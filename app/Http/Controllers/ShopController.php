@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
 
 class ShopController extends Controller
 {
@@ -33,12 +34,20 @@ class ShopController extends Controller
     
     public function productDetails2()
     {
-        return view('shop/productDetails2');
+        return view('shop.productDetails2');
     }
     
     public function shop()
     {
-        return view('shop/shop');
+        return view('shop.shop');
+    }
+
+    public function category($category)
+    {
+        // return $category;
+        $category = Category::where('slug', $category)->first();
+		return view('shop.shop');
+        // return response()->json($category);
     }
     
     public function sidebarLeft()

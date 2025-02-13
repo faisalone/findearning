@@ -1,5 +1,5 @@
 <header id="rtsHeader">
-	<div class="header-topbar header-topbar3 header-topbar4">
+	{{-- <div class="header-topbar header-topbar3 header-topbar4">
 		<div class="container header-container">
 			<div class="header-top-inner">
 				<h3 class="welcome-text"><i class="rt-truck"></i> Free shipping for all orders of <span
@@ -11,57 +11,34 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> --}}
 	<div class="navbar-wrapper">
 		<div class="navbar-part navbar-part3 navbar-part4">
 			<div class="container">
 				<div class="navbar-inner navbar-inner5">
 					<div class="navbar-search-area">
-						<div class="search-input-inner">
-							<select class="custom-select">
-								<option value="hide">All Catagory</option>
-								<option value="all">All</option>
-								<option value="men">Men</option>
-								<option value="women">Women</option>
-								<option value="shoes">Shoes</option>
-								<option value="shoes">Glasses</option>
-								<option value="shoes">Bags</option>
-								<option value="shoes">Assesories</option>
-							</select>
-							<div class="input-div">
-								<div class="search-input-icon"><i class="rt-search mr--10"></i>Search</div>
-								<input class="search-input input5" type="text" placeholder="Keyword here...">
-							</div>
-						</div>
-					</div>
-					<a href="{{ route('index') }}" class="logo"><img src="{{ asset('assets/images/logo2.png') }}" alt="weiboo-logo"></a>
-					<div class="navbar-select-area">
-						<select class="topbar-select custom-select">
-							<option value="eng">Eng</option>
-							<option value="esp">esp</option>
-							<option value="ban">Ban</option>
-						</select>
-						<select class="topbar-select custom-select last-child">
-							<option value="usd">USD</option>
-							<option value="eur">Euro</option>
-							<option value="tk">Taka</option>
-						</select>
-					</div>
-					<div class="header-action-items header-action-items1">
-						<div class="search-part">
-							<div class="search-icon action-item icon"><i class="rt-search"></i></div>
-							<div class="search-input-area">
-								<div class="container">
-									<div class="search-input-inner inner-2">
-										<div class="input-div">
-											<input class="search-input input4" type="text"
-												placeholder="Search by keyword or #">
-										</div>
-										<div class="search-close-icon"><i class="rt-xmark"></i></div>
-									</div>
+						<form action="#" method="GET">
+							<div class="search-input-inner">
+								<select class="custom-select" name="category">
+									<option value="">All Category</option>
+									@foreach($categories as $category)
+										<option value="{{ strtolower($category->id) }}">{{ $category->title }}</option>
+									@endforeach
+								</select>
+								<div class="input-div">
+									<button type="submit" class="search-input-icon"><i class="rt-search mr--10"></i> Search</button>
+									<input class="search-input input5" type="text" name="q" placeholder="Keyword here...">
 								</div>
 							</div>
-						</div>
+						</form>
+					</div>
+					<a href="{{ route('index') }}" class="logo">
+						<img src="{{ asset('assets/images/logo-findearning.svg') }}" class="w-75" alt="logo">
+					</a>
+					<div class="navbar-select-area">
+						
+					</div>
+					<div class="header-action-items header-action-items1">
 						<div class="cart action-item">
 							<div class="cart-nav">
 								<div class="cart-icon icon"><i class="rt-cart"></i><span
@@ -83,12 +60,12 @@
 		<div class="navbar-part navbar-part2 lower-navbar lower-navbar4">
 			<div class="container">
 				<div class="navbar-inner">
-					<a href="{{ route('index') }}" class="logo"><img src="{{ asset('assets/images/logo4.svg') }}" alt="umart-logo"></a>
+					<a href="{{ route('index') }}" class="logo"><img src="{{ asset('assets/images/logo4.svg') }}" class="w-50" alt="umart-logo"></a>
 					<div class="navbar-coupon-code">
 						<div class="icon"><img src="{{ asset('assets/images/icons/percent-tag.png') }}" alt="tag-icon"></div>
 						<div class="content">
-							<span class="title">COUPON CODE</span>
-							<span class="code">WEIBOO45%</span>
+							<span class="title">Get Offer</span>
+							<span class="code">Upto 30%</span>
 						</div>
 					</div>
 					<div class="rts-menu">
@@ -178,7 +155,7 @@
 					</div>
 					<div class="contact-info ml-auto">
 						<span class="title">Get Support</span>
-						<a href="mailto:pixcelsthemes@gmail.com" class="email-address info">info@webexample.com</a>
+						<a href="mailto:contact@findearning.com" class="email-address info">contact@findearning.com</a>
 					</div>
 					<div class="hamburger"><span></span></div>
 				</div>

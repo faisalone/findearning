@@ -10474,7 +10474,7 @@ tr:first-child {
   font-size: 13px;
 }
 .newsletter-banner.newsletter-banner8 {
-  background-image: url("../images/background/dark.webp");
+  background-image: url("../images/background/dark.jpg");
   background-position: center center;
 }
 .newsletter-banner.newsletter-banner8 .newsletter-contents {
@@ -13286,6 +13286,7 @@ tr:first-child {
 }
 .rts-featured-product-section1.featured-product8 .rts-featured-product-section-inner .product-item .product-image {
   margin-bottom: 0;
+  width: 100%;
   border-radius: 10px;
 }
 .rts-featured-product-section1.featured-product8 .rts-featured-product-section-inner .product-item .product-image img {

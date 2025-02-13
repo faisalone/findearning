@@ -29,4 +29,9 @@ class Category extends Model
 	{
 		return $this->getImageUrl($this->image);
 	}
+
+	// public function getRouteKeyName()
+    // {
+    //     return 'slug';
+    // }
 }

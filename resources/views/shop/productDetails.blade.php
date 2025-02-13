@@ -5,8 +5,7 @@
     $subTitle = 'Shop';
     $subTitle2 = 'Product';
     $script= '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
-    
-    
+	$css = '<link rel="stylesheet" href="' . asset('assets/css/variables/variable4.css') . '"/>';
 @endphp
 
 @section('content')

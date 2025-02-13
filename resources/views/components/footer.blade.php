@@ -4,7 +4,7 @@
 			<div class="row">
 				<div class="col-xl-3 col-md-6 col-sm-6 box-widget-col">
 					<div class="footer-widget footer-box-widget">
-						<div class="footer-logo"><img src="{{ asset('assets/images/logo2.png') }}" alt="footer-logo"></div>
+						<div class="footer-logo"><img src="{{ asset('assets/images/logo-findearning.svg') }}" class="w-100" alt="footer-logo"></div>
 						<p>Solid is the information & experience
 							directed at an end-user</p>
 						<div class="quick-contact">
@@ -21,7 +21,7 @@
 								</div>
 								<div class="contact-info">
 									<a href="mailto:pixcelsthemes@gmail.com"
-										class="email-address info">pixcelsthemes@gmail.com</a>
+										class="email-address info">contact@findearning.com</a>
 									<span class="title">Get Support</span>
 								</div>
 							</div>
@@ -100,9 +100,9 @@
 	</div>
 	<div class="footer-bottom-area">
 		<div class="container">
-			<div class="footer-bottom-inner">
-				<span class="copyright">Copyright & Design By <a href="http://PixcelsThemes.com" class="brand"
-						target="_blank">PixcelsThemes</a> -2024</span>
+			<div class="footer-bottom-inner d-flex justify-content-between">
+				<span class="copyright">All rights reserved by <a href="http://findearning.us" class="brand" target="_blank">findearning.us</a></span>
+				<span class="copyright">Design & developed by <a href="http://oyelab.com" class="brand" target="_blank">oyelab.com</a></span>
 			</div>
 		</div>
 	</div>

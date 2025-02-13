@@ -3,18 +3,20 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Category;
 
 class HomeController extends Controller
 {
-    public function index()
+	public function index()
     {
-        return view('home/index');
+		$categories = Category::select('id', 'title', 'slug', 'image')->get();
+        return view('home.index', compact('categories'));
     }
     
     
     public function allCategory()
     {
-        return view('home/allCategory');
+        return view('home.allCategory');
     }
     
     
@@ -64,5 +66,4 @@ class HomeController extends Controller
     {
         return view('home/login');
     }
-    
 }
