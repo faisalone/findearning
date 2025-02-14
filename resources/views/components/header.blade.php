@@ -1,17 +1,4 @@
 <header id="rtsHeader">
-	{{-- <div class="header-topbar header-topbar3 header-topbar4">
-		<div class="container header-container">
-			<div class="header-top-inner">
-				<h3 class="welcome-text"><i class="rt-truck"></i> Free shipping for all orders of <span
-						class="value">150$</span></h3>
-				<div class="topbar-action">
-					<a href="#" class="action-item mr--40"><i class="rt-store"></i> Store Location<span
-							class="separator"></span></a>
-					<a href="#" class="action-item"><i class="rt-location-dot"></i> Track Order</a>
-				</div>
-			</div>
-		</div>
-	</div> --}}
 	<div class="navbar-wrapper">
 		<div class="navbar-part navbar-part3 navbar-part4">
 			<div class="container">
@@ -21,7 +8,7 @@
 							<div class="search-input-inner">
 								<select class="custom-select" name="category">
 									<option value="">All Category</option>
-									@foreach($categories as $category)
+									@foreach($categories->take(10) as $category)
 										<option value="{{ strtolower($category->id) }}">{{ $category->title }}</option>
 									@endforeach
 								</select>
@@ -39,16 +26,17 @@
 						
 					</div>
 					<div class="header-action-items header-action-items1">
-						<div class="cart action-item">
-							<div class="cart-nav">
-								<div class="cart-icon icon"><i class="rt-cart"></i><span
-										class="wishlist-dot icon-dot">3</span></div>
+						<a href="{{ route('cart') }}">
+							<div class="cart action-item">
+								<div class="cart-nav">
+									<div class="cart-icon icon">
+										<i class="rt-cart"></i>
+										<span id="cart-count" class="wishlist-dot icon-dot">{{ count(session('cart', [])) }}</span>
+									</div>
+								</div>
 							</div>
-						</div>
-						<div class="wishlist action-item">
-							<div class="favourite-icon icon"><a href="{{ route('wishlist') }}"><i class="rt-heart"></i></a>
-							</div>
-						</div>
+						</a>
+						
 						<a href="{{ route('login') }}" class="account"><i class="rt-user-2"></i></a>
 					</div>
 					<div class="hamburger"><span></span></div>
@@ -94,9 +82,11 @@
 										</li>
 										<li class="mega-dropdown-li">
 											<ul class="mega-dropdown-ul">
-												<li class="dropdown-li"><a class="dropdown-link"
-														href="{{ route('productDetails') }}">Single Product Layout
-														One</a>
+												<li class="dropdown-li">
+													<a class="dropdown-link"
+														href="{{ route('productDetails', ['category' => 'cash-app-account', 'product' => 'product-32']) }}">Single Product Layout
+														One
+													</a>
 												</li>
 												<li class="dropdown-li"><a class="dropdown-link"
 														href="{{ route('productDetails2') }}">Single Product Layout
@@ -162,102 +152,7 @@
 			</div>
 		</div>
 	</div>
-	<div class="cart-bar">
-		<div class="cart-header">
-			<h3 class="cart-heading">MY CART (3 ITEMS)</h3>
-			<div class="close-cart"><i class="fal fa-times"></i></div>
-		</div>
-		<div class="product-area">
-			<div class="product-item">
-				<div class="product-detail">
-					<div class="product-thumb"><img src="{{ asset('assets/images/slider/image1.jpg') }}" alt="product-thumb"></div>
-					<div class="item-wrapper">
-						<span class="product-name">Parachute Jacket</span>
-						<div class="item-wrapper">
-							<span class="product-variation"><span class="color">Green /</span>
-								<span class="size">XL</span></span>
-						</div>
-						<div class="item-wrapper">
-							<span class="product-qnty">3 ×</span>
-							<span class="product-price">$198.00</span>
-						</div>
-					</div>
-				</div>
-				<div class="cart-edit">
-					<div class="quantity-edit">
-						<button class="button"><i class="fal fa-minus minus"></i></button>
-						<input type="text" class="input" value="3" />
-						<button class="button plus">+<i class="fal fa-plus plus"></i></button>
-					</div>
-					<div class="item-wrapper d-flex mr--5 align-items-center">
-						<a href="#" class="product-edit"><i class="fal fa-edit"></i></a>
-						<a href="#" class="delete-cart"><i class="fal fa-times"></i></a>
-					</div>
-				</div>
-			</div>
-			<div class="product-item">
-				<div class="product-detail">
-					<div class="product-thumb"><img src="{{ asset('assets/images/slider/image2.jpg') }}" alt="product-thumb"></div>
-					<div class="item-wrapper">
-						<span class="product-name">Narrow Trouser</span>
-						<div class="item-wrapper">
-							<span class="product-variation"><span class="color">Green /</span>
-								<span class="size">XL</span></span>
-						</div>
-						<div class="item-wrapper">
-							<span class="product-qnty">2 ×</span>
-							<span class="product-price">$88.00</span>
-						</div>
-					</div>
-				</div>
-				<div class="cart-edit">
-					<div class="quantity-edit">
-						<button class="button"><i class="fal fa-minus minus"></i></button>
-						<input type="text" class="input" value="2" />
-						<button class="button plus">+<i class="fal fa-plus plus"></i></button>
-					</div>
-					<div class="item-wrapper d-flex mr--5 align-items-center">
-						<a href="#" class="product-edit"><i class="fal fa-edit"></i></a>
-						<a href="#" class="delete-cart"><i class="fal fa-times"></i></a>
-					</div>
-				</div>
-			</div>
-			<div class="product-item last-child">
-				<div class="product-detail">
-					<div class="product-thumb"><img src="{{ asset('assets/images/slider/image5.jpg') }}" alt="product-thumb"></div>
-					<div class="item-wrapper">
-						<span class="product-name">Bellyless Hoodie</span>
-						<div class="item-wrapper">
-							<span class="product-variation"><span class="color">Green /</span>
-								<span class="size">XL</span></span>
-						</div>
-						<div class="item-wrapper">
-							<span class="product-qnty">1 ×</span>
-							<span class="product-price">$289.00</span>
-						</div>
-					</div>
-				</div>
-				<div class="cart-edit">
-					<div class="quantity-edit">
-						<button class="button"><i class="fal fa-minus minus"></i></button>
-						<input type="text" class="input" value="2" />
-						<button class="button plus">+<i class="fal fa-plus plus"></i></button>
-					</div>
-					<div class="item-wrapper d-flex mr--5 align-items-center">
-						<a href="#" class="product-edit"><i class="fal fa-edit"></i></a>
-						<a href="#" class="delete-cart"><i class="fal fa-times"></i></a>
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="cart-bottom-area">
-			<span class="spend-shipping"><i class="fal fa-truck"></i> SPENT <span class="amount">$199.00</span> MORE
-				FOR FREE SHIPPING</span>
-			<span class="total-price">TOTAL: <span class="price">$556</span></span>
-			<a href="{{ route('checkOut') }}" class="checkout-btn cart-btn">PROCEED TO CHECKOUT</a>
-			<a href="{{ route('cart') }}" class="view-btn cart-btn">VIEW CART</a>
-		</div>
-	</div>
+
 	<!-- slide-bar start -->
 	<aside class="slide-bar">
 		<div class="offset-sidebar">
@@ -324,10 +219,10 @@
 						</li>
 						<li class="mega-dropdown-li">
 							<ul class="mega-dropdown-ul mm-show">
-								<li class="dropdown-li"><a class="dropdown-link" href="{{ route('productDetails') }}">Single
-										Product
-										Layout
-										One</a>
+								<li class="dropdown-li">
+									<a class="dropdown-link" href="{{ route('productDetails', ['category' => 'category-slug', 'product' => 'product-32']) }}">
+										Single Product Layout One
+									</a>
 								</li>
 								<li class="dropdown-li"><a class="dropdown-link" href="{{ route('productDetails2') }}">Single
 										Product Layout
@@ -401,7 +296,7 @@
 			</div>
 			<div class="cart action-item">
 				<div class="cart-nav">
-					<div class="cart-icon icon"><i class="rt-cart"></i><span class="wishlist-dot icon-dot">3</span>
+					<div class="cart-icon icon"><i class="rt-cart"></i><span id="mobile-cart-count" class="wishlist-dot icon-dot">{{ count(session('cart', [])) }}</span>
 					</div>
 				</div>
 			</div>

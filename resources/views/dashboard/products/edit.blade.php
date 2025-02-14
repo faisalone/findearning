@@ -6,7 +6,7 @@
 	
 	<x-form 
 		form-id="productForm" 
-		form-action="{{ route('products.update', $product->id) }}" 
+		form-action="{{ route('products.update', $product) }}" 
 		method="PUT"
 		title="Edit Product"
 		:discardRoute="route('products.index')"

@@ -55,12 +55,7 @@
   /* Uncomment for 3D effect */
   /* text-shadow: 1px 1px 1px rgba(127, 127, 127, 0.3); */
 }
-
-.rt-linkedin-in:before {
-  content: '\e800';
-}
-
-/* '' */
+ /* '' */
 .rt-location-dot:before {
   content: '\e801';
 }
@@ -266,3 +261,6 @@
 }
 
 /* '' */
+.rt-my-custom-icon:before {
+  content: '\e900'; /* Use a unique character code */
+}

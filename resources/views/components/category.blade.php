@@ -1,17 +1,25 @@
 @props(['categories' => []])
-@foreach($categories as $category)
-<div class="col-xl-3 col-md-4 col-sm-6 col-12">
-	<div class="product-item element-item1">
-		<a href="{{ $category->detailsLink ?? route('productDetails', $category->slug ?? null) }}" class="product-image">
-			<div class="image-vari1 image-vari">
-				<img src="{{ $category->imagePath }}" alt="{{ $category->title }}" class="img-fluid img-cover">
-			</div>
-		</a>
-		<div class="bottom-content">
-			<a href="{{ $category->detailsLink ?? route('productDetails', $category->slug ?? null) }}" class="product-name">
-				{{ $category->title ?? 'Online Action Game' }}
-			</a>
-		</div>
-	</div>
+
+<div class="rts-new-collection-section section-gap">
+    <div class="container">
+        <div class="recent-products-header section-header">
+        </div>
+        <div class="swiper rts-cmmnSlider-over" data-swiper="pagination">
+            <div class="swiper-wrapper">
+				@foreach($categories as $category)
+                <div class="swiper-slide">
+                    <div class="collection-item">
+                        <a href="{{ route('shop.category', $category->slug ) }}">
+							<img src="{{ $category->imagePath }}" alt="{{ $category->title }}" class="img-fluid img-cover">
+                        </a>
+                        <p class="item-quantity">20 <span>items</span></p>
+                        <a href="{{ route('shop.category', $category->slug ) }}" class="item-catagory-box">
+                            <h3 class="title">{{ $category->title }}</h3>
+                        </a>
+                    </div>
+                </div>
+				@endforeach
+            </div>
+        </div>
+    </div>
 </div>
-@endforeach

@@ -24,15 +24,15 @@
                                 <input class="form-check-input toggle-status" type="checkbox" role="switch" id="flexSwitchCheckChecked{{ $product->id }}" data-id="{{ $product->id }}" {{ $product->status ? 'checked' : '' }}>
                             </div>
                         </td>
-						<td>
-							@if($product->images->isNotEmpty())
-								@foreach($product->imagePaths as $image)
-									<img src="{{ $image['url'] }}" alt="{{ $product->title }}" class="img-thumbnail" style="width: 50px; height: 50px;">
-								@endforeach
-							@else
-								<span>No Image</span>
-							@endif
-						</td>
+                        <td>
+                            @if($product->images->isNotEmpty())
+                                @foreach($product->imagePaths as $image)
+                                    <img src="{{ $image['url'] }}" alt="{{ $product->title }}" class="img-thumbnail" style="width: 50px; height: 50px;">
+                                @endforeach
+                            @else
+                                <span>No Image</span>
+                            @endif
+                        </td>
                         <td>
                             <span class="badge bg-secondary">
                                 {{ $product->category->title ?? 'No Category' }}
@@ -70,5 +70,5 @@
 @endsection
 
 @push('scripts')
-	<script src="{{ asset('backend/js/product.js') }}"></script>
+    <script src="{{ asset('backend/js/product.js') }}"></script>
 @endpush

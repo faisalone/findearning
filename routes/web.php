@@ -33,19 +33,23 @@ Route::prefix('pages')->group(function () {
 // shop
 Route::prefix('shop')->group(function () {
 	Route::controller(ShopController::class)->group(function () {
-		Route::get('/account', 'account')->name('account');
+		Route::get('/', 'shop')->name('shop');
 		Route::get('/cart', 'cart')->name('cart');
+		Route::get('/account', 'account')->name('account');
 		Route::get('/check-out', 'checkOut')->name('checkOut');
 		Route::get('/full-width-Shop', 'fullWidthShop')->name('fullWidthShop');
 		Route::get('/grouped-products', 'groupedProducts')->name('groupedProducts');
-		Route::get('/product-details', 'productDetails')->name('productDetails');
 		Route::get('/product-details2', 'productDetails2')->name('productDetails2');
-		Route::get('/shop', 'shop')->name('shop');
-		Route::get('/shop/{category}', 'category')->name('shop.category');
 		Route::get('/sidebar-left', 'sidebarLeft')->name('sidebarLeft');
 		Route::get('/sidebar-right', 'sidebarRight')->name('sidebarRight');
 		Route::get('/variable-products', 'variableProducts')->name('variableProducts');
 		Route::get('/grouped-products', 'groupedProducts')->name('groupedProducts');
+		Route::get('/{category}', 'category')->name('shop.category');
+		Route::get('/{category}/{product}', 'productDetails')->name('productDetails');
+		Route::post('/add-to-cart', 'addToCart')->name('shop.addToCart');
+		Route::post('/remove-from-cart', 'removeFromCart')->name('shop.removeFromCart');
+		Route::post('/update-cart', 'updateCart')->name('shop.updateCart');
+		Route::post('/place-order', 'placeOrder')->name('placeOrder');
 	});
 });
 
@@ -87,3 +91,6 @@ Route::prefix('dashboard')->group(function () {
 		Route::delete('/variants/{variant}', 'destroyVariant')->name('products.destroyVariant');
 	});
 });
+
+Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');

@@ -32,28 +32,14 @@
 </div>
 <!-- ..::Banner Section End Here::.. -->
 
-<!-- ..::Featured Product Section Start Here::.. -->
-<div class="rts-featured-product-section1 featured-product7 featured-product8">
-	<div class="container">
-		<div class="rts-featured-product-section-inner">
-			<div class="section-header section-header3">
-				<div class="wrapper">
-					<h2 class="title">Latest Categories</h2>
-					<a href="{{ route('shop') }}" class="section-button">Veiw All</a>
-				</div>
-			</div>
-			<div class="row">
-				<x-category :categories="$categories" />
-			</div>
-		</div>
-	</div>
-</div>
-<!-- ..::Featured Product Section End Here::.. -->
+<!-- ..::New Collection Section Start Here::.. -->
+<x-category :categories="$categories" />
+<!-- ..::New Collection Section End Here::.. -->
 
-<x-brand />
+<x-product :products="$randomProducts" />
 
 <x-newslettter />
 
-<x-service />
+<x-brand />
 
 @endsection

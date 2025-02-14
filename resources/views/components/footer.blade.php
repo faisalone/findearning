@@ -9,11 +9,10 @@
 							directed at an end-user</p>
 						<div class="quick-contact">
 							<div class="phone contact-item">
-								<div class="icon"><img src="{{ asset('assets/images/icons/24clock2.png') }}" alt="chat-icon">
-								</div>
+								<div class="icon"><img src="{{ asset('assets/images/icons/telegram.png') }}" alt="telegram-icon"></div>
 								<div class="contact-info">
-									<a href="tel:0020500" class="service-time info">0020 500 - CALL - 000</a>
-									<span class="title">Mon - Fri: 9:00-20:00</span>
+									<a href="https://t.me/username" class="telegram-handle info">@username</a>
+									<span class="title">Connect on Telegram</span>
 								</div>
 							</div>
 							<div class="email contact-item">
