@@ -11,7 +11,7 @@
 
     <div class="rts-checkout-section">
         <div class="container">
-            <form class="checkout-form" method="POST" action="{{ route('placeOrder') }}">
+			<form class="checkout-form" method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="row g-3 justify-content-between">
                     <label class="delivery-heading mb-3"><h3>Delivery Information:</h3></label>
@@ -21,15 +21,15 @@
                         <div class="shipping-options checkout-options mb-3">
                             <span class="shipping">Delivery Method</span>
                             <div class="btn-group d-flex justify-content-center gap-3" role="group">
-                                <input type="radio" class="btn-check" name="delivery_method" id="emailDelivery" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="delivery_method" id="emailDelivery" value="email" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="emailDelivery">
                                     <img src="{{ asset('assets/images/icons/mail.png') }}" alt="Email" class="delivery-icon"> Email
                                 </label>
-                                <input type="radio" class="btn-check" name="delivery_method" id="whatsappDelivery" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="delivery_method" id="whatsappDelivery" value="whatsapp" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="whatsappDelivery">
                                     <img src="{{ asset('assets/images/icons/whatsapp.png') }}" alt="WhatsApp" class="delivery-icon"> WhatsApp
                                 </label>
-                                <input type="radio" class="btn-check" name="delivery_method" id="telegramDelivery" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="delivery_method" id="telegramDelivery" value="telegram" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="telegramDelivery">
                                     <img src="{{ asset('assets/images/icons/telegram.png') }}" alt="Telegram" class="delivery-icon"> Telegram
                                 </label>
@@ -64,27 +64,27 @@
                         <div class="payment-options checkout-options mb-3">
                             <label class="mb-2">Select a payment option:</label>
                             <div class="btn-group d-flex flex-wrap justify-content-center gap-3" role="group">
-                                <input type="radio" class="btn-check" name="payment_method" id="payeer" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="payment_option" id="payeer" value="payeer" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="payeer" onclick="showPaymentInfo('payeer')">
                                     <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Payeer" class="payment-icon"> Payeer
                                 </label>
-                                <input type="radio" class="btn-check" name="payment_method" id="nagad" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="payment_option" id="nagad" value="nagad" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="nagad" onclick="showPaymentInfo('nagad')">
                                     <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Nagad" class="payment-icon"> Nagad
                                 </label>
-                                <input type="radio" class="btn-check" name="payment_method" id="rocket" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="payment_option" id="rocket" value="rocket" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="rocket" onclick="showPaymentInfo('rocket')">
                                     <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Rocket" class="payment-icon"> Rocket
                                 </label>
-                                <input type="radio" class="btn-check" name="payment_method" id="litecoin" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="payment_option" id="litecoin" value="litecoin" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="litecoin" onclick="showPaymentInfo('litecoin')">
                                     <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Litecoin" class="payment-icon"> Litecoin (litecoin network)
                                 </label>
-                                <input type="radio" class="btn-check" name="payment_method" id="bitcoin" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="payment_option" id="bitcoin" value="bitcoin" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="bitcoin" onclick="showPaymentInfo('bitcoin')">
                                     <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Bitcoin" class="payment-icon"> Bitcoin
                                 </label>
-                                <input type="radio" class="btn-check" name="payment_method" id="binance" required autocomplete="off">
+                                <input type="radio" class="btn-check" name="payment_option" id="binance" value="binance" required autocomplete="off">
                                 <label class="btn btn-outline-secondary rounded-pill" for="binance" onclick="showPaymentInfo('binance')">
                                     <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Binance" class="payment-icon"> Binance
                                 </label>
@@ -117,7 +117,7 @@
                             <div class="card p-3">
                                 <h5>Step 2: Upload Proof of Payment</h5>
                                 <label for="paymentScreenshot" class="form-label">Upload Payment Screenshot:</label>
-                                <input class="form-control" type="file" id="paymentScreenshot" name="payment_screenshot" accept="image/*" required>
+                                <input class="form-control" type="file" id="paymentScreenshot" name="proof" accept="image/*" required>
                                 <img id="screenshotPreview" alt="Payment Screenshot" class="img-thumbnail mt-2 img-fluid d-none">
                             </div>
                         </div>

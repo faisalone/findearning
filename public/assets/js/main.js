@@ -1477,3 +1477,16 @@ if (nstSlider.length) {
     }
   });
 }
+
+document.addEventListener('DOMContentLoaded', function() {
+  document.querySelectorAll('.password-input').forEach(function(container) {
+    var input = container.querySelector('input');
+    var toggle = container.querySelector('.show-password-input');
+    if (toggle) {
+      toggle.style.cursor = 'pointer';
+      toggle.addEventListener('click', function() {
+        input.type = input.type === "password" ? "text" : "password";
+      });
+    }
+  });
+});

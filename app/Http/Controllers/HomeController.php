@@ -8,6 +8,11 @@ use App\Models\Product;
 
 class HomeController extends Controller
 {
+	// public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
+	
 	public function index()
     {
 		$categories = Category::select('id', 'title', 'slug', 'image')->take(10)->get();
@@ -66,6 +71,6 @@ class HomeController extends Controller
     
     public function login()
     {
-        return view('home/login');
+        return view('home.login');
     }
 }

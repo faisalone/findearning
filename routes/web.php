@@ -8,6 +8,8 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\OrderController;
+
 
 Route::controller(HomeController::class)->group(function () {
 	Route::get('/', 'index')->name('index');
@@ -49,7 +51,13 @@ Route::prefix('shop')->group(function () {
 		Route::post('/add-to-cart', 'addToCart')->name('shop.addToCart');
 		Route::post('/remove-from-cart', 'removeFromCart')->name('shop.removeFromCart');
 		Route::post('/update-cart', 'updateCart')->name('shop.updateCart');
-		Route::post('/place-order', 'placeOrder')->name('placeOrder');
+	});
+});
+
+// shop
+Route::prefix('order')->group(function () {
+	Route::controller(OrderController::class)->group(function () {
+		Route::post('/store', 'createOrder')->name('placeOrder');
 	});
 });
 
@@ -77,6 +85,7 @@ Route::prefix('dashboard')->group(function () {
 	Route::prefix('attributes')->controller(AttributeController::class)->group(function () {
 		Route::get('/{parentId}/children', 'children')->name('attributes.children');
 	});
+	Route::resource('orders', OrderController::class);
 	// Route::resource('orders', OrderController::class);
 	// Route::resource('users', UserController::class);
 	// Route::resource('sites', SiteController::class);
@@ -92,5 +101,7 @@ Route::prefix('dashboard')->group(function () {
 	});
 });
 
-Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
-Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
+// Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
+// Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
+
+Route::auth(); // This line automatically registers Auth routes, no extra directive needed.

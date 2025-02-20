@@ -56,4 +56,9 @@ class Product extends Model
         return $this->count();
     }
 
+	public function orders()
+	{
+		return $this->hasMany(Order::class);
+	}
+
 }

@@ -25,6 +25,12 @@
 					Attributes
 				</a>
 			</li>
+			<li class="nav-item">
+				<a class="nav-link {{ request()->is('dashboard/orders*') ? 'active' : '' }}" href="{{ route('orders.index') }}">
+					<i class="bi bi-receipt"></i>
+					Orders
+				</a>
+			</li>
             <!-- Add more menu items here -->
         </ul>
     </div>
