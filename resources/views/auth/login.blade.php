@@ -49,7 +49,7 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
 											<label for="remember" class="form-label mb-0">Remember Me</label>
 										</div>
 										<div class="d-inline-flex align-items-center">
-											<a class="forgot-password" href="#">Lost your password?</a>
+											<a class="forgot-password" href="{{ route('password.request') }}">Lost your password?</a>
 										</div>
 									</div>
                                     <div class="form">

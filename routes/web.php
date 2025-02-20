@@ -71,7 +71,7 @@ Route::prefix('blog')->group(function () {
 	});
 });
 
-Route::prefix('dashboard')->group(function () {
+Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 	Route::get('/', function () {
 		return view('dashboard.index');
 	})->name('dashboard');
@@ -104,4 +104,5 @@ Route::prefix('dashboard')->group(function () {
 // Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
 // Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
 
-Route::auth(); // This line automatically registers Auth routes, no extra directive needed.
+// Route::auth(); // This line automatically registers Auth routes, no extra directive needed.
+Auth::routes(['verify' => true]);
