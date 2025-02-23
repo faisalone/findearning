@@ -30,7 +30,7 @@
 							</div>
 							<div class="bottom-content">
 								<h4 class="product-name">
-									<a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}">
+									<a class="text-white" href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}">
 										{{ $product->title }}
 									</a>
 								</h4>

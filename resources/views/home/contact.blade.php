@@ -71,34 +71,15 @@
                             </h3>
                             <div class="contact">
                                 <ul>
-                                    <li class="one">
-                                        24/26 Strait Bargate, Boston, PE21,
-                                        United Kingdom
-                                    </li>
-                                    <li class="two"><a href="tel:+0989057868978">+098 (905) 786 897 8</a>
-                                        <a href="tel:61463895748">6 - 146 - 389 - 5748</a></li>
-                                    <li class="three">Store Hours: <br>
-                                        10 am - 10 pm EST, 7 days a week</li>
+                                    <li class="one">{{ $address->subtitle }}</li>
+                                    <li class="two">{{ $contact->url }} ({{ $contact->name }})</li>
+                                    <li class="three">Store Hours: <br>{{ $storeHours->subtitle }}</li>
                                 </ul>
-                            </div>
-                        </div>
-                        <div class="section-button">
-                            <div class="btn-1">
-                                <a href="#">Get Support On Call <i class="fal fa-headphones-alt"></i></a>
-                            </div>
-                            <div class="btn-2">
-                                <a href="#">Get Direction <i class="rt-location-dot"></i></a>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <div class="map">
-            <p><iframe
-                    src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d3651.0452483624595!2d90.424043!3d23.781403!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x3cc42b4e4b430164!2sPixcelsThemes!5e0!3m2!1sen!2sbd!4v1656420500360!5m2!1sen!2sbd"
-                     height="500" style="border:0;" allowfullscreen="" loading="lazy"
-                    referrerpolicy="no-referrer-when-downgrade"></iframe></p>
         </div>
     </div>
     <!--contact-area end-->

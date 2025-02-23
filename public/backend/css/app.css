@@ -49,6 +49,45 @@ body {
     text-align: center;
 }
 
+#lightbox {
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background: rgba(0,0,0,0.8);
+	display: none;
+	justify-content: center;
+	align-items: center;
+	z-index: 1000;
+}
+#lightbox-img {
+	max-width: 90%;
+	max-height: 90%;
+}
+.magnify-container {
+	/* Maintain container for click event */
+	display: inline-block;
+}
+.magnify-container img {
+	cursor: pointer;
+}
+
+/* Order Style */
+.zoom-container {
+	position: relative;
+	display: inline-block;
+}
+
+.zoom-container img {
+	transition: transform 0.2s;
+}
+
+.zoom-container:hover img {
+	transform: scale(2);
+}
+/* Order Style End */
+
 @media (max-width: 768px) {
     .sidebar {
         position: relative;

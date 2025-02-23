@@ -25,20 +25,7 @@
 								</div>
 							</div>
 						</div>
-						<ul class="social-links-footer2">
-							<li><a class="platform fb" target="_blank" href="http://facebook.com"><i
-										class="fab fa-facebook"></i></a>
-							</li>
-							<li><a class="platform yt" target="_blank" href="http://youtube.com"><i
-										class="fab fa-youtube"></i></a>
-							</li>
-							<li><a class="platform ttr" target="_blank" href="http://twitter.com"><i
-										class="fab fa-twitter"></i></a>
-							</li>
-							<li><a class="platform lkd" target="_blank" href="http://linkedin.com"><i
-										class="fab fa-linkedin"></i></a>
-							</li>
-						</ul>
+
 					</div>
 				</div>
 				<div class="col-xl-3 col-md-6 col-sm-6">
@@ -55,28 +42,24 @@
 					<div class="footer-widget">
 						<h3 class="footer-widget-title">Information</h3>
 						<ul class="widget-items cata-widget">
-							<li class="widget-list-item"><a href="#0">Custom Service</a></li>
-							<li class="widget-list-item"><a href="#0">FAQs</a></li>
-							<li class="widget-list-item"><a href="#0">Ordering Tracking</a></li>
-							<li class="widget-list-item"><a href="#0">Contacts</a></li>
-							<li class="widget-list-item"><a href="#0">Events</a></li>
+							@foreach($informationPages as $page)
+								<li class="widget-list-item"><a href="{{ route('pages.show', $page->slug) }}">{{ $page->title }}</a></li>
+							@endforeach
 						</ul>
 					</div>
 				</div>
 				<div class="col-lg-13 col-md-6 col-sm-6">
 					<h3 class="footer-widget-title">My Account</h3>
 					<ul class="footer-widget">
-						<li class="widget-list-item"><a href="#0">Delivery Infomation</a></li>
-						<li class="widget-list-item"><a href="#0">Privacy Policy</a></li>
-						<li class="widget-list-item"><a href="#0">Discount</a></li>
-						<li class="widget-list-item"><a href="#0">Custom Service</a></li>
-						<li class="widget-list-item"><a href="#0">Terms & Condition</a></li>
+						@foreach($myaccountPages as $page)
+							<li class="widget-list-item"><a href="{{ route('pages.show', $page->slug) }}">{{ $page->title }}</a></li>
+						@endforeach
 					</ul>
 				</div>
 				<div class="col-lg-25 col-md-6 col-sm-6">
 					<h3 class="footer-widget-title">Get Newsletter</h3>
 					<div class="footer-widget newsletter-widget">
-						<p class="widget-text">Get 10% off your first order! Hurry up</p>
+						<p class="widget-text">Don't miss any updates and offers!</p>
 						<div class="input-div">
 							<input type="email" placeholder="Enter email address">
 						</div>
@@ -85,13 +68,6 @@
 				</div>
 			</div>
 			<div class="footer-bottombar">
-				<div class="app-download">
-					<span class="download-text">Order faster with our App!</span>
-					<a href="http://appstore.com" target="_blank" class="download-store"><img
-							src="{{ asset('assets/images/items/appstore.jpg') }}" alt=""></a>
-					<a href="https://play.google.com/store/apps" target="_blank" class="download-store"><img
-							src="{{ asset('assets/images/items/playstore.jpg') }}" alt=""></a>
-				</div>
 				<div class="payment-methods"><img src="{{ asset('assets/images/footer/payment2.svg') }}" alt="payment-methods">
 				</div>
 			</div>

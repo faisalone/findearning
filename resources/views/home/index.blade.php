@@ -25,7 +25,7 @@
 						</div>
 					</div>
 				</div>
-				<x-banner />
+				<x-banner :banners="$banners" />
 			</div>
 		</div>
 	</div>

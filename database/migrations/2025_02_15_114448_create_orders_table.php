@@ -17,7 +17,7 @@ return new class extends Migration
             $table->json('product_details'); // Rename to product_details
             $table->string('delivery_method');
             $table->string('payment_option');
-            $table->string('proof');
+            $table->string('proof')->nullable();
             $table->decimal('total', 8, 2);
             $table->text('order_notes')->nullable();
             $table->string('status');

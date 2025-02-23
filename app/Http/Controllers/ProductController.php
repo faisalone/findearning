@@ -14,9 +14,16 @@ use App\Models\ProductImage;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
+use App\Http\Middleware\AdminMiddleware;
+
 
 class ProductController extends Controller
 {
+	public function __construct()
+    {
+        $this->middleware(AdminMiddleware::class);
+    }
+
 	public function index()
 	{
 		$products = Product::select('id', 'category_id', 'title', 'slug', 'status', 'updated_at')

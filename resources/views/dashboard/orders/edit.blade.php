@@ -6,17 +6,24 @@
         :formId="'editOrderForm'"
         :formAction="route('orders.update', $order->id)"
         :method="'PUT'"
-        :title="'Edit Order #'.$order->id.' - '.$order->user->name.' ('.$order->user->email.')'"
+        :title="'Edit Order #'.$order->id.' - '.$order->user->name"
         :discardRoute="route('orders.index')"
     >
         <!-- Group 1: Total, Proof & Status -->
         <div class="row mb-3 p-3 bg-light rounded border">
-			<div class="col-md-4">
-                <label for="proof" class="form-label">Proof</label>
-                <div class="zoom-container">
-                    <img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid" style="width: 100px; height: 100px;">
-                </div>
-            </div>
+			@if($order->payment_option === 'wallet')
+				<div class="col-md-4">
+					<label class="form-label">Wallet ID</label>
+					<p class="fs-4 fw-bold mb-0">{{ $order->user->wallet->id }}</p>
+				</div>
+			@else
+				<div class="col-md-4">
+					<label for="proof" class="form-label">Proof</label>
+					<div class="zoom-container">
+						<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid" style="width: 100px; height: 100px;">
+					</div>
+				</div>
+			@endif
 			
             <div class="col-md-4">
                 <label class="form-label">Total</label>
@@ -60,6 +67,25 @@
                 <p class="form-control-plaintext">{{ $order->payment_option }}</p>
             </div>
         </div>
+        <!-- New Group: User Contact with Copy to Clipboard for both Phone & Email -->
+        <div class="row mb-3 p-3 bg-light rounded border">
+            <div class="col-12">
+                <label class="form-label">User Contact</label>
+                <p class="form-control-plaintext">
+                    Phone: <span id="phoneText">{{ $order->user->contact }}</span>
+                    <button type="button" id="copyPhoneBtn" class="btn btn-link p-0">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                    <span id="copyPhoneMessage" style="display:none;">Copied!</span>
+                    <br>
+                    Email: <span id="emailText">{{ $order->user->email }}</span>
+                    <button type="button" id="copyEmailBtn" class="btn btn-link p-0">
+                        <i class="bi bi-clipboard"></i>
+                    </button>
+                    <span id="copyEmailMessage" style="display:none;">Copied!</span>
+                </p>
+            </div>
+        </div>
         <!-- Group 4: Order Notes -->
         <div class="row mb-3 p-3 bg-light rounded border">
             <div class="col-12">
@@ -69,4 +95,24 @@
         </div>
     </x-form>
 </div>
+
+<script>
+document.getElementById("copyPhoneBtn").addEventListener("click", function(){
+    var phoneText = document.getElementById("phoneText").innerText;
+    navigator.clipboard.writeText(phoneText).then(function() {
+        var copyMsg = document.getElementById("copyPhoneMessage");
+        copyMsg.style.display = "inline";
+        setTimeout(function(){ copyMsg.style.display = "none"; }, 2000);
+    });
+});
+
+document.getElementById("copyEmailBtn").addEventListener("click", function(){
+    var emailText = document.getElementById("emailText").innerText;
+    navigator.clipboard.writeText(emailText).then(function() {
+        var copyMsg = document.getElementById("copyEmailMessage");
+        copyMsg.style.display = "inline";
+        setTimeout(function(){ copyMsg.style.display = "none"; }, 2000);
+    });
+});
+</script>
 @endsection

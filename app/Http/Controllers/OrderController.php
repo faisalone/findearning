@@ -8,9 +8,17 @@ use App\Models\User;
 use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Wallet; // Added Wallet model
+use App\Http\Middleware\AdminMiddleware; // Added AdminMiddleware
 
 class OrderController extends Controller
 {
+    // Cleaner constructor using only the admin middleware (which checks auth)
+    public function __construct()
+    {
+        $this->middleware(AdminMiddleware::class)->except(['createOrder', 'thankYou']);
+    }
+
     public function createOrder(Request $request)
     {
         // Validate the request
@@ -20,9 +28,43 @@ class OrderController extends Controller
             'contact' => 'required|string|max:255',
             'delivery_method' => 'required|string',
             'payment_option' => 'required|string',
-            'proof' => 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
+            'proof' => $request->input('payment_option') === 'Wallet'
+                        ? 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048'
+                        : 'required|file|mimes:jpeg,png,jpg,gif|max:2048',
             'order_notes' => 'nullable|string',
         ]);
+
+        // Collect product details from the cart and calculate the total
+        $cart = session('cart', []);
+        $productDetails = [];
+        $total = 0;
+
+        foreach ($cart as $productId => $item) {
+            $product = Product::find($productId);
+            if ($product) {
+                $quantity = is_array($item) && isset($item['quantity']) ? $item['quantity'] : $item;
+                $productDetails[] = ['id' => $productId, 'quantity' => $quantity];
+                $total += $product->price * $quantity;
+            }
+        }
+
+        // Check Wallet balance if payment_option is Wallet
+        if ($request->payment_option === 'Wallet') {
+            $user = auth()->check() ? auth()->user() : User::where('email', $request->email)->first();
+            if ($user) {
+                $wallet = Wallet::where('user_id', $user->id)->first();
+                if (!$wallet || $wallet->balance === null) {
+                    return redirect()->back()
+                        ->withErrors(['payment_option' => 'eWallet not found or balance is empty. Please recharge your eWallet.'])
+                        ->withInput();
+                }
+                if ($total > $wallet->balance) {
+                    return redirect()->back()
+                        ->withErrors(['payment_option' => 'Insufficient eWallet balance. Please Recharge your eWallet.'])
+                        ->withInput();
+                }
+            }
+        }
 
         // Check if the user is authenticated
         if (auth()->check()) {
@@ -30,7 +72,6 @@ class OrderController extends Controller
         } else {
             // Check if the user exists by email or contact
             $user = User::where('email', $request->email)
-                        ->orWhere('contact', $request->contact)
                         ->first();
 
             if ($user) {
@@ -54,18 +95,10 @@ class OrderController extends Controller
             $proofFilename = basename($proofFilename); // Store only the filename
         }
 
-        // Collect product details from the cart and calculate the total
-        $cart = session('cart', []);
-        $productDetails = [];
-        $total = 0;
-
-        foreach ($cart as $productId => $item) {
-            $product = Product::find($productId);
-            if ($product) {
-                $quantity = is_array($item) && isset($item['quantity']) ? $item['quantity'] : $item;
-                $productDetails[] = ['id' => $productId, 'quantity' => $quantity];
-                $total += $product->price * $quantity;
-            }
+        // Deduct wallet balance if payment_option is wallet
+        if ($request->payment_option === 'Wallet') {
+            $wallet->balance -= $total;
+            $wallet->save();
         }
 
         // Create the order
@@ -77,13 +110,13 @@ class OrderController extends Controller
             'proof' => $proofFilename, // Store only the filename
             'total' => $total, // Calculate total from session
             'order_notes' => $request->order_notes,
-            'status' => 'pending'
+            'status' => $request->payment_option === 'Wallet' ? 'processing' : 'pending'
         ]);
 
         // Destroy the cart session
         session()->forget('cart');
 
-        return response()->json(['success' => true, 'order' => $order], 201);
+		return redirect()->route('thankYou', ['order' => $order->id]);
     }
 
     public function index()

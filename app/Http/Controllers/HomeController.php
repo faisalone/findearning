@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Social;
+use App\Models\Slider;
 
 class HomeController extends Controller
 {
@@ -17,60 +19,32 @@ class HomeController extends Controller
     {
 		$categories = Category::select('id', 'title', 'slug', 'image')->take(10)->get();
 		$randomProducts = Product::inRandomOrder()->limit(8)->get();
-        return view('home.index', compact('categories', 'randomProducts'));
+        $banners = Slider::all()
+            ->map(function($slider) {
+                return [
+                    'title' => $slider->title,
+                    'image' => $slider->image_path,
+                    'link' => route('shop')
+                ];
+            });
+        
+        return view('home.index', compact('categories', 'randomProducts', 'banners'));
     }
     
     
     public function allCategory()
     {
-        return view('home.allCategory');
+        $categories = Category::select('id', 'title', 'slug', 'image')->paginate(10);
+        return view('home.allCategory', compact('categories'));
     }
     
     
-    public function category()
+	public function contact()
     {
-        return view('home/category');
+		$address = Social::where('name', 'Address')->firstOrFail();
+		$contact = Social::where('name', 'Telegram')->firstOrFail();
+		$storeHours = Social::where('name', 'Store Hours')->firstOrFail();
+        return view('home.contact', compact('address', 'contact', 'storeHours'));
     }
-    
-    
-    public function externalProducts()
-    {
-        return view('home/externalProducts');
-    }
-    
-    
-    public function outOfStockProducts()
-    {
-        return view('home/outOfStockProducts');
-    }
-    
-    
-    public function shopFiveColumn()
-    {
-        return view('home/shopFiveColumn');
-    }
-    
-    
-    public function simpleProducts()
-    {
-        return view('home/simpleProducts');
-    }
-    
-    
-    public function thankYou()
-    {
-        return view('home/thankYou');
-    }
-    
-    
-    public function wishlist()
-    {
-        return view('home/wishlist');
-    }
-    
-    
-    public function login()
-    {
-        return view('home.login');
-    }
+
 }

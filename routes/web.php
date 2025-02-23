@@ -4,25 +4,27 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\ShopController;
-use App\Http\Controllers\BlogController;
-use App\Http\Controllers\AttributeController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\WalletController;
+use App\Http\Controllers\PageController;
+use App\Http\Controllers\SliderController;
+use App\Http\Controllers\CustomerController;
+use App\Http\Controllers\PaymentMethodController;
+use App\Http\Controllers\TransactionController;
 
+// Route::auth(); // This line automatically registers Auth routes, no extra directive needed.
+Auth::routes(['verify' => true]);
 
 Route::controller(HomeController::class)->group(function () {
 	Route::get('/', 'index')->name('index');
 	Route::get('/all-category', 'allCategory')->name('allCategory');
-	Route::get('/category', 'category')->name('category');
-	Route::get('/external-products', 'externalProducts')->name('externalProducts');
-	Route::get('/out-of-stock-products', 'outOfStockProducts')->name('outOfStockProducts');
-	Route::get('/shop-five-column', 'shopFiveColumn')->name('shopFiveColumn');
-	Route::get('/simple-products', 'simpleProducts')->name('simpleProducts');
-	Route::get('/thank-you', 'thankYou')->name('thankYou');
-	Route::get('/wishlist', 'wishlist')->name('wishlist');
-	Route::get('/login', 'login')->name('login');
+	Route::get('/contact', 'contact')->name('contact');
+
 });
+
+Route::get('/pages/{page}', [PageController::class, 'show'])->name('pages.show');
 
 Route::prefix('pages')->group(function () {
 	Route::controller(PagesController::class)->group(function () {
@@ -37,20 +39,13 @@ Route::prefix('shop')->group(function () {
 	Route::controller(ShopController::class)->group(function () {
 		Route::get('/', 'shop')->name('shop');
 		Route::get('/cart', 'cart')->name('cart');
-		Route::get('/account', 'account')->name('account');
-		Route::get('/check-out', 'checkOut')->name('checkOut');
-		Route::get('/full-width-Shop', 'fullWidthShop')->name('fullWidthShop');
-		Route::get('/grouped-products', 'groupedProducts')->name('groupedProducts');
-		Route::get('/product-details2', 'productDetails2')->name('productDetails2');
-		Route::get('/sidebar-left', 'sidebarLeft')->name('sidebarLeft');
-		Route::get('/sidebar-right', 'sidebarRight')->name('sidebarRight');
-		Route::get('/variable-products', 'variableProducts')->name('variableProducts');
-		Route::get('/grouped-products', 'groupedProducts')->name('groupedProducts');
-		Route::get('/{category}', 'category')->name('shop.category');
-		Route::get('/{category}/{product}', 'productDetails')->name('productDetails');
 		Route::post('/add-to-cart', 'addToCart')->name('shop.addToCart');
 		Route::post('/remove-from-cart', 'removeFromCart')->name('shop.removeFromCart');
 		Route::post('/update-cart', 'updateCart')->name('shop.updateCart');
+		Route::get('/check-out', 'checkOut')->name('checkOut');
+		Route::get('/{order}/thank-you', 'thankYou')->name('thankYou');
+		Route::get('/{category}', 'category')->name('shop.category');
+		Route::get('/{category}/{product}', 'productDetails')->name('productDetails');
 	});
 });
 
@@ -61,48 +56,32 @@ Route::prefix('order')->group(function () {
 	});
 });
 
-// blog
-Route::prefix('blog')->group(function () {
-	Route::controller(BlogController::class)->group(function () {
-		Route::get('/contact', 'contact')->name('contact');
-		Route::get('/news', 'news')->name('news');
-		Route::get('/newsDetails', 'newsDetails')->name('newsDetails');
-		Route::get('/newsGrid', 'newsGrid')->name('newsGrid');
-	});
-});
 
 Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 	Route::get('/', function () {
 		return view('dashboard.index');
 	})->name('dashboard');
-
+	Route::get('/wallet', [WalletController::class, 'index'])->name('wallet');
+	Route::post('/wallet/recharge', [WalletController::class, 'recharge'])->name('recharge');
+	Route::get('/transactions/{id}/approve', [TransactionController::class, 'approve'])->name('transactions.approve');
+	Route::get('/transactions/{id}/reject', [TransactionController::class, 'reject'])->name('transactions.reject');
+	
 	Route::resource('categories', CategoryController::class);
 	Route::prefix('categories')->controller(CategoryController::class)->group(function () {
 		Route::post('/{category}/status', 'updateStatus')->name('categories.updateStatus');
 	});
-	Route::resource('/attributes', AttributeController::class);
 
-	Route::prefix('attributes')->controller(AttributeController::class)->group(function () {
-		Route::get('/{parentId}/children', 'children')->name('attributes.children');
-	});
 	Route::resource('orders', OrderController::class);
-	// Route::resource('orders', OrderController::class);
-	// Route::resource('users', UserController::class);
-	// Route::resource('sites', SiteController::class);
-	// Route::resource('pages', PageController::class);
+	Route::resource('sliders', SliderController::class);
+	Route::resource('payment-methods', PaymentMethodController::class);
+	Route::resource('pages', PageController::class)->except(['show']);
 
 	Route::resource('products', ProductController::class);
 	Route::prefix('products')->controller(ProductController::class)->group(function () {
 		Route::post('/{product}/status', 'updateStatus')->name('products.updateStatus');
-		Route::get('/{product}/add-variant', 'addVariant')->name('products.addVariant');
-		Route::post('/{product}/store-variant', 'storeVariant')->name('products.storeVariant');
-		Route::post('/variants/{variant}', 'updateVariant')->name('products.updateVariant');
-		Route::delete('/variants/{variant}', 'destroyVariant')->name('products.destroyVariant');
 	});
+	Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
+	Route::get('/my-profile', [CustomerController::class, 'profile'])->name('myProfile');
+	Route::post('/my-profile/update', [CustomerController::class, 'updateProfile'])->name('profile.update');
+	Route::get('/my-orders', [CustomerController::class, 'orders'])->name('myOrders'); 
 });
-
-// Route::post('/cart/remove', [App\Http\Controllers\CartController::class, 'remove'])->name('cart.remove');
-// Route::post('/cart/update', [App\Http\Controllers\CartController::class, 'update'])->name('cart.update');
-
-// Route::auth(); // This line automatically registers Auth routes, no extra directive needed.
-Auth::routes(['verify' => true]);

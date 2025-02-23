@@ -7,11 +7,8 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>Order ID</th>
                     <th>User</th>
-                    <th>Products</th>
-                    <th>Total</th>
-                    <th>Status</th>
+                    <th>Summary</th>
                     <th>Proof</th>
                     <th>Actions</th>
                 </tr>
@@ -19,28 +16,39 @@
             <tbody>
                 @foreach($orders as $order)
                     <tr>
-                        <td>{{ $order->id }}</td>
-                        <td>{{ $order->user->name }} ({{ $order->user->email }})</td>
+						<td>
+							{{ $order->user->name }}<br>
+							Email: {{ $order->user->email }}<br>
+							Contact: {{ $order->user->contact }}
+						</td>
                         <td>
+							<strong>Order ID: {{ $order->id }}</strong>
+							<br>
+							Products:
                             <ul>
                                 @foreach($order->products() as $product)
                                     <li>{{ $product->title }} (Quantity: {{ $product->quantity }})</li>
                                 @endforeach
                             </ul>
-                        </td>
-                        <td>${{ number_format($order->total, 2) }}</td>
-                        <td>{{ $order->status }}</td>
-                        <td>
-                            <div class="zoom-container">
-                                <img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid" style="width: 100px; height: 100px;">
-                            </div>
+                            Status: <strong>{{ $order->status }}</strong>
+                            <br>
+                            Total: <strong>{{ number_format($order->total, 2) }}</strong>
                         </td>
                         <td>
-                            <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm">Edit</a>
+							@if($order->payment_option == 'wallet')
+								Wallet ID: {{ $order->user->wallet->id }}<br>
+							@else
+								<div class="zoom-container">
+									<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid" style="width: 100px; height: 100px;">
+								</div>
+							@endif
+						</td>
+                        <td>
+                            <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm mb-1 w-100">Edit</a>
                             <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                <button type="submit" class="btn btn-danger btn-sm w-100">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -50,20 +58,3 @@
     </div>
 </div>
 @endsection
-
-@push('styles')
-<style>
-    .zoom-container {
-        position: relative;
-        display: inline-block;
-    }
-
-    .zoom-container img {
-        transition: transform 0.2s;
-    }
-
-    .zoom-container:hover img {
-        transform: scale(2);
-    }
-</style>
-@endpush

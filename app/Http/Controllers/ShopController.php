@@ -5,12 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Category;
 use App\Models\Product;
+use App\Models\Order;
+use App\Models\PaymentMethod;
 
 class ShopController extends Controller
 {
 	public function shop()
     {
-        return view('shop.index');
+		$products = Product::select('id', 'category_id', 'title', 'price', 'slug', 'status', 'updated_at')
+		->with([
+			'category:id,title,slug',
+			'images:id,product_id,image',
+		])
+		->orderBy('updated_at', 'desc')
+		->paginate(5);
+
+		// return response()->json($products);
+		
+		return view('shop.fullWidthShop', compact('products'));
     }
 
 	public function category($slug)
@@ -78,43 +90,21 @@ class ShopController extends Controller
                 $subtotal += $product->price * $quantity;
             }
         }
-        return view('shop.checkOut', compact('cartItems', 'subtotal'));
+        // Fetch active payment methods from DB
+        $paymentMethods = PaymentMethod::where('status', true)->get();
+        return view('shop.checkOut', compact('cartItems', 'subtotal', 'paymentMethods'));
+    }
+
+	public function thankYou(Order $order)
+    {
+        return view('home.thankYou', compact('order'));
     }
     
     public function fullWidthShop()
     {
         return view('shop.fullWidthShop');
     }
-    
 
-    
-    public function productDetails2()
-    {
-        return view('shop.productDetails2');
-    }
-    
-
-
-
-    
-    public function sidebarLeft()
-    {
-        return view('shop.sidebarLeft');
-    }
-    
-    public function sidebarRight()
-    {
-        return view('shop.sidebarRight');
-    }
-    
-    public function variableProducts()
-    {
-        return view('shop.variableProducts');
-    }
-    public function groupedProducts()
-    {
-        return view('shop.groupedProducts');
-    }
 
     public function addToCart(Request $request)
     {

@@ -6,9 +6,14 @@ use Illuminate\Http\Request;
 use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Http\Middleware\AdminMiddleware;
 
 class CategoryController extends Controller
 {
+	public function __construct()
+    {
+        $this->middleware(AdminMiddleware::class);
+    }
     /**
      * Display a listing of the resource.
      */

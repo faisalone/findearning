@@ -11,157 +11,176 @@
 
     <div class="rts-checkout-section">
         <div class="container">
-			<form class="checkout-form" method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
-                @csrf
-                <div class="row g-3 justify-content-between">
-                    <label class="delivery-heading mb-3"><h3>Delivery Information:</h3></label>
+            @if(count($cartItems) > 0)
+                <form class="checkout-form" method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
+                    @csrf
+                    <div class="row g-3 justify-content-between">
+                        <label class="delivery-heading mb-3"><h3>Delivery Information:</h3></label>
 
-                    <div class="col-xl-8 col-lg-7">
-                        <!-- Shipping Options -->
-                        <div class="shipping-options checkout-options mb-3">
-                            <span class="shipping">Delivery Method</span>
-                            <div class="btn-group d-flex justify-content-center gap-3" role="group">
-                                <input type="radio" class="btn-check" name="delivery_method" id="emailDelivery" value="email" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="emailDelivery">
-                                    <img src="{{ asset('assets/images/icons/mail.png') }}" alt="Email" class="delivery-icon"> Email
-                                </label>
-                                <input type="radio" class="btn-check" name="delivery_method" id="whatsappDelivery" value="whatsapp" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="whatsappDelivery">
-                                    <img src="{{ asset('assets/images/icons/whatsapp.png') }}" alt="WhatsApp" class="delivery-icon"> WhatsApp
-                                </label>
-                                <input type="radio" class="btn-check" name="delivery_method" id="telegramDelivery" value="telegram" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="telegramDelivery">
-                                    <img src="{{ asset('assets/images/icons/telegram.png') }}" alt="Telegram" class="delivery-icon"> Telegram
-                                </label>
+                        <div class="col-xl-8 col-lg-7">
+                            <!-- Shipping Options -->
+                            <div class="shipping-options checkout-options mb-3">
+                                <span class="shipping">Delivery Method</span>
+                                <div class="btn-group d-flex justify-content-center gap-3" role="group">
+                                    <input type="radio" class="btn-check" name="delivery_method" id="emailDelivery" value="email" required autocomplete="off" {{ old('delivery_method') == 'email' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-secondary rounded-pill" for="emailDelivery">
+                                        <img src="{{ asset('assets/images/icons/mail.png') }}" alt="Email" class="delivery-icon"> Email
+                                    </label>
+                                    <input type="radio" class="btn-check" name="delivery_method" id="whatsappDelivery" value="whatsapp" required autocomplete="off" {{ old('delivery_method') == 'whatsapp' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-secondary rounded-pill" for="whatsappDelivery">
+                                        <img src="{{ asset('assets/images/icons/whatsapp.png') }}" alt="WhatsApp" class="delivery-icon"> WhatsApp
+                                    </label>
+                                    <input type="radio" class="btn-check" name="delivery_method" id="telegramDelivery" value="telegram" required autocomplete="off" {{ old('delivery_method') == 'telegram' ? 'checked' : '' }}>
+                                    <label class="btn btn-outline-secondary rounded-pill" for="telegramDelivery">
+                                        <img src="{{ asset('assets/images/icons/telegram.png') }}" alt="Telegram" class="delivery-icon"> Telegram
+                                    </label>
+                                </div>
                             </div>
-                        </div>
-                        <!-- Delivery Information Fields -->
-                        <div class="row">
-                            <div class="col-12">
-                                <div class="input-div">
-                                    <input type="text" name="name" placeholder="Name**" required>
+                            <!-- Delivery Information Fields -->
+                            <div class="row">
+                                <div class="col-12">
+                                    <div class="input-div">
+                                        <input type="text" name="name" placeholder="Name**" required value="{{ old('name') }}">
+                                        @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-xl-6 col-md-6">
+                                    <div class="input-div">
+                                        <input type="text" name="contact" placeholder="Telegram/WhatsApp**" required value="{{ old('contact') }}">
+                                        @error('contact')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                                <div class="col-xl-6 col-md-6">
+                                    <div class="input-div">
+                                        <input type="email" name="email" placeholder="Email Address**" required value="{{ old('email') }}">
+                                        @error('email')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <textarea id="orderNotes" name="order_notes" cols="80" rows="4" placeholder="Order notes (optional)">{{ old('order_notes') }}</textarea>
+                                </div>
+                            </div>
+                            <!-- Payment Options -->
+                            <div class="payment-options checkout-options mb-3">
+                                <label class="mb-2">Select a payment option:</label>
+                                <div class="btn-group d-flex flex-wrap justify-content-center gap-3" role="group">
+                                    @foreach($paymentMethods as $method)
+                                        <input type="radio" class="btn-check" name="payment_option" id="payment_{{ $method->id }}" value="{{ $method->name }}" required autocomplete="off" {{ old('payment_option') == $method->name ? 'checked' : '' }}>
+                                        <label class="btn btn-outline-secondary rounded-pill" for="payment_{{ $method->id }}" onclick="showPaymentInfo('{{ $method->name }}')">
+                                            <img src="{{ $method->image_path }}" alt="{{ $method->name }}" class="payment-icon"> {{ $method->name }}
+                                        </label>
+                                    @endforeach
+                                </div>
+                                @error('payment_option')
+                                    <span class="text-danger">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            
+                            <!-- Payment Details and Upload -->
+                            <div id="payment-info-container" class="d-none">
+                                <div id="payment-details">
+                                    <div class="p-3 mb-3">
+                                        <h5>Step 1: Payment</h5>
+                                        <div class="d-flex flex-wrap align-items-center">
+                                            <label class="form-label me-2 mb-0">Payment Details:</label>
+                                            <span class="badge bg-info text-dark text-break" style="white-space: normal;">
+                                                Instructions: Ensure to send money/cash out correctly for Bkash, Nagad, or Rocket!
+                                            </span>
+                                        </div>
+                                        <div class="input-group">
+                                            <button class="btn btn-outline-secondary"
+                                                    id="copyButton"
+                                                    type="button"
+                                                    onclick="copyToClipboard(paymentDetails[selectedPaymentMethod], selectedPaymentMethod)">
+                                                <i class="fa fa-copy"></i> Copy
+                                            </button>
+                                            <input type="text" class="form-control" aria-label="Payment Details" id="paymentDetailsInput" readonly>
+                                        </div>
+                                        <div class="mt-2">
+                                            <strong>Payable Total: <span id="payableTotalDropdown">${{ number_format($subtotal, 2) }}</span></strong>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="upload-proof">
+                                    <div class="card p-3">
+                                        <h5>Step 2: Upload Proof of Payment</h5>
+                                        <label for="paymentScreenshot" class="form-label">Upload Payment Screenshot:</label>
+                                        <input class="form-control" type="file" id="paymentScreenshot" name="proof" accept="image/*">
+                                        @error('proof')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                        <img id="screenshotPreview" alt="Payment Screenshot" class="img-thumbnail mt-2 img-fluid d-none">
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-xl-6 col-md-6">
-                                <div class="input-div">
-                                    <input type="text" name="contact" placeholder="Telegram/WhatsApp**" required>
-                                </div>
+
+                        <div class="col-xl-4 col-lg-5">
+                            <div class="action-item">
+                                @if(count($cartItems) > 0)
+                                    <div class="action-top d-flex align-items-center justify-content-between">
+                                        <span class="action-title">Product</span>
+                                        <a href="{{ route('cart') }}">Edit Cart</a>
+                                    </div>
+                                    @foreach($cartItems as $item)
+                                        @php
+                                            $lineTotal = $item['product']->price * $item['quantity'];
+                                        @endphp
+                                        <div class="category-item">
+                                            <div class="category-item-inner d-flex align-items-center justify-content-between">
+                                                <div class="category-title-area">
+                                                    <span class="category-title">{{ $item['product']->title }} × {{ $item['quantity'] }}</span>
+                                                </div>
+                                                <div class="price">${{ number_format($lineTotal, 2) }}</div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                    <div class="action-middle d-flex align-items-center justify-content-between">
+                                        <span class="subtotal">Subtotal</span>
+                                        <span class="total-price">${{ number_format($subtotal, 2) }}</span>
+                                    </div>
+                                    <div class="action-bottom d-flex align-items-center justify-content-between">
+                                        <span class="total">Total</span>
+                                        <span class="total-price">${{ number_format($subtotal, 2) }}</span>
+                                    </div>
+                                @else
+                                    <div class="empty-checkout text-center">
+                                        <p>Your cart is empty.</p>
+                                        <a href="{{ route('shop') }}" class="continue-shopping">
+                                            <i class="fal fa-long-arrow-left"></i> Shopping more
+                                        </a>
+                                    </div>
+                                @endif
                             </div>
-                            <div class="col-xl-6 col-md-6">
-                                <div class="input-div">
-                                    <input type="email" name="email" placeholder="Email Address**" required>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row mb-3">
-                            <div class="col-12">
-                                <textarea id="orderNotes" name="order_notes" cols="80" rows="4" placeholder="Order notes (optional)"></textarea>
-                            </div>
-                        </div>
-                        <!-- Payment Options -->
-                        <div class="payment-options checkout-options mb-3">
-                            <label class="mb-2">Select a payment option:</label>
-                            <div class="btn-group d-flex flex-wrap justify-content-center gap-3" role="group">
-                                <input type="radio" class="btn-check" name="payment_option" id="payeer" value="payeer" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="payeer" onclick="showPaymentInfo('payeer')">
-                                    <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Payeer" class="payment-icon"> Payeer
-                                </label>
-                                <input type="radio" class="btn-check" name="payment_option" id="nagad" value="nagad" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="nagad" onclick="showPaymentInfo('nagad')">
-                                    <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Nagad" class="payment-icon"> Nagad
-                                </label>
-                                <input type="radio" class="btn-check" name="payment_option" id="rocket" value="rocket" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="rocket" onclick="showPaymentInfo('rocket')">
-                                    <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Rocket" class="payment-icon"> Rocket
-                                </label>
-                                <input type="radio" class="btn-check" name="payment_option" id="litecoin" value="litecoin" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="litecoin" onclick="showPaymentInfo('litecoin')">
-                                    <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Litecoin" class="payment-icon"> Litecoin (litecoin network)
-                                </label>
-                                <input type="radio" class="btn-check" name="payment_option" id="bitcoin" value="bitcoin" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="bitcoin" onclick="showPaymentInfo('bitcoin')">
-                                    <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Bitcoin" class="payment-icon"> Bitcoin
-                                </label>
-                                <input type="radio" class="btn-check" name="payment_option" id="binance" value="binance" required autocomplete="off">
-                                <label class="btn btn-outline-secondary rounded-pill" for="binance" onclick="showPaymentInfo('binance')">
-                                    <img src="{{ asset('assets/images/icons/payment.png') }}" alt="Binance" class="payment-icon"> Binance
+                            <!-- Agree to terms and Place Order Button Inline -->
+                            <div class="agree-terms mb-3">
+                                <label for="agreeTerms" class="d-flex align-items-center">
+                                    <input class="agree-terms-input mt-4" type="checkbox" value="1" id="agreeTerms" name="agreeTerms" required style="width: auto; margin-right: 5px;">
+                                    <span style="vertical-align: middle;">I agree to the terms and conditions</span>
                                 </label>
                             </div>
-                        </div>
-						
-                        <!-- Payment Details and Upload -->
-                        <div id="payment-info-container" class="d-none">
-                            <div class="p-3 mb-3">
-                                <h5>Step 1: Payment</h5>
-                                <div class="d-flex flex-wrap align-items-center">
-                                    <label class="form-label me-2 mb-0">Payment Details:</label>
-                                    <span class="badge bg-info text-dark text-break" style="white-space: normal;">
-                                        Instructions: Ensure to send money/cash out correctly for Bkash, Nagad, or Rocket!
-                                    </span>
-                                </div>
-                                <div class="input-group">
-                                    <button class="btn btn-outline-secondary"
-                                            id="copyButton"
-                                            type="button"
-                                            onclick="copyToClipboard(paymentDetails[selectedPaymentMethod], selectedPaymentMethod)">
-                                        <i class="fa fa-copy"></i> Copy
-                                    </button>
-                                    <input type="text" class="form-control" aria-label="Payment Details" id="paymentDetailsInput" readonly>
-                                </div>
-                                <div class="mt-2">
-                                    <strong>Total Amount: ${{ number_format($subtotal, 2) }}</strong>
-                                </div>
-                            </div>
-                            <div class="card p-3">
-                                <h5>Step 2: Upload Proof of Payment</h5>
-                                <label for="paymentScreenshot" class="form-label">Upload Payment Screenshot:</label>
-                                <input class="form-control" type="file" id="paymentScreenshot" name="proof" accept="image/*" required>
-                                <img id="screenshotPreview" alt="Payment Screenshot" class="img-thumbnail mt-2 img-fluid d-none">
-                            </div>
+                            <button type="submit" class="place-order-btn">Place Order</button>
                         </div>
                     </div>
-
-					<div class="col-xl-4 col-lg-5">
-						<div class="action-item">
-							<div class="action-top d-flex align-items-center justify-content-between">
-								<span class="action-title">Product</span>
-								<a href="{{ route('cart') }}">Edit Cart</a>
-							</div>
-							@foreach($cartItems as $item)
-								@php
-									$lineTotal = $item['product']->price * $item['quantity'];
-								@endphp
-								<div class="category-item">
-									<div class="category-item-inner d-flex align-items-center justify-content-between">
-										<div class="category-title-area">
-											<span class="category-title">{{ $item['product']->title }} × {{ $item['quantity'] }}</span>
-										</div>
-										<div class="price">${{ number_format($lineTotal, 2) }}</div>
-									</div>
-								</div>
-							@endforeach
-							<div class="action-middle d-flex align-items-center justify-content-between">
-								<span class="subtotal">Subtotal</span>
-								<span class="total-price">${{ number_format($subtotal, 2) }}</span>
-							</div>
-							<div class="action-bottom d-flex align-items-center justify-content-between">
-								<span class="total">Total</span>
-								<span class="total-price">${{ number_format($subtotal, 2) }}</span>
-							</div>
-						</div>
-						<!-- Agree to terms and Place Order Button Inline -->
-						<div class="agree-terms mb-3">
-							<label for="agreeTerms" class="d-flex align-items-center">
-								<input class="agree-terms-input mt-4" type="checkbox" value="1" id="agreeTerms" name="agreeTerms" required style="width: auto; margin-right: 5px;">
-								<span style="vertical-align: middle;">I agree to the terms and conditions</span>
-							</label>
-						</div>
-						<button type="submit" class="place-order-btn">Place Order</button>
-					</div>
+                </form>
+            @else
+                <div class="empty-checkout text-center">
+                    <p>Your cart is empty.</p>
+                    <a href="{{ route('shop') }}" class="continue-shopping">
+                        <i class="fal fa-long-arrow-left"></i> Shopping more
+                    </a>
                 </div>
-            </form>
+            @endif
         </div>
     </div>
 
@@ -170,21 +189,62 @@
 @push('scripts')
 <script>
     let selectedPaymentMethod = '';
-    const paymentDetails = {
-        'payeer': 'P12345678',
-        'nagad': '01XXXXXXXXX',
-        'rocket': '01XXXXXXXXX',
-        'litecoin': 'LKJHGFDSAQWERTYUIOP',
-        'bitcoin': '1234567890ABCDEFGHIJKL',
-        'binance': 'BNBMNBVCXZASDFGHJKLQWERTYUIOP',
-    };
+    const paymentDetails = {!! json_encode($paymentMethods->pluck('address', 'name')) !!};
+    const paymentRates = {!! json_encode($paymentMethods->pluck('rate', 'name')) !!};
+    const subtotal = {{ $subtotal }};
 
     function showPaymentInfo(paymentMethod) {
         selectedPaymentMethod = paymentMethod;
         const container = document.getElementById('payment-info-container');
+        const paymentScreenshot = document.getElementById('paymentScreenshot');
+        const paymentDetailsInput = document.getElementById('paymentDetailsInput');
+        
         container.classList.remove('d-none');
-        document.getElementById('paymentDetailsInput').value = paymentDetails[paymentMethod];
+        
+        let multiplier = parseFloat(paymentRates[paymentMethod]) || 1;
+        let payableTotal = subtotal * multiplier;
+        document.getElementById('payableTotalDropdown').innerHTML = '$' + payableTotal.toFixed(2);
+        
+        // Set payment details
+        if (paymentDetails[paymentMethod]) {
+            paymentDetailsInput.value = paymentDetails[paymentMethod];
+        }
+        
+        if (paymentMethod.toLowerCase() === 'wallet') {
+            document.getElementById('payment-details').classList.add('d-none');
+            document.getElementById('upload-proof').classList.add('d-none');
+            paymentScreenshot.removeAttribute('required');
+        } else {
+            document.getElementById('payment-details').classList.remove('d-none');
+            document.getElementById('upload-proof').classList.remove('d-none');
+            paymentScreenshot.setAttribute('required', 'required');
+        }
     }
+
+    // Update form submission handler
+    document.addEventListener('DOMContentLoaded', function() {
+        const checkoutForm = document.querySelector('.checkout-form');
+        const paymentScreenshot = document.getElementById('paymentScreenshot');
+        
+        if (checkoutForm) {
+            checkoutForm.addEventListener('submit', function(e) {
+                const selectedPayment = document.querySelector('input[name="payment_option"]:checked');
+                // Validate proof only if selected option is not "Wallet"
+                if (selectedPayment && selectedPayment.value.toLowerCase() !== 'wallet' && (!paymentScreenshot.files || !paymentScreenshot.files[0])) {
+                    e.preventDefault();
+                    alert('Please upload payment proof');
+                    return false;
+                }
+                return true;
+            });
+        }
+
+        // Initialize payment method if there's a previously selected option
+        const selectedPayment = document.querySelector('input[name="payment_option"]:checked');
+        if (selectedPayment) {
+            showPaymentInfo(selectedPayment.value);
+        }
+    });
 
     document.addEventListener("DOMContentLoaded", function() {
         var screenshotElem = document.getElementById('paymentScreenshot');

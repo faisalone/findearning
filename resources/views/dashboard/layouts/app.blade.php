@@ -75,19 +75,6 @@
             </div>
         </div>
     </div>
-	<footer class="footer bg-light fixed-bottom p-2">
-		<div class="container-fluid">
-			<div class="row">
-				<div class="text-end">
-					<span class="text-muted">Made with <i class="bi bi-heart-fill text-danger"></i> by 
-						<a href="https://oyelab.com" target="_blank">
-							<img src="{{ asset('logo-dark.svg') }}" alt="Oyelab Logo" style="height: 20px;">
-						</a>
-					</span>
-				</div>
-			</div>
-		</div>
-	</footer>
     <!-- Bootstrap 5 JS -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>

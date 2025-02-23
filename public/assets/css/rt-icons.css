@@ -264,3 +264,8 @@
 .rt-my-custom-icon:before {
   content: '\e900'; /* Use a unique character code */
 }
+
+/* '' Wallet icon: adjust the Unicode if needed */
+.rt-wallet:before {
+  content: '\e90a';
+}

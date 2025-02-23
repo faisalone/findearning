@@ -1057,7 +1057,6 @@
 
   function closeSearch() {
     $searchWrap.fadeOut(200);
-    $navSearch.add($searchClose).removeClass("open");
   }
 
   $(document.body).on('click', function (e) {
@@ -1452,6 +1451,13 @@
     $(".anywere").removeClass("bgshow")
   });
 
+  $(window).on('resize', function() {
+    if ($(window).width() >= 768) { // adjust threshold if needed
+        $(".slide-bar").removeClass("show");
+        $(".anywere").removeClass("bgshow");
+        $(".hamburger, .hamburger-1").removeClass("active move");
+    }
+  });
 
 })(jQuery);
 

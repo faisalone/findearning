@@ -1,14 +1,12 @@
-<div class="col-xl-3 col-md-4 col-sm-6">
+<div class="col-xl-3 col-md-3 col-sm-6">
 	<div class="product-item product-item2 element-item3">
-		<a href="#" class="product-image">
+		<a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}" class="product-image">
 			<img src="{{ $product->imagePaths[0]['url'] }}" alt="{{ $product->title }}">
 		</a>
 		<div class="bottom-content">
-			<a href="#" class="product-name">{{ $product->title }}</a>
-			<div class="action-wrap">
-				<span class="product-price">{{ $product->price }}</span>
-				<a href="{{ route('cart') }}" class="addto-cart"><i class="fal fa-shopping-cart"></i> Add To
-					Cart</a>
+			<a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}" class="product-name">{{ $product->title }}</a>
+			<div class="product-price-area">
+				<span class="product-price">{{ $product->price }}$</span>
 			</div>
 		</div>
 	</div>

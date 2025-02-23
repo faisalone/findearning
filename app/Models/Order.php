@@ -31,15 +31,28 @@ class Order extends Model
     // Define the relationship with the Product model using the product_details JSON field
     public function products()
     {
-        $productDetails = json_decode($this->product_details, true);
-        $products = Product::whereIn('id', array_column($productDetails, 'id'))->get();
+        try {
+            $productDetails = json_decode($this->product_details, true);
+            
+            if (!is_array($productDetails)) {
+                return collect([]);
+            }
 
-        // Attach quantities to the products
-        foreach ($products as $product) {
-            $product->quantity = collect($productDetails)->firstWhere('id', $product->id)['quantity'];
+            $products = Product::whereIn('id', array_column($productDetails, 'id'))->get();
+
+            // Attach quantities to the products
+            foreach ($products as $product) {
+                $details = collect($productDetails)->firstWhere('id', $product->id);
+                if ($details) {
+                    $product->quantity = $details['quantity'];
+                }
+            }
+
+            return $products;
+        } catch (\Exception $e) {
+            \Log::error('Error decoding product details: ' . $e->getMessage());
+            return collect([]);
         }
-
-        return $products;
     }
 
     // Get the URL of the proof image

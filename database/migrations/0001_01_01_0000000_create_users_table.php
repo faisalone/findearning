@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('contact')->nullable(); // Add contact field
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('role')->default(0); // Add role field
             $table->rememberToken();
             $table->timestamps();
         });

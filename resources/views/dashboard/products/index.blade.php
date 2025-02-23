@@ -42,9 +42,6 @@
 
                         <td>
                             <div class="d-flex flex-column">
-                                <a href="{{ route('products.addVariant', $product) }}" class="btn btn-info btn-sm mb-1 w-100">
-                                    <i class="bi bi-plus-circle"></i>
-                                </a>
                                 <a href="{{ route('products.edit', $product) }}" class="btn btn-warning btn-sm mb-1 w-100">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>

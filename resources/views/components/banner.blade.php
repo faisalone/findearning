@@ -1,45 +1,46 @@
 @props(['banners' => null])
 @php
-	$banners = $banners ?: [
-		[
-			'title' => 'CALL OF <br> DUTY GAMES',
-			'background_class' => 'bg-image bg-image-3-1 bg-image-8-1',
-			'link' => route('shop')
-		],
-		[
-			'title' => 'BLADEPOINT MORUS <br> CUP SEASON 2',
-			'background_class' => 'bg-image bg-image-3-3 bg-image-8-2',
-			'link' => route('shop')
-		],
-		[
-			'title' => 'NEW GAMES <br> FOR RANDOM CLICK',
-			'background_class' => 'bg-image bg-image-3-4 bg-image-8-3',
-			'link' => route('shop')
-		],
-	];
+    $defaultBanners = [
+        [
+            'title' => 'CALL OF <br> DUTY GAMES',
+            'image' => asset('assets/images/banner/banner-1.webp'),
+            'link' => route('shop')
+        ],
+        [
+            'title' => 'BLADEPOINT MORUS <br> CUP SEASON 2',
+            'image' => asset('assets/images/banner/banner-1.webp'),
+            'link' => route('shop')
+        ],
+        [
+            'title' => 'NEW GAMES <br> FOR RANDOM CLICK',
+            'image' => asset('assets/images/banner/banner-1.webp'),
+            'link' => route('shop')
+        ],
+    ];
+    $banners = $banners ?: $defaultBanners;
 @endphp
 
 <div class="col-xl-10 col-md-8 col-sm-12 gutter-2">
-	<div class="swiper bannerSlide2">
-		<div class="swiper-wrapper">
-			@foreach($banners as $banner)
-			<div class="swiper-slide">
-				<div class="banner-single {{ $banner['background_class'] ?? 'bg-image' }}">
-					<div class="container">
-						<div class="single-inner">
-							<div class="content-box">
-								<h2 class="slider-title">{!! $banner['title'] !!}</h2>
-								<a href="{{ $banner['link'] ?? route('shop') }}" class="slider-btn2">View Collections</a>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-			@endforeach
-		</div>
-		<div class="slider-navigation">
-			<div class="swiper-button-prev slider-btn prev"><i class="rt rt-arrow-left-long"></i></div>
-			<div class="swiper-button-next slider-btn next"><i class="rt rt-arrow-right-long"></i></div>
-		</div>
-	</div>
+    <div class="swiper bannerSlide2">
+        <div class="swiper-wrapper">
+            @foreach($banners as $banner)
+            <div class="swiper-slide">
+                <div class="banner-single bg-image bg-image-3-1 bg-image-8-1" style="background-image: url('{{ $banner['image'] }}')">
+                    <div class="container">
+                        <div class="single-inner">
+                            <div class="content-box">
+                                <h2 class="slider-title">{!! $banner['title'] !!}</h2>
+                                <a href="{{ $banner['link'] ?? route('shop') }}" class="slider-btn2">View Collections</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+        </div>
+        <div class="slider-navigation">
+            <div class="swiper-button-prev slider-btn prev"><i class="rt rt-arrow-left-long"></i></div>
+            <div class="swiper-button-next slider-btn next"><i class="rt rt-arrow-right-long"></i></div>
+        </div>
+    </div>
 </div>
