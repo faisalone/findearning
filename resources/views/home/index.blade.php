@@ -38,8 +38,6 @@
 
 <x-product :products="$randomProducts" />
 
-<x-newslettter />
-
 <x-brand />
 
 @endsection

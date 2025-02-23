@@ -1,4 +1,3 @@
-{{-- filepath: /c:/Users/USER/Desktop/Oyelab/findearning/resources/views/dashboard/categories/create.blade.php --}}
 @extends('dashboard.layouts.app')
 
 @section('content')

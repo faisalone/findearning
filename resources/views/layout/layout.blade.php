@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" class="darkmode" data-theme="light">
-<x-head headTitle='{{ isset($headTitle) ? $headTitle : "" }}' css='{!! isset($css) ? $css : "" !!}'/>
+<x-head :headTitle="$title ?? ''" css='{!! isset($css) ? $css : "" !!}'/>
 <body>
     <!-- ..::Preloader Section Start Here::.. -->
     {{-- <x-preloader /> --}}

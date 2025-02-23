@@ -13,6 +13,7 @@ use App\Http\Controllers\SliderController;
 use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\SettingController;
 
 // Route::auth(); // This line automatically registers Auth routes, no extra directive needed.
 Auth::routes(['verify' => true]);
@@ -84,4 +85,9 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 	Route::get('/my-profile', [CustomerController::class, 'profile'])->name('myProfile');
 	Route::post('/my-profile/update', [CustomerController::class, 'updateProfile'])->name('profile.update');
 	Route::get('/my-orders', [CustomerController::class, 'orders'])->name('myOrders'); 
+});
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+    Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 });

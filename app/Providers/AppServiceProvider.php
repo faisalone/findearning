@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Schema; // added import
 use App\Models\Category;
 use App\Models\Page; // added import
 use Illuminate\Pagination\Paginator; // added import
+use App\Models\Setting;
+use Illuminate\Support\Facades\Config;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,6 +27,9 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
+		$settings = Setting::pluck('value', 'key')->toArray();
+   		Config::set('settings', $settings);
+
 		Paginator::useBootstrapFive(); // enable Bootstrap 5 pagination
 
 		if (Schema::hasTable('categories')) {
