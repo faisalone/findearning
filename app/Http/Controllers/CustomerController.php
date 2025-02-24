@@ -18,7 +18,9 @@ class CustomerController extends Controller
 	{
 		$customer = auth()->user();
 		$paymentMethods = PaymentMethod::all(); // Assuming a relationship 'paymentMethods' is defined in the User model
-		$transactions = $customer->wallet->transactions()->latest()->paginate(10); // Add this line
+		$transactions = $customer->wallet 
+            ? $customer->wallet->transactions()->latest()->paginate(10)
+            : collect(); // Add this line
 		return view('dashboard.customers.profile', compact('customer', 'paymentMethods', 'transactions'));
 	}
 
