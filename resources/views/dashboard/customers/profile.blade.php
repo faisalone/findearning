@@ -147,7 +147,7 @@
 		<div class="modal-content">
 			<form action="{{ route('recharge') }}" method="POST" enctype="multipart/form-data" id="rechargeForm">
 				@csrf
-				<input type="hidden" name="wallet_id" value="{{ $customer->wallet->id }}">
+				<input type="hidden" name="wallet_id" value="{{ optional($customer->wallet)->id }}">
 				<div class="modal-header">
 					<h5 class="modal-title" id="rechargeModalLabel">Recharge Wallet</h5>
 					<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
