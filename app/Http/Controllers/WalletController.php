@@ -46,8 +46,18 @@ class WalletController extends Controller
 				'payment_method_id' => 'required|exists:payment_methods,id',
 				'amount' => 'required|numeric|min:1',
 				'screenshot' => 'required|image|max:2048',
-				'wallet_id' => 'required|exists:wallets,id',
+				'wallet_id' => 'nullable|exists:wallets,id', // changed: allow nullable wallet_id
 			]);
+
+			// Check if wallet exists; if not, create one.
+			$wallet = isset($data['wallet_id']) ? Wallet::find($data['wallet_id']) : null;
+			if (!$wallet) {
+				$wallet = Wallet::create([
+					'user_id' => Auth::id(),
+					'balance' => 0,
+				]);
+			}
+			$data['wallet_id'] = $wallet->id;
 
 			// Handle file upload
 			if ($request->hasFile('screenshot')) {
