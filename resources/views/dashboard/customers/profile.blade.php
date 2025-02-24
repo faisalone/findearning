@@ -12,7 +12,13 @@
 						<div class="card-body d-flex justify-content-between align-items-center">
 							<div class="d-flex align-items-center">
 								<i class="bi bi-wallet2 text-primary"></i>
-								<strong class="ms-3">${{ number_format($customer->wallet->balance, 2) }}</strong>
+								<strong class="ms-3">
+                                    @if($customer->wallet)
+                                        ${{ number_format($customer->wallet->balance, 2) }}
+                                    @else
+                                        $0.00
+                                    @endif
+                                </strong>
 							</div>
 							<!-- Changed recharge button to trigger modal -->
 							<button type="button" class="btn btn-outline-primary btn-sm" data-bs-toggle="modal" data-bs-target="#rechargeModal">
