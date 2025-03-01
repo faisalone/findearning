@@ -27,10 +27,12 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
-		$settings = Setting::pluck('value', 'key')->toArray();
-   		Config::set('settings', $settings);
-
 		Paginator::useBootstrapFive(); // enable Bootstrap 5 pagination
+
+		if (Schema::hasTable('settings')) {
+			$settings = Setting::pluck('value', 'key')->toArray();
+   			Config::set('settings', $settings);
+		}
 
 		if (Schema::hasTable('categories')) {
 			$categories = Category::select('id', 'title')->take(10)->get();
