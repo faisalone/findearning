@@ -1849,6 +1849,27 @@ i {
     flex-direction: column;
   }
 }
+.telegram-float {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    margin: 1rem;
+    max-width: 300px;
+}
+
+.telegram-button {
+    background-color: #0088cc;
+    border-radius: 40px;
+    width: auto;
+    padding: 10px 20px;
+    display: flex;
+    align-items: center;
+}
+
+.telegram-icon {
+    font-size: 30px;
+    margin-right: 0.5rem;
+}
 .scroll-top-btn {
   display: inline-block;
   background: #1D72FF;
@@ -7556,7 +7577,7 @@ tr:first-child {
   }
 }
 .banner.banner-1 .catagory-sidebar {
-  min-height: 575px;
+  min-height: 375px;
   border-radius: 10px;
 }
 @media (max-width: 991px) {
@@ -7594,7 +7615,7 @@ tr:first-child {
   border-radius: 0 0 10px 10px;
 }
 .banner.banner-1 .catagory-sidebar .widget-bg nav ul li {
-  margin-bottom: 27px;
+  margin-bottom: 15px;
   position: relative;
   transition: all 0.6s;
 }
@@ -9231,7 +9252,7 @@ tr:first-child {
   background-image: url("../images/banner/shadow-fight.webp");
 }
 .banner.banner-8 .banner-inner .banner-single .single-inner .content-box .slider-title {
-  color: #fff;
+color: var(--theme-color);
 }
 .banner.banner-8 .banner-inner .banner-single .single-inner .content-box .slider-btn2 {
   color: #fff;
@@ -9289,7 +9310,7 @@ tr:first-child {
   background-image: url("../images/banner/bg-pattern-1.jpg");
   background-position: center center;
   background-size: cover;
-  height: 575px;
+  height: 375px;
   background-repeat: no-repeat;
   border-radius: 10px;
 }
@@ -9311,7 +9332,7 @@ tr:first-child {
   background-image: url("../images/banner/bg-pattern-2.jpg");
   background-position: center center;
   background-size: cover;
-  height: 575px;
+  height: 375px;
   background-repeat: no-repeat;
   border-radius: 10px;
 }
@@ -13118,7 +13139,7 @@ tr:first-child {
 
 .rts-featured-product-section1 {
   padding: 65px 0;
-  padding-top: 100px !important;
+  /* padding-top: 100px !important; */
 }
 .rts-featured-product-section1.related-product {
   padding-bottom: 125px;

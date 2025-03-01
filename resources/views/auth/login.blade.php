@@ -57,7 +57,7 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
                                     </div>
                                     <!-- Change text-center to text-left for left alignment -->
                                     <div class="form text-left">
-                                        <a href="{{ route('register') }}" class="form-label">Need account?</a>
+                                        <a href="{{ route('register') }}" class="form-label">Create a new account?</a>
                                     </div>
                                 </form>
                             </div>

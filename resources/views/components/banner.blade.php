@@ -26,14 +26,6 @@
             @foreach($banners as $banner)
             <div class="swiper-slide">
                 <div class="banner-single bg-image bg-image-3-1 bg-image-8-1" style="background-image: url('{{ $banner['image'] }}')">
-                    <div class="container">
-                        <div class="single-inner">
-                            <div class="content-box">
-                                <h2 class="slider-title">{!! $banner['title'] !!}</h2>
-                                <a href="{{ $banner['link'] ?? route('shop') }}" class="slider-btn2">View Collections</a>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
             @endforeach

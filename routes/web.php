@@ -28,7 +28,7 @@ Route::controller(HomeController::class)->group(function () {
 Route::get('/pages/{page}', [PageController::class, 'show'])->name('pages.show');
 
 Route::prefix('pages')->group(function () {
-	Route::controller(PagesController::class)->group(function () {
+	Route::controller(PageController::class)->group(function () {
 		Route::get('/about', 'about')->name('about');
 		Route::get('/error-page', 'errorPage')->name('errorPage');
 		Route::get('/faq', 'faq')->name('faq');

@@ -60,9 +60,10 @@
 						<nav class="menus menu-toggle">
 							<ul class="nav__menu">
 								<li><a class="menu-item" href="{{ route('index') }}">Home</a></li>
-								<li class="has-dropdown"><a class="menu-item" href="{{ route('shop') }}">Shop</a></li>
-								<li class="has-dropdown"><a class="menu-item" href="{{ route('allCategory') }}">All Category</a></li>
+								<li><a class="menu-item" href="{{ route('shop') }}">Shop</a></li>
+								<li><a class="menu-item" href="{{ route('allCategory') }}">All Category</a></li>
 								<li><a class="menu-item" href="{{ route('contact') }}">Contact</a></li>
+								<li><a class="menu-item" href="{{ route('contact') }}">Shop Use Tutorial</a></li>
 							</ul>
 						</nav>
 					</div>
@@ -81,19 +82,24 @@
 
 	<!-- slide-bar start -->
 	<aside class="slide-bar">
-		<div class="offset-sidebar">
+		<div class="offset-sidebar d-flex justify-content-between align-items-center">
 			<a class="hamburger-1 mobile-hamburger-1 mobile-hamburger-2 ml--30" href="#"><span><i class="rt-xmark"></i></span></a>
+			<div class="e-wallet text-right ml-auto mr-3">
+				@if(Auth::check())
+					<a href="{{ route('myProfile') }}" class="text-dark"><i class="rt-plus"></i> eWallet</a>
+				@else
+					<a href="{{ route('login') }}" class="text-dark"><i class="rt-plus"></i> eWallet</a>
+				@endif
+			</div>
 		</div>
 		<!-- side-mobile-menu start -->
 		<nav class="side-mobile-menu side-mobile-menu1 side-mobile-menu2">
 			<ul id="mobile-menu-active">
 				<li><a class="mm-link" href="{{ route('index') }}">Home</a></li>
-				<li class="has-dropdown firstlvl"><a class="mm-link" href="{{ route('shop') }}">Shop</a></li>
-				<li class="has-dropdown firstlvl"><a class="mm-link" href="{{ route('allCategory') }}">All Category</a></li>
+				<li><a class="mm-link" href="{{ route('shop') }}">Shop</a></li>
+				<li><a class="mm-link" href="{{ route('allCategory') }}">All Category</a></li>
 				<li><a class="mm-link" href="{{ route('contact') }}">Contact</a></li>
-			</ul>
-			<ul>
-				<li><a class="wallet" href="{{ route('myProfile') }}">Wallet</a></li>
+				<li><a class="mm-link" href="{{ route('contact') }}">Shop Use Tutorial</a></li>
 			</ul>
 		</nav>
 	</aside>
