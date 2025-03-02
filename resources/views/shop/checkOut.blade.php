@@ -12,6 +12,20 @@
     <div class="rts-checkout-section">
         <div class="container">
             @if(count($cartItems) > 0)
+                <!-- Display stock error message -->
+                @error('stock_error')
+                    <div class="alert alert-danger" role="alert">
+                        {{ $message }}
+                    </div>
+                @enderror
+                
+                <!-- Display general error message -->
+                @error('error')
+                    <div class="alert alert-danger" role="alert">
+                        {{ $message }}
+                    </div>
+                @enderror
+                
                 <form class="checkout-form" method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
                     @csrf
                     <div class="row g-3 justify-content-between">
@@ -22,15 +36,15 @@
                             <div class="shipping-options checkout-options mb-3">
                                 <span class="shipping">Delivery Method</span>
                                 <div class="btn-group d-flex justify-content-center gap-3" role="group">
-                                    <input type="radio" class="btn-check" name="delivery_method" id="emailDelivery" value="email" required autocomplete="off" {{ old('delivery_method') == 'email' ? 'checked' : '' }}>
+                                    <input type="radio" class="btn-check delivery-method-radio" name="delivery_method" id="emailDelivery" value="email" required autocomplete="off" {{ old('delivery_method') == 'email' ? 'checked' : '' }}>
                                     <label class="btn btn-outline-secondary rounded-pill" for="emailDelivery">
                                         <img src="{{ asset('assets/images/icons/mail.png') }}" alt="Email" class="delivery-icon"> Email
                                     </label>
-                                    <input type="radio" class="btn-check" name="delivery_method" id="whatsappDelivery" value="whatsapp" required autocomplete="off" {{ old('delivery_method') == 'whatsapp' ? 'checked' : '' }}>
+                                    <input type="radio" class="btn-check delivery-method-radio" name="delivery_method" id="whatsappDelivery" value="whatsapp" required autocomplete="off" {{ old('delivery_method') == 'whatsapp' ? 'checked' : '' }}>
                                     <label class="btn btn-outline-secondary rounded-pill" for="whatsappDelivery">
                                         <img src="{{ asset('assets/images/icons/whatsapp.png') }}" alt="WhatsApp" class="delivery-icon"> WhatsApp
                                     </label>
-                                    <input type="radio" class="btn-check" name="delivery_method" id="telegramDelivery" value="telegram" required autocomplete="off" {{ old('delivery_method') == 'telegram' ? 'checked' : '' }}>
+                                    <input type="radio" class="btn-check delivery-method-radio" name="delivery_method" id="telegramDelivery" value="telegram" required autocomplete="off" {{ old('delivery_method') == 'telegram' ? 'checked' : '' }}>
                                     <label class="btn btn-outline-secondary rounded-pill" for="telegramDelivery">
                                         <img src="{{ asset('assets/images/icons/telegram.png') }}" alt="Telegram" class="delivery-icon"> Telegram
                                     </label>
@@ -50,7 +64,7 @@
                             <div class="row">
                                 <div class="col-xl-6 col-md-6">
                                     <div class="input-div">
-                                        <input type="text" name="contact" placeholder="Telegram/WhatsApp**" required value="{{ old('contact') }}">
+                                        <input type="text" id="contactInput" name="contact" placeholder="Telegram/WhatsApp**" value="{{ old('contact') }}">
                                         @error('contact')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -58,7 +72,7 @@
                                 </div>
                                 <div class="col-xl-6 col-md-6">
                                     <div class="input-div">
-                                        <input type="email" name="email" placeholder="Email Address**" required value="{{ old('email') }}">
+                                        <input type="email" id="emailInput" name="email" placeholder="Email Address**" value="{{ old('email') }}">
                                         @error('email')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror
@@ -267,6 +281,40 @@
         } else {
             console.error("Element 'paymentScreenshot' not found.");
         }
+
+        // Set up delivery method change handlers
+        const emailInput = document.getElementById('emailInput');
+        const contactInput = document.getElementById('contactInput');
+        const deliveryRadios = document.querySelectorAll('.delivery-method-radio');
+        
+        // Function to update required fields based on delivery method
+        function updateRequiredFields() {
+            const selectedDelivery = document.querySelector('input[name="delivery_method"]:checked');
+            
+            if (selectedDelivery) {
+                if (selectedDelivery.value === 'email') {
+                    // Email delivery: email required, contact optional
+                    emailInput.setAttribute('required', 'required');
+                    contactInput.removeAttribute('required');
+                    emailInput.placeholder = 'Email Address**';
+                    contactInput.placeholder = 'Telegram/WhatsApp (Optional)';
+                } else {
+                    // WhatsApp/Telegram delivery: contact required, email optional
+                    contactInput.setAttribute('required', 'required');
+                    emailInput.removeAttribute('required');
+                    contactInput.placeholder = 'Telegram/WhatsApp**';
+                    emailInput.placeholder = 'Email Address (Optional)';
+                }
+            }
+        }
+        
+        // Add event listeners to all delivery method radio buttons
+        deliveryRadios.forEach(radio => {
+            radio.addEventListener('change', updateRequiredFields);
+        });
+        
+        // Initialize on page load
+        updateRequiredFields();
     });
 
     function copyToClipboard(text, paymentMethod) {

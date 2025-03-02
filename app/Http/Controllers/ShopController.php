@@ -7,10 +7,11 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Order;
 use App\Models\PaymentMethod;
+use Illuminate\Support\Facades\View;
 
 class ShopController extends Controller
 {
-	public function shop()
+	public function shop(Request $request)
     {
 		$products = Product::select('id', 'category_id', 'title', 'price', 'slug', 'status', 'updated_at')
 		->with([
@@ -18,9 +19,17 @@ class ShopController extends Controller
 			'images:id,product_id,image',
 		])
 		->orderBy('updated_at', 'desc')
-		->paginate(5);
+		->paginate(8);
 
-		// return response()->json($products);
+        // Check if this is an AJAX request for infinite scroll
+        if ($request->ajax() && $request->has('page')) {
+            $html = '';
+            foreach ($products as $product) {
+                $html .= View::make('components.product-item', ['product' => $product])->render();
+            }
+            
+            return response()->json(['html' => $html]);
+        }
 		
 		return view('shop.fullWidthShop', compact('products'));
     }
@@ -28,12 +37,27 @@ class ShopController extends Controller
 	public function category($slug)
 	{
 		$category = Category::where('slug', $slug)->firstOrFail();
-		$products = $category->products()->paginate(6);
-		return view('shop.fullWidthShop', compact('category', 'products'));
+		$products = $category->products()->paginate(8);
+        
+        // Check if this is an AJAX request for infinite scroll
+        if (request()->ajax() && request()->has('page')) {
+            $html = '';
+            foreach ($products as $product) {
+                $html .= View::make('components.product-item', ['product' => $product])->render();
+            }
+            
+            return response()->json(['html' => $html]);
+        }
+
+		$title = $category->title;
+        
+		return view('shop.fullWidthShop', compact('category', 'products', 'title'));
 	}
 
 	public function productDetails(string $category, string $product)
 	{
+		// $topProducts = Product::getTopProducts(9, false);
+		// return response()->json($topProducts);
 		$product = Product::with('category')
 			->where('slug', $product)
 			->whereHas('category', function($query) use ($category) {

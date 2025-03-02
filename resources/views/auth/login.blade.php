@@ -25,9 +25,12 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
                                     <div class="form">
-                                        <!-- Changed field name from username to email -->
-                                        <input type="text" class="form-control" id="email" name="email"
-                                            placeholder="Email address*" required />
+                                        <!-- Changed name to login but kept id as email for any JS dependencies -->
+                                        <input type="text" class="form-control" id="email" name="login"
+                                            placeholder="Email or Contact Number*" required />
+                                        @error('login')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                         @error('email')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

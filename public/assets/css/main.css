@@ -9581,7 +9581,6 @@ color: var(--theme-color);
 }
 
 .rts-new-collection-section {
-  background: #031424;
   overflow: hidden;
   padding: 60px 0;
   border: none;
@@ -14750,7 +14749,7 @@ color: var(--theme-color);
 
 .rts-testimonial-section {
   padding: 125px 0 110px 0;
-  background: url(../images/slider/testimonial-bg.jpg);
+  background: #02101E;
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -20911,8 +20910,6 @@ color: var(--theme-color);
 
 .rts-shop-section {
   margin-top: 50px;
-  margin-bottom: 50px;
-  padding: 50px 0 110px;
 }
 @media (max-width: 1200px) {
   .rts-shop-section .product-pagination-area {

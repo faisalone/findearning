@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Storage;
+use Illuminate\Support\Collection;
 
 class Order extends Model
 {
@@ -28,29 +29,47 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    // Define the relationship with the Product model using the product_details JSON field
-    public function products()
+    /**
+     * Get products from the order's product_details JSON field
+     * 
+     * @return Collection
+     */
+    public function products(): Collection
     {
         try {
-            $productDetails = json_decode($this->product_details, true);
-            
-            if (!is_array($productDetails)) {
+            // Quick exit if no product details
+            if (empty($this->product_details)) {
                 return collect([]);
             }
 
-            $products = Product::whereIn('id', array_column($productDetails, 'id'))->get();
-
-            // Attach quantities to the products
-            foreach ($products as $product) {
-                $details = collect($productDetails)->firstWhere('id', $product->id);
-                if ($details) {
-                    $product->quantity = $details['quantity'];
-                }
+            // Parse product details with error handling
+            $details = json_decode($this->product_details, true) ?? [];
+            
+            // Extract product IDs with array filtering for safety
+            $productIds = collect($details)
+                ->filter(fn($item) => isset($item['id']))
+                ->pluck('id')
+                ->unique();
+                
+            if ($productIds->isEmpty()) {
+                return collect([]);
             }
 
-            return $products;
-        } catch (\Exception $e) {
-            \Log::error('Error decoding product details: ' . $e->getMessage());
+            // Create a quantities lookup
+            $quantities = collect($details)
+                ->filter(fn($item) => isset($item['id']))
+                ->mapWithKeys(fn($item) => [$item['id'] => $item['quantity'] ?? 1]);
+
+            // Fetch and enhance products with their quantities
+            return Product::whereIn('id', $productIds)
+                ->get()
+                ->map(function($product) use ($quantities) {
+                    $product->quantity = $quantities[$product->id] ?? 1;
+                    return $product;
+                });
+                
+        } catch (\Throwable $e) {
+            report($e);
             return collect([]);
         }
     }
