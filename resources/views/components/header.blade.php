@@ -69,7 +69,11 @@
 					</div>
 					<div class="contact-info ml-auto">
 						@if(Auth::check())
-							<a href="{{ route('myProfile') }}" class="text-white"><i class="rt-plus"></i> eWallet</a>
+							@if(optional(Auth::user()->wallet)->balance)
+								<a href="{{ route('myProfile') }}" class="text-white"> ${{ Auth::user()->wallet->balance }}</a>
+							@else
+								<a href="{{ route('myProfile') }}" class="text-white"><i class="rt-plus"></i> eWallet</a>
+							@endif
 						@else
 							<a href="{{ route('login') }}" class="text-white"><i class="rt-plus"></i> eWallet</a>
 						@endif
@@ -86,7 +90,11 @@
 			<a class="hamburger-1 mobile-hamburger-1 mobile-hamburger-2 ml--30" href="#"><span><i class="rt-xmark"></i></span></a>
 			<div class="e-wallet text-right ml-auto mr-3">
 				@if(Auth::check())
-					<a href="{{ route('myProfile') }}" class="text-dark"><i class="rt-plus"></i> eWallet</a>
+					@if(optional(Auth::user()->wallet)->balance)
+						<a href="{{ route('myProfile') }}" class="text-dark"> ${{ Auth::user()->wallet->balance }}</a>
+					@else
+						<a href="{{ route('myProfile') }}" class="text-dark"><i class="rt-plus"></i> eWallet</a>
+					@endif
 				@else
 					<a href="{{ route('login') }}" class="text-dark"><i class="rt-plus"></i> eWallet</a>
 				@endif

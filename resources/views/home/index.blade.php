@@ -47,7 +47,7 @@
 								</div>
 							</a>
 							<div class="bottom-content">
-								<a href="{{ route('shop.category', $category->slug) }}" class="product-name">{{ $category->title }}</a>
+								<a href="{{ route('shop.category', $category->slug) }}" class="product-name fs-5">{{ $category->title }}</a>
 							</div>
 						</div>
 					</div>
@@ -58,6 +58,40 @@
 </div>
 <!-- ..::Featured Product Section End Here::.. -->
 
-<x-product :products="$randomProducts" />
+<!-- ..::Featured Product Section Start Here::.. -->
+<div class="rts-featured-product-section1 featured-product7 featured-product8">
+	<div class="container">
+		<div class="rts-featured-product-section-inner">
+			<div class="section-header section-header3">
+				<div class="wrapper">
+					<h2 class="title">Latest Products</h2>
+					<a href="{{ route('shop') }}" class="section-button">View All</a>
+				</div>
+			</div>
+			<div class="row">
+				@foreach ($randomProducts as $product)
+				<div class="col-xl-3 col-md-3 col-sm-6 col-6">
+					<div class="product-item element-item1">
+						<a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}" class="product-image">
+							<div class="image-vari1 image-vari">
+								<img src="{{ $product->imagePaths[0]['url'] }}" alt="product-image">
+							</div>
+						</a>
+						<div class="bottom-content">
+							<a class="text-white fs-5" href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}">
+								{{ $product->title }}
+							</a>
+							<div class="text-white">
+								<span class="price text-white">${{ $product->price }}</span>
+							</div>
+						</div>
+					</div>
+				</div>
+				@endforeach
+			</div>
+		</div>
+	</div>
+</div>
+<!-- ..::Featured Product Section End Here::.. -->
 
 @endsection

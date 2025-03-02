@@ -52,11 +52,6 @@ class ShopController extends Controller
 		return view('shop.productDetails', compact('product'));
 	}
 
-
-    public function account()
-    {
-        return view('shop.account');
-    }
     
     public function cart()
     {
@@ -108,6 +103,13 @@ class ShopController extends Controller
 
     public function addToCart(Request $request)
     {
+        // Validate the request
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+            'action_type' => 'required|string'
+        ]);
+        
         $quantity = (int)$request->input('quantity', 1);
         $product = Product::findOrFail($request->product_id);
         $cart = session()->get('cart', []);
@@ -127,11 +129,23 @@ class ShopController extends Controller
         
         $uniqueCount = count($cart);
         
-        if ($request->ajax()) {
-            return response()->json(['count' => $uniqueCount]);
+        // Check if it's an AJAX request
+        if ($request->ajax() && $request->input('action_type') === 'add-to-cart') {
+            // Return JSON response for AJAX requests
+            return response()->json([
+                'success' => true, 
+                'message' => 'Product added to cart',
+                'count' => $uniqueCount  // Using the calculated count instead of Cart facade
+            ]);
         }
-
-        return redirect()->back();
+        
+        // If it's a "Buy Now" action, redirect to checkout
+        if ($request->input('action_type') === 'buy-now') {
+            return redirect()->route('checkOut');
+        }
+        
+        // Default fallback for non-AJAX requests
+        return redirect()->back()->with('success', 'Product added to cart');
     }
 
     public function removeFromCart(Request $request)

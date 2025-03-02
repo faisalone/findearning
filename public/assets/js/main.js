@@ -50,9 +50,9 @@
   });
   // Common-slider-over
   var swiper = new Swiper(".rts-cmmnSlider-over", {
-    slidesPerView: 4,
+    slidesPerView: 3,
     spaceBetween: 30,
-    slidesPerGroup: 2,
+    slidesPerGroup: 1,
     speed: 1500,
     loop: true,
     loopFillGroupWithBlank: true,
@@ -80,10 +80,10 @@
         slidesPerView: 2,
       },
       500: {
-        slidesPerView: 1,
+        slidesPerView: 2,
       },
       0: {
-        slidesPerView: 1,
+        slidesPerView: 2,
       }
     },
     autoplay: {
