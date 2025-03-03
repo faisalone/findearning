@@ -34,7 +34,7 @@ class HomeController extends Controller
     
     public function allCategory()
     {
-        $categories = Category::select('id', 'title', 'slug', 'image')->paginate(10);
+        $categories = Category::select('id', 'title', 'slug', 'image')->get();
         return view('home.allCategory', compact('categories'));
     }
     
