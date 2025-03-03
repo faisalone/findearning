@@ -54,6 +54,13 @@ class ShopController extends Controller
 		return view('shop.fullWidthShop', compact('category', 'products', 'title'));
 	}
 
+	/**
+     * Show the product details page.
+     *
+     * @param string $category
+     * @param string $product
+     * @return \Illuminate\View\View
+     */
 	public function productDetails(string $category, string $product)
 	{
 		// $topProducts = Product::getTopProducts(9, false);
@@ -71,6 +78,11 @@ class ShopController extends Controller
 				'message' => "No product matching '{$product}' in category '{$category}' was found."
 			], 404);
 		}
+
+        // Load the product with its approved reviews and the users who wrote them
+        $product->load(['approvedReviews' => function($query) {
+            $query->orderBy('created_at', 'desc');
+        }, 'approvedReviews.user']);
 		// return response()->json($product->imagePaths);
 		
 		return view('shop.productDetails', compact('product'));

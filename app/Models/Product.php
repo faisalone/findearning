@@ -7,9 +7,12 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Product extends Model
 {
+    use HasFactory;
+
     protected $table = 'products';
     protected $fillable = ['category_id', 'title', 'slug', 'price', 'quantity', 'description', 'status'];
 
@@ -141,5 +144,72 @@ class Product extends Model
     public function scopeActive($query)
     {
         return $query->where('status', 1);
+    }
+
+    /**
+     * Get the reviews for this product
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get approved reviews only
+     */
+    public function approvedReviews()
+    {
+        return $this->hasMany(Review::class)->where('status', true);
+    }
+
+    /**
+     * Calculate and get the average rating for this product
+     */
+    public function getAverageRatingAttribute()
+    {
+        $reviews = $this->approvedReviews;
+        if ($reviews->isEmpty()) {
+            return 0;
+        }
+        
+        return round($reviews->avg('rating'), 1);
+    }
+
+    /**
+     * Get the total count of approved reviews
+     */
+    public function getReviewsCountAttribute()
+    {
+        return $this->approvedReviews->count();
+    }
+
+    /**
+     * Format the stars display based on average rating
+     */
+    public function getStarsHtmlAttribute()
+    {
+        $rating = $this->average_rating;
+        $fullStars = floor($rating);
+        $halfStar = round($rating - $fullStars, 1) >= 0.5;
+        
+        $html = '';
+        
+        // Full stars
+        for ($i = 0; $i < $fullStars; $i++) {
+            $html .= '<i class="fas fa-star text-warning"></i>';
+        }
+        
+        // Half star if needed
+        if ($halfStar) {
+            $html .= '<i class="fas fa-star-half-alt text-warning"></i>';
+        }
+        
+        // Empty stars to make 5 total
+        $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+        for ($i = 0; $i < $emptyStars; $i++) {
+            $html .= '<i class="far fa-star text-warning"></i>';
+        }
+        
+        return $html;
     }
 }

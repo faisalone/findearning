@@ -19176,10 +19176,7 @@ color: var(--theme-color);
 .rts-product-details-section .side-products .product-item .product-image {
   max-width: 225px !important;
 }
-.rts-product-details-section .details-product-area {
-  display: flex;
-  align-items: flex-start;
-}
+
 @media (max-width: 576px) {
   .rts-product-details-section .details-product-area {
     margin-bottom: 30px;

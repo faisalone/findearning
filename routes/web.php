@@ -14,6 +14,7 @@ use App\Http\Controllers\CustomerController;
 use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
+use App\Http\Controllers\ReviewController;
 
 // Route::auth(); // This line automatically registers Auth routes, no extra directive needed.
 Auth::routes(['verify' => true]);
@@ -46,7 +47,8 @@ Route::prefix('shop')->group(function () {
 		Route::get('/check-out', 'checkOut')->name('checkOut');
 		Route::get('/{order}/thank-you', 'thankYou')->name('thankYou');
 		Route::get('/{category}', 'category')->name('shop.category');
-		Route::get('/{category}/{product}', 'productDetails')->name('productDetails');
+		Route::get('/{category}/{product}', 'productDetails')
+            ->name('productDetails');
 	});
 });
 
@@ -57,6 +59,13 @@ Route::prefix('order')->group(function () {
 	});
 });
 
+// Product Reviews
+Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])
+    ->middleware('auth')  // This middleware will use the stored intended URL
+    ->name('product.addReview');
+Route::patch('/reviews/{review}/toggle-status', [ReviewController::class, 'toggleStatus'])
+    ->middleware(['auth', 'can:manage-reviews'])
+    ->name('reviews.toggleStatus');
 
 Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 	Route::get('/', function () {

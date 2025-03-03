@@ -3,10 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Providers\RouteServiceProvider;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\URL;
 
 class LoginController extends Controller
 {
@@ -38,7 +40,6 @@ class LoginController extends Controller
     public function __construct()
     {
         $this->middleware('guest')->except('logout');
-        $this->middleware('auth')->only('logout');
     }
 
     /**
@@ -86,5 +87,37 @@ class LoginController extends Controller
             : ['login' => trans('auth.failed')];
 
         throw ValidationException::withMessages($errors);
+    }
+
+    /**
+     * Show the application's login form.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\View\View
+     */
+    public function showLoginForm(Request $request)
+    {
+        // Store the current URL as the intended URL when accessing the login page
+        if (!session()->has('url.intended')) {
+            session(['url.intended' => URL::previous()]);
+        }
+
+        return view('auth.login');
+    }
+
+    /**
+     * Get the post login redirect path.
+     *
+     * @return string
+     */
+    public function redirectPath()
+    {
+        // First check for the URL intended by the user
+        if (session()->has('url.intended')) {
+            return session()->pull('url.intended', $this->redirectTo);
+        }
+
+        // Otherwise return the default redirect path
+        return $this->redirectTo;
     }
 }
