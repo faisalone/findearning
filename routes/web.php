@@ -40,6 +40,7 @@ Route::prefix('pages')->group(function () {
 Route::prefix('shop')->group(function () {
 	Route::controller(ShopController::class)->group(function () {
 		Route::get('/', 'shop')->name('shop');
+		Route::get('/search', 'search')->name('shop.search'); // Add this new route
 		Route::get('/cart', 'cart')->name('cart');
 		Route::post('/add-to-cart', 'addToCart')->name('shop.addToCart');
 		Route::post('/remove-from-cart', 'removeFromCart')->name('shop.removeFromCart');

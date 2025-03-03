@@ -97,7 +97,7 @@
                             </h2>
 
                             <div class="d-flex justify-content-start align-items-center">
-                                <span class="product-price">{{ $product->price }}</span>
+                                <span class="product-price">${{ $product->price }}</span>
                                 <span>/Email Delivery</span>
                             </div>
                             <p>

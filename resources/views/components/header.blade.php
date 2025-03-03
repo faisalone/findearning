@@ -4,11 +4,11 @@
 			<div class="container">
 				<div class="navbar-inner navbar-inner5">
 					<div class="navbar-search-area">
-						<form action="#" method="GET">
+						<form action="{{ route('shop.search') }}" method="GET">
 							<div class="search-input-inner">
 								<div class="input-div">
 									<button type="submit" class="search-input-icon"><i class="rt-search mr--10"></i> Search</button>
-									<input class="search-input input5" type="text" name="q" placeholder="Keyword here...">
+									<input class="search-input input5" type="text" name="query" value="{{ request('query') }}" placeholder="Keyword here...">
 								</div>
 							</div>
 						</form>
@@ -26,7 +26,9 @@
                                 <div class="container">
                                     <div class="search-input-inner">
                                         <div class="input-div">
-                                            <input id="searchInput1" class="search-input" type="text" placeholder="Search by keyword">
+                                            <form action="{{ route('shop.search') }}" method="GET">
+                                                <input id="searchInput1" name="query" class="search-input" type="text" value="{{ request('query') }}" placeholder="Search by keyword">
+                                            </form>
                                         </div>
                                         <div class="search-close-icon"><i class="rt-xmark"></i></div>
                                     </div>

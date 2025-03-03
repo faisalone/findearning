@@ -8,51 +8,73 @@ use App\Models\Product;
 use App\Models\Order;
 use App\Models\PaymentMethod;
 use Illuminate\Support\Facades\View;
+use App\Traits\ProductSorting;
 
 class ShopController extends Controller
 {
-	public function shop(Request $request)
+    use ProductSorting;
+    
+    public function shop(Request $request)
     {
-		$products = Product::select('id', 'category_id', 'title', 'price', 'slug', 'status', 'updated_at')
-		->with([
-			'category:id,title,slug',
-			'images:id,product_id,image',
-		])
-		->orderBy('updated_at', 'desc')
-		->paginate(8);
+        $productsQuery = Product::select('products.*')
+            ->distinct()
+            ->with([
+                'category:id,title,slug',
+                'images:id,product_id,image',
+            ]);
+        
+        // Apply sorting
+        $productsQuery = $this->applySorting($productsQuery);
+        
+        $products = $productsQuery->paginate(8);
 
         // Check if this is an AJAX request for infinite scroll
         if ($request->ajax() && $request->has('page')) {
             $html = '';
             foreach ($products as $product) {
+                // Render the exact same component used in the blade template
                 $html .= View::make('components.product-item', ['product' => $product])->render();
             }
-            
-            return response()->json(['html' => $html]);
+            return response()->json([
+                'html'        => $html,
+                'currentPage' => $products->currentPage(),
+                'lastPage'    => $products->lastPage(),
+            ]);
         }
-		
-		return view('shop.fullWidthShop', compact('products'));
+        
+        return view('shop.fullWidthShop', compact('products'));
     }
 
-	public function category($slug)
-	{
-		$category = Category::where('slug', $slug)->firstOrFail();
-		$products = $category->products()->paginate(8);
+    public function category($slug)
+    {
+        $category = Category::where('slug', $slug)->firstOrFail();
+        
+        // Use getQuery() to get a Builder instance instead of a HasMany relationship
+        $productsQuery = $category->products();
+        
+        // Apply sorting
+        $productsQuery = $this->applySorting($productsQuery);
+        
+        $products = $productsQuery->paginate(8);
         
         // Check if this is an AJAX request for infinite scroll
         if (request()->ajax() && request()->has('page')) {
             $html = '';
             foreach ($products as $product) {
+                // Render the exact same component used in the blade template
                 $html .= View::make('components.product-item', ['product' => $product])->render();
             }
-            
-            return response()->json(['html' => $html]);
+            return response()->json([
+                'html'        => $html,
+                'currentPage' => $products->currentPage(),
+                'lastPage'    => $products->lastPage(),
+            ]);
         }
 
-		$title = $category->title;
+        $title = $category->title;
         
-		return view('shop.fullWidthShop', compact('category', 'products', 'title'));
-	}
+        return view('shop.fullWidthShop', compact('category', 'products', 'title'));
+    }
 
 	/**
      * Show the product details page.
@@ -215,6 +237,73 @@ class ShopController extends Controller
             'newQuantity' => $newQuantity,
             'count' => $uniqueCount,
         ]);
+    }
+    
+    /**
+     * Search for products based on query
+     *
+     * @param Request $request
+     * @return \Illuminate\View\View
+     */
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $categorySlug = $request->input('category');
+        
+        // Start with base query
+        $productsQuery = Product::select('id', 'category_id', 'title', 'price', 'slug', 'status', 'updated_at')
+            ->with([
+                'category:id,title,slug',
+                'images:id,product_id,image',
+            ]);
+        
+        // Search by query
+        if ($query) {
+            $productsQuery->where(function($q) use ($query) {
+                $q->where('title', 'like', "%{$query}%")
+                  ->orWhere('description', 'like', "%{$query}%")
+                  ->orWhereHas('category', function($categoryQuery) use ($query) {
+                      $categoryQuery->where('title', 'like', "%{$query}%");
+                  });
+            });
+        }
+        
+        // Filter by category if provided
+        if ($categorySlug) {
+            $productsQuery->whereHas('category', function($q) use ($categorySlug) {
+                $q->where('slug', $categorySlug);
+            });
+        }
+        
+        // Only active products
+        $productsQuery->where('status', true);
+        
+        // Apply sorting
+        $productsQuery = $this->applySorting($productsQuery);
+        
+        $products = $productsQuery->paginate(8)->withQueryString();
+        
+        // Check if this is an AJAX request for infinite scroll
+        if ($request->ajax() && $request->has('page')) {
+            $html = '';
+            foreach ($products as $product) {
+                // Render the exact same component used in the blade template
+                $html .= View::make('components.product-item', ['product' => $product])->render();
+            }
+            
+            return response()->json([
+                'html' => $html,
+                'lastPage' => $products->lastPage(),
+                'currentPage' => $products->currentPage(),
+                'totalResults' => $products->total()
+            ]);
+        }
+        
+        // Get all categories for filter sidebar
+        $categories = Category::where('status', true)->get();
+        $title = $query ? "Search results for: {$query}" : "All Products";
+        
+        return view('shop.fullWidthShop', compact('products', 'query', 'categorySlug', 'categories', 'title'));
     }
     
 }

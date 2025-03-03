@@ -11,7 +11,7 @@ class Category extends Model
 	use HasFactory;
 
     protected $table = 'categories';
-    protected $fillable = ['title', 'slug', 'description', 'image'];
+    protected $fillable = ['title', 'slug', 'description', 'image', 'status'];
 
     public const IMAGE_FOLDER = 'categories';
 

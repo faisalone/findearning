@@ -18,30 +18,42 @@
 				<div class="shop-product-topbar">
 					<div class="filter-area">
 						<p class="select-area">
-							<select class="select">
-								<option value="*">Sort by average rating</option>
-								<option value=".popular">Sort by popularity</option>
-								<option value=".best-rate">Sort by latest</option>
-								<option value=".on-sale">Sort by price: low to high</option>
-								<option value=".featured">Sort by price: high to low</option>
+							<select class="select" id="product-sort">
+								<option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Sort by popularity</option>
+								<option value="latest" {{ request('sort') == 'latest' || !request('sort') ? 'selected' : '' }}>Sort by latest</option>
+								<option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Sort by price: low to high</option>
+								<option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Sort by price: high to low</option>
 							</select>
 						</p>
 					</div>
 				</div>
 				@if($products->count() > 0)
-					<div class="products-area products-area3">
-						<div class="row row-cols-2 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-4" id="products-container">
-							@foreach ($products as $product)
-								<x-product-item :product="$product" />
-							@endforeach
-						</div>
+					<div class="products-container row gx-3 gx-lg-2 gx-xl-4 mt--20 mt-lg-0" 
+						data-current-page="{{ $products->currentPage() }}"
+						data-last-page="{{ $products->lastPage() }}"
+						data-total="{{ $products->total() }}">
+						@foreach ($products as $product)
+							<div class="col-6 col-sm-6 col-md-4 col-lg-3 text-center">
+								<div class="product-item mx-auto">
+									<a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}" class="product-image">
+										<img src="{{ $product->imagePaths[0]['url'] }}" alt="{{ $product->title }}">
+									</a>
+									<div class="bottom-content">
+										<a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}" class="product-name">
+											{{ $product->title }}
+										</a>
+										<div class="product-price-area">
+											<span class="product-price">{{ $product->price }}$</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						@endforeach
 					</div>
-					<div class="loading-indicator text-center mt-4 d-none">
-						<div class="spinner-border text-primary" role="status">
-							<span class="visually-hidden">Loading...</span>
-						</div>
+					<div class="loading-spinner mt-4 text-center" style="display:none;">
+						<i class="fas fa-spinner fa-spin fa-2x"></i>
+						<p>Loading more products...</p>
 					</div>
-					<input type="hidden" id="current-page" value="1">
 				@else
 					<p class="text-center">No products available.</p>
 				@endif
@@ -54,75 +66,21 @@
 @endsection
 
 @push('scripts')
+<script src="{{ asset('assets/js/infinite-scroll.js') }}"></script>
 <script>
-	$(function() {
-		let loading = false;
-		let currentPage = parseInt($('#current-page').val());
-		let noMoreProducts = false;
-        
-        // Check if device is mobile
-        const isMobile = window.innerWidth <= 767;
-        
-        // Set a more aggressive threshold for mobile devices
-        const scrollThreshold = isMobile ? 1000 : 300;
+	document.getElementById('product-sort').addEventListener('change', function() {
+		const sortValue = this.value;
+		const currentUrl = new URL(window.location.href);
 		
-		$(window).scroll(function() {
-			if (loading || noMoreProducts) return;
-			
-			// Calculate distance from bottom, adjusted for mobile
-			const scrollPosition = $(window).scrollTop() + $(window).height();
-			const documentHeight = $(document).height() - scrollThreshold;
-			
-			// Check if user scrolled close enough to the bottom
-			if (scrollPosition >= documentHeight) {
-				loadMoreProducts();
-			}
-		});
-        
-        // Initial check in case the page doesn't fill the screen
-        if ($(window).height() >= $(document).height() - scrollThreshold) {
-            loadMoreProducts();
-        }
+		// Preserve all existing query parameters
+		currentUrl.searchParams.set('sort', sortValue);
 		
-		function loadMoreProducts() {
-			loading = true;
-			currentPage++;
-			$('.loading-indicator').removeClass('d-none');
-			
-			// Build the URL based on current page context
-			let url = '{{ request()->route("category") ? route("shop.category", request()->route("category")) : route("shop") }}';
-			
-			$.ajax({
-				url: url,
-				type: 'GET',
-				data: { 
-					page: currentPage
-				},
-				success: function(response) {
-					if (response.html === '') {
-						noMoreProducts = true;
-					} else {
-						$('#products-container').append(response.html);
-						$('#current-page').val(currentPage);
-					}
-					loading = false;
-					$('.loading-indicator').addClass('d-none');
-                    
-                    // Check again after content is loaded in case the new content doesn't fill the screen
-                    if ($(window).scrollTop() + $(window).height() >= $(document).height() - scrollThreshold) {
-                        setTimeout(function() {
-                            if (!loading && !noMoreProducts) {
-                                loadMoreProducts();
-                            }
-                        }, 500);
-                    }
-				},
-				error: function() {
-					loading = false;
-					$('.loading-indicator').addClass('d-none');
-				}
-			});
+		// Reset to page 1 when sorting changes
+		if (currentUrl.searchParams.has('page')) {
+			currentUrl.searchParams.set('page', '1');
 		}
+		
+		window.location.href = currentUrl.toString();
 	});
 </script>
 @endpush

@@ -23,6 +23,15 @@ class Order extends Model
         'status'
     ];
 
+    /**
+     * The attributes that should be cast.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'product_details' => 'array'
+    ];
+
     // Define the relationship with the User model
     public function user()
     {

@@ -41,7 +41,7 @@
                                                 </div>
                                             </td>
                                             <td>
-                                                <span class="product-price">{{ $item['product']->price }}</span>
+                                                <span class="product-price">${{ $item['product']->price }}</span>
                                             </td>
                                             <td>
                                                 <div class="cart-edit">

@@ -1,5 +1,5 @@
-<div class="col mb-4">
-    <div class="product-item">
+<div class="col-6 col-sm-6 col-md-4 col-lg-3 text-center">
+    <div class="product-item mx-auto">
         <a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}" class="product-image">
             <img src="{{ $product->imagePaths[0]['url'] }}" alt="{{ $product->title }}">
         </a>
