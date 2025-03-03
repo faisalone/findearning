@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid px-0 px-md-2">
     <x-form 
         :formId="'editOrderForm'"
         :formAction="route('orders.update', $order->id)"
@@ -30,15 +30,15 @@
                 <p class="fs-4 fw-bold mb-0">${{ number_format($order->total, 2) }}</p>
             </div>
 
-            <div class="col-md-4">
-                <label for="status" class="form-label">Status</label>
-                <select class="form-select" id="status" name="status">
-                    <option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
-                    <option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
-                    <option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
-                    <option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
-                </select>
-            </div>
+			<div class="col-md-4">
+				<label for="status" class="form-label">Status</label>
+				<select class="form-control" id="status" name="status">
+					<option value="pending" {{ $order->status == 'pending' ? 'selected' : '' }}>Pending</option>
+					<option value="processing" {{ $order->status == 'processing' ? 'selected' : '' }}>Processing</option>
+					<option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
+					<option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
+				</select>
+			</div>
         </div>
         <!-- Group 2: Products -->
         <div class="row mb-3 p-3 bg-white rounded border">

@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid px-0 px-md-2">
 	<x-form 
 		form-id="sliderForm" 
 		form-action="{{ route('sliders.store') }}" 

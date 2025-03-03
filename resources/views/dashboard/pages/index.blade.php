@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.app')
 
 @section('content')
-<div class="container mt-4">
+<div class="container-fluid px-0 px-md-2">
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h1>Pages</h1>
         <a href="{{ route('pages.create') }}" class="btn btn-primary">Create New Page</a>

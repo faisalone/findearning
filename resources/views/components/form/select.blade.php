@@ -9,7 +9,7 @@
 ])
 <div class="form-group mb-3">
     <label for="{{ $name }}">{{ $label }}</label>
-    <select name="{{ $name }}" id="{{ $name }}" class="form-select @error($name) is-invalid @enderror">
+    <select name="{{ $name }}" id="{{ $name }}" class="form-control @error($name) is-invalid @enderror">
         <option value="" disabled {{ $selected == '' ? 'selected' : '' }}>{{ $placeholder }}</option>
         @foreach($options as $option)
             @php 

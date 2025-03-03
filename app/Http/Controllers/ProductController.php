@@ -26,13 +26,13 @@ class ProductController extends Controller
 
 	public function index()
 	{
-		$products = Product::select('id', 'category_id', 'title', 'slug', 'status', 'updated_at')
+		$products = Product::select('id', 'category_id', 'title', 'slug', 'quantity', 'status', 'updated_at')
 			->with([
-				'category:id,title',
+				'category:id,title,slug',
 				'images:id,product_id,image',
 			])
 			->orderBy('updated_at', 'desc')
-			->paginate(5);
+			->paginate(15);
 
 		// return response()->json($products);
 

@@ -11,6 +11,7 @@ class CustomerController extends Controller
     public function index()
     {
         $customers = User::where('role', 0)->get();
+		// return response()->json($customers);
         return view('dashboard.customers.index', compact('customers'));
     }
 
@@ -18,10 +19,12 @@ class CustomerController extends Controller
 	{
 		$customer = auth()->user();
 		$paymentMethods = PaymentMethod::all(); // Assuming a relationship 'paymentMethods' is defined in the User model
-		$transactions = $customer->wallet 
-            ? $customer->wallet->transactions()->latest()->paginate(10)
-            : collect(); // Add this line
-		return view('dashboard.customers.profile', compact('customer', 'paymentMethods', 'transactions'));
+		// $transactions = $customer->wallet 
+        //     ? $customer->wallet->transactions()->latest()->paginate(10)
+        //     : collect(); // Add this line
+		$customer->transactions = $customer->transactions()->paginate(10);
+		
+		return view('dashboard.customers.profile', compact('customer', 'paymentMethods',));
 	}
 
 	public function updateProfile(Request $request)

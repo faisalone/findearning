@@ -2,17 +2,10 @@
 
 @push('styles')
 <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
-<style>
-    /* Added to break long words in table cells */
-    #customerTable th,
-    #customerTable td {
-        word-break: break-all;
-    }
-</style>
 @endpush
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid px-0 px-md-2">
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -36,6 +29,7 @@
                                         {{ $customer->name }}
                                         <br><span>{{ $customer->email }}</span>
                                         <br><span>{{ $customer->contact ?? 'N/A' }}</span>
+										<br><strong>Balance: <span class="text-primary">{{ $customer->wallet ? '$' . $customer->wallet->balance : 'No Wallet' }}</span></strong>
                                     </td>
                                     <td>{{ $customer->created_at->format('d M Y') }}</td>
                                     <td>
@@ -60,9 +54,16 @@
 <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
 <script>
     $(document).ready(function() {
+        // Check if DataTable is already initialized on this table
+        if ($.fn.DataTable.isDataTable('#customerTable')) {
+            // Destroy existing DataTable instance
+            $('#customerTable').DataTable().destroy();
+        }
+        
+        // Initialize DataTable
         $('#customerTable').DataTable({
             responsive: true,
-            "order": [[ 0, "desc" ]],
+            "order": [[ 1, "desc" ]],  // Changed to use registration date column
             "pageLength": 25,
             "language": {
                 "search": "Search customers:",

@@ -15,7 +15,7 @@
         @if($existingImages)
             @foreach($existingImages as $image)
                 <div class="existing-image" data-id="{{ $image['id'] ?? '' }}">
-                    <img src="{{ $image['url'] ?? $image }}" class="img-thumbnail me-2" style="height:50px;">
+                    <img src="{{ $image['url'] ?? $image }}" class="img-thumbnail mr-2" style="height:50px;">
                 </div>
             @endforeach
         @endif

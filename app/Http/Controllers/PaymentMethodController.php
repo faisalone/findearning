@@ -13,6 +13,7 @@ class PaymentMethodController extends Controller
     {
         $this->middleware(AdminMiddleware::class);
     }
+
     /**
      * Display a listing of the resource.
      */
@@ -41,7 +42,8 @@ class PaymentMethodController extends Controller
             'rate'        => 'required|numeric',
             'address'     => 'nullable|string',
             'instruction' => 'nullable|string',
-            'image'        => 'nullable|mimes:jpg,jpeg,png,svg,webp',
+            'image'       => 'nullable|mimes:jpg,jpeg,png,svg,webp',
+            'qr'          => 'nullable|mimes:jpg,jpeg,png,svg,webp',
             'status'      => 'required|boolean',
         ]);
 
@@ -49,6 +51,12 @@ class PaymentMethodController extends Controller
 			$imageName = uniqid() . '.' . $request->file('image')->extension();
 			$request->file('image')->storeAs(PaymentMethod::IMAGE_FOLDER, $imageName, 'public');
 			$validated['image'] = $imageName;
+		}
+        
+        if ($request->hasFile('qr')) {
+			$qrName = uniqid() . '_qr.' . $request->file('qr')->extension();
+			$request->file('qr')->storeAs(PaymentMethod::IMAGE_FOLDER, $qrName, 'public');
+			$validated['qr'] = $qrName;
 		}
 
         PaymentMethod::create($validated);
@@ -82,7 +90,8 @@ class PaymentMethodController extends Controller
 			'rate'        => 'required|numeric',
 			'address'     => 'nullable|string',
 			'instruction' => 'nullable|string',
-            'image'        => 'nullable|mimes:jpg,jpeg,png,svg,webp',
+            'image'       => 'nullable|mimes:jpg,jpeg,png,svg,webp',
+            'qr'          => 'nullable|mimes:jpg,jpeg,png,svg,webp',
 			'status'      => 'required|boolean',
 		]);
 
@@ -93,6 +102,15 @@ class PaymentMethodController extends Controller
 			$imageName = uniqid() . '.' . $request->file('image')->extension();
 			$request->file('image')->storeAs(PaymentMethod::IMAGE_FOLDER, $imageName, 'public');
 			$validated['image'] = $imageName;
+		}
+        
+        if ($request->hasFile('qr')) {
+			if ($paymentMethod->qr) {
+				Storage::disk('public')->delete(PaymentMethod::IMAGE_FOLDER . '/' . $paymentMethod->qr);
+			}
+			$qrName = uniqid() . '_qr.' . $request->file('qr')->extension();
+			$request->file('qr')->storeAs(PaymentMethod::IMAGE_FOLDER, $qrName, 'public');
+			$validated['qr'] = $qrName;
 		}
 
 		$paymentMethod->update($validated);
@@ -107,6 +125,10 @@ class PaymentMethodController extends Controller
 	{
 		if ($paymentMethod->image) {
 			Storage::disk('public')->delete(PaymentMethod::IMAGE_FOLDER . '/' . $paymentMethod->image);
+		}
+        
+        if ($paymentMethod->qr) {
+			Storage::disk('public')->delete(PaymentMethod::IMAGE_FOLDER . '/' . $paymentMethod->qr);
 		}
 
 		$paymentMethod->delete();

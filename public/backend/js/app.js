@@ -15,10 +15,10 @@ function showAlert(message, type) {
 }
 
 document.addEventListener('DOMContentLoaded', function () {
-    const sidebarToggle = document.querySelector('.navbar-toggler');
+    const sidebarToggle = document.querySelector('.sidebar-toggle');
     const sidebar = document.querySelector('#sidebarMenu');
 
     sidebarToggle.addEventListener('click', function () {
-        sidebar.classList.toggle('show');
+        sidebar.classList.toggle('hide');
     });
 });

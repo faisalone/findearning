@@ -68,14 +68,19 @@ Route::patch('/reviews/{review}/toggle-status', [ReviewController::class, 'toggl
     ->middleware(['auth', 'can:manage-reviews'])
     ->name('reviews.toggleStatus');
 
+// Transaction routes
+
 Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 	Route::get('/', function () {
 		return view('dashboard.index');
 	})->name('dashboard');
 	Route::get('/wallet', [WalletController::class, 'index'])->name('wallet');
+	Route::get('/wallet/recharge', [WalletController::class, 'rechargeIndex'])->name('recharge.index');
 	Route::post('/wallet/recharge', [WalletController::class, 'recharge'])->name('recharge');
 	Route::get('/transactions/{id}/approve', [TransactionController::class, 'approve'])->name('transactions.approve');
 	Route::get('/transactions/{id}/reject', [TransactionController::class, 'reject'])->name('transactions.reject');
+	Route::patch('/transactions/{id}/adjust', [TransactionController::class, 'adjust'])->name('transactions.adjust');
+
 	
 	Route::resource('categories', CategoryController::class);
 	Route::prefix('categories')->controller(CategoryController::class)->group(function () {
@@ -95,9 +100,11 @@ Route::prefix('dashboard')->middleware(['auth'])->group(function () {
 	Route::get('/my-profile', [CustomerController::class, 'profile'])->name('myProfile');
 	Route::post('/my-profile/update', [CustomerController::class, 'updateProfile'])->name('profile.update');
 	Route::get('/my-orders', [CustomerController::class, 'orders'])->name('myOrders'); 
-});
-
-Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+	Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
     Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
 });
+
+// Route::middleware(['auth', 'verified'])->group(function () {
+//     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
+//     Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
+// });

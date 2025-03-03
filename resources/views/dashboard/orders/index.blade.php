@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.app')
 
 @section('content')
-<div class="container-fluid">
+<div class="container-fluid px-0 px-md-2">
     <h1>Orders</h1>
     <div class="table-responsive">
         <table class="table table-bordered">

@@ -9,9 +9,9 @@
 @php
 	$id = $id ?? $name;
 @endphp
-<div class="mb-3">
+<div class="form-group mb-3">
 	@if($label)
-		<label for="{{ $id }}" class="form-label">{{ $label }}</label>
+		<label for="{{ $id }}">{{ $label }}</label>
 	@endif
 	<select name="{{ $name }}" id="{{ $id }}" class="form-control @error($name) is-invalid @enderror">
 		@foreach($options as $key => $optionLabel)

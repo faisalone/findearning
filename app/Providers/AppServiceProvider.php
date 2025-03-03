@@ -28,7 +28,8 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
-		Paginator::useBootstrapFive(); // enable Bootstrap 5 pagination
+		Paginator::useBootstrapFive(); // enable Bootstrap 4 pagination
+		Paginator::useBootstrapFour(); // enable Bootstrap 4 pagination
 
 		if (Schema::hasTable('settings')) {
 			$settings = Setting::pluck('value', 'key')->toArray();

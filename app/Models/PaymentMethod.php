@@ -20,12 +20,21 @@ class PaymentMethod extends Model
 		'address',
 		'instruction',
 		'image',
+		'qr',
 		'status',
 	];
+
+    // Append computed attributes so that they are available in JSON
+    protected $appends = ['image_path', 'qr_path'];
 
 	public function getImagePathAttribute()
     {
         return Storage::url(self::IMAGE_FOLDER . '/' . $this->image);
+    }
+    
+    public function getQrPathAttribute()
+    {
+        return Storage::url(self::IMAGE_FOLDER . '/' . $this->qr);
     }
 
 	/**

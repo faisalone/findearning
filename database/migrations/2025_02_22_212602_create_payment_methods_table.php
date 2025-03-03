@@ -18,6 +18,7 @@ return new class extends Migration
 			$table->string('address')->nullable();
 			$table->string('instruction')->nullable();
 			$table->string('image')->nullable();
+			$table->string('qr')->nullable();
 			$table->boolean('status')->default(true);
             $table->timestamps();
         });

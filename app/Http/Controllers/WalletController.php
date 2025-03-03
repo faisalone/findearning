@@ -8,13 +8,24 @@ use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException; // added
 use App\Http\Middleware\AdminMiddleware;
+use App\Models\PaymentMethod;
 
 class WalletController extends Controller
 {
 	public function __construct()
     {
-        $this->middleware(AdminMiddleware::class)->except('recharge');
+        $this->middleware(AdminMiddleware::class)->except(['rechargeIndex', 'recharge']);
     }
+
+	public function rechargeIndex()
+	{
+		// Modified to exclude payment method named "Wallet"
+		$paymentMethods = PaymentMethod::where('status', true)
+			->where('name', '!=', 'Wallet')  // Exclude the "Wallet" payment method
+			->get();
+		
+		return view('dashboard.customers.recharge', compact('paymentMethods'));
+	}
 
     public function index()
 	{
@@ -29,58 +40,39 @@ class WalletController extends Controller
 
 	public function recharge(Request $request)
 	{
-		try {
-			// Check for pending transactions
-			$pendingTransaction = Transaction::where('user_id', Auth::id())
-				->where('status', 'pending')
-				->first();
+		$request->validate([
+			'wallet_id' => 'required|exists:wallets,id',
+			'payment_method_id' => 'required|exists:payment_methods,id',
+			'amount' => 'required|numeric|min:1',
+			'screenshot' => 'required|image|max:2048',
+		], [], [
+			'wallet_id' => 'wallet',
+			'payment_method_id' => 'payment method',
+		]);
 
-			if ($pendingTransaction) {
-				return back()
-					->withErrors(['pending' => 'You already have a pending recharge request. Please wait for it to be processed.'], 'recharge')
-					->withInput()
-					->with('openRechargeModal', true);
-			}
+		// Check if user already has a pending transaction
+		$pendingTransaction = Transaction::where('user_id', auth()->id())
+			->where('status', 'pending')
+			->first();
 
-			$data = $request->validate([
-				'payment_method_id' => 'required|exists:payment_methods,id',
-				'amount' => 'required|numeric|min:1',
-				'screenshot' => 'required|image|max:2048',
-				'wallet_id' => 'nullable|exists:wallets,id', // changed: allow nullable wallet_id
-			]);
-
-			// Check if wallet exists; if not, create one.
-			$wallet = isset($data['wallet_id']) ? Wallet::find($data['wallet_id']) : null;
-			if (!$wallet) {
-				$wallet = Wallet::create([
-					'user_id' => Auth::id(),
-					'balance' => 0,
-				]);
-			}
-			$data['wallet_id'] = $wallet->id;
-
-			// Handle file upload
-			if ($request->hasFile('screenshot')) {
-				$path = $request->file('screenshot')->store('screenshots', 'public');
-				$data['screenshot'] = basename($path);
-			}
-
-			$data['user_id'] = Auth::id();
-			$data['status'] = 'pending'; // Add default status
-
-			Transaction::create($data);
-
-			return back()->with('success', 'Recharge request submitted successfully.');
-		} catch (ValidationException $e) {
-			return back()
-				->withErrors($e->errors(), 'recharge')
-				->withInput()
-				->with('openRechargeModal', true);
-		} catch (\Exception $e) {
-			return back()
-				->withErrors(['unexpected' => 'An unexpected error occurred'], 'recharge')
-				->withInput()
-				->with('openRechargeModal', true);
+		if ($pendingTransaction) {
+			return back()->with('error', 'You already have a pending transaction. Please wait for it to be processed.');
 		}
+
+		// Store screenshot and get the filename
+		$path = $request->file('screenshot')->store('transactions', 'public');
+		$filename = basename($path);
+
+		// Create transaction
+		$transaction = Transaction::create([
+			'user_id' => auth()->id(),
+			'wallet_id' => $request->wallet_id,
+			'payment_method_id' => $request->payment_method_id,
+			'amount' => $request->amount,
+			'screenshot' => $filename,
+			'status' => 'pending',
+		]);
+
+		return redirect()->route('recharge.index')->with('success', 'Recharge request submitted successfully. It will be processed shortly.');
 	}
 }

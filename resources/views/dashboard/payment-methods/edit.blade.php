@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.app')
 
 @section('content')
-<div class="container">
+<div class="container-fluid px-0 px-md-2">
 	<x-alert />
 
 	<x-form 
@@ -46,6 +46,8 @@
 
 		{{-- image input --}}
 		<x-form.files label="Image" name="image" :existingImages="[$paymentMethod->imagePath]" />
+
+		<x-form.files label="QR" name="qr" :existingImages="[$paymentMethod->qrPath]" />
 
 		{{-- Status select --}}
 		<x-form.option 
