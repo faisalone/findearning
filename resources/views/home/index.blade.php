@@ -94,86 +94,31 @@
 </div>
 <!-- ..::Featured Product Section End Here::.. -->
 
+<!-- ..::Testimonial/Review Section Start Here::.. -->
 <div class="rts-testimonial-section">
 	<div class="container">
 		<div class="section-inner">
-			<div class="swiper testimonialSlide swiper-initialized swiper-horizontal swiper-pointer-events swiper-backface-hidden">
-				<div class="swiper-wrapper" id="swiper-wrapper-93a45101c5269964" aria-live="off" style="transition-duration: 1500ms; transform: translate3d(-2850px, 0px, 0px);"><div class="swiper-slide swiper-slide-duplicate swiper-slide-duplicate-next" data-swiper-slide-index="3" style="width: 940px; margin-right: 10px;">
-						<div class="slider-inner">
-							<img class="icon" src="assets/images/slider/icon-testimonial.png" alt="">
-							<div class="content text-white">
-								<p class="description text-white">“ This is genuinely the first theme I bought for which I did
-									not have to write one line of code. I would recommend everybody to get it. “</p>
-							</div>
-							<div class="author-box">
-								<h3 class="author-name text-white">Jennifer Lopez</h3>
-							</div>
-						</div>
-					</div>
-					<div class="swiper-slide" data-swiper-slide-index="0" style="width: 940px; margin-right: 10px;">
-						<div class="slider-inner">
-							<img class="icon" src="assets/images/slider/icon-testimonial.png" alt="">
-							<div class="content text-white">
-								<p class="description text-white">“ This is genuinely the first theme I bought for which I did
-									not have to write one line of code. I would recommend everybody to get it. “</p>
-							</div>
-							<div class="author-box">
-								<h3 class="author-name text-white">Jennifer Lopez</h3>
+			<div class="swiper testimonialSlide">
+				<div class="swiper-wrapper">
+					@foreach ($reviews as $review)
+						<div class="swiper-slide">
+							<div class="slider-inner">
+								<img class="avatar img-fluid" src="{{ asset('storage/' . $review->image_path) }}" alt="Review image" style="max-width: 100px;">
+								<div class="content text-white">
+									<p class="description text-white">“ {{ $review->comment }} ”</p>
+								</div>
+								<div class="author-box">
+									<h3 class="author-name text-white">{{ $review->user->name ?? 'Anonymous' }}</h3>
+								</div>
 							</div>
 						</div>
-					</div>
-					<div class="swiper-slide swiper-slide-prev" data-swiper-slide-index="1" style="width: 940px; margin-right: 10px;">
-						<div class="slider-inner">
-							<img class="icon" src="assets/images/slider/icon-testimonial.png" alt="">
-							<div class="content">
-								<p class="description text-white">“ This is genuinely the first theme I bought for which I did
-									not have to write one line of code. I would recommend everybody to get it. “</p>
-							</div>
-							<div class="author-box">
-								<h3 class="author-name text-white">Jennifer Lopez</h3>
-							</div>
-						</div>
-					</div>
-					<div class="swiper-slide swiper-slide-active" data-swiper-slide-index="2" style="width: 940px; margin-right: 10px;">
-						<div class="slider-inner">
-							<img class="icon" src="assets/images/slider/icon-testimonial.png" alt="">
-							<div class="content">
-								<p class="description text-white">“ This is genuinely the first theme I bought for which I did
-									not have to write one line of code. I would recommend everybody to get it. “</p>
-							</div>
-							<div class="author-box">
-								<h3 class="author-name text-white">Jennifer Lopez</h3>
-							</div>
-						</div>
-					</div>
-					<div class="swiper-slide swiper-slide-next" data-swiper-slide-index="3" style="width: 940px; margin-right: 10px;">
-						<div class="slider-inner">
-							<img class="icon" src="assets/images/slider/icon-testimonial.png" alt="">
-							<div class="content text-white">
-								<p class="description text-white">“ This is genuinely the first theme I bought for which I did
-									not have to write one line of code. I would recommend everybody to get it. “</p>
-							</div>
-							<div class="author-box ">
-								<h3 class="author-name text-white">Jennifer Lopez</h3>
-							</div>
-						</div>
-					</div>
-				<div class="swiper-slide swiper-slide-duplicate" data-swiper-slide-index="0" style="width: 940px; margin-right: 10px;">
-						<div class="slider-inner">
-							<img class="icon" src="assets/images/slider/icon-testimonial.png" alt="">
-							<div class="content">
-								<p class="description">“ This is genuinely the first theme I bought for which I did
-									not have to write one line of code. I would recommend everybody to get it. “</p>
-							</div>
-							<div class="author-box">
-								<h3 class="author-name text-white">Jennifer Lopez</h3>
-							</div>
-						</div>
-					</div></div>
-				<div class="swiper-pagination swiper-pagination-clickable swiper-pagination-bullets swiper-pagination-horizontal"><span class="swiper-pagination-bullet" tabindex="0"></span><span class="swiper-pagination-bullet" tabindex="0"></span><span class="swiper-pagination-bullet swiper-pagination-bullet-active" tabindex="0" aria-current="true"></span><span class="swiper-pagination-bullet" tabindex="0"></span></div>
-			<span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span></div>
+					@endforeach
+				</div>
+				<div class="swiper-pagination"></div>
+			</div>
 		</div>
 	</div>
 </div>
+<!-- ..::Testimonial/Review Section End Here::.. -->
 
 @endsection

@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Social;
 use App\Models\Slider;
+use App\Models\Review; // added import
 
 class HomeController extends Controller
 {
@@ -27,8 +28,10 @@ class HomeController extends Controller
                     'link' => route('shop')
                 ];
             });
+        $reviews = Review::where('status', true)->get(); // fetching approved reviews
+		// return $reviews;
         
-        return view('home.index', compact('categories', 'randomProducts', 'banners'));
+        return view('home.index', compact('categories', 'randomProducts', 'banners', 'reviews'));
     }
     
     
