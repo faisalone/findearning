@@ -1,7 +1,7 @@
 @extends('dashboard.layouts.app')
 
 @push('styles')
-<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap4.min.css">
 @endpush
 
 @section('content')
@@ -20,6 +20,7 @@
                                     <th>Customer Info</th>
                                     <th>Registration Date</th>
                                     <th>Status</th>
+                                    <th>Action</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -36,6 +37,18 @@
                                         <span class="badge bg-{{ $customer->email_verified_at ? 'success' : 'warning' }}">
                                             {{ $customer->email_verified_at ? 'Verified' : 'Unverified' }}
                                         </span>
+                                        <br>
+                                        <span class="badge bg-{{ $customer->role == 0 ? 'success' : 'danger' }} mt-1">
+                                            {{ $customer->role == 0 ? 'Active' : 'Inactive' }}
+                                        </span>
+                                    </td>
+                                    <td>
+                                        <form action="{{ route('customers.toggle', $customer->id) }}" method="POST">
+                                            @csrf
+                                            <button class="btn btn-{{ $customer->role == 0 ? 'danger' : 'success' }} btn-sm">
+                                                {{ $customer->role == 0 ? 'Deactivate' : 'Activate' }}
+                                            </button>
+                                        </form>
                                     </td>
                                 </tr>
                                 @endforeach
@@ -51,7 +64,7 @@
 
 @push('scripts')
 <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+<script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap4.min.js"></script>
 <script>
     $(document).ready(function() {
         // Check if DataTable is already initialized on this table

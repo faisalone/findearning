@@ -158,4 +158,36 @@ copy-feedback.visible {
 	.pagination .page-link {
 		margin: 2px;
 	}
+	.table-responsive {
+		border: 0;
+	}
+	.mobile-card {
+		margin-bottom: 1rem;
+		border: 1px solid rgba(0,0,0,.125);
+		border-radius: .25rem;
+	}
+	.mobile-card .card-body {
+		padding: 1rem;
+	}
+	.mobile-card-title {
+		color: #6c757d;
+		font-size: 0.875rem;
+		margin-bottom: 0.25rem;
+	}
+	.mobile-card-value {
+		font-weight: 500;
+	}
+	.mobile-order-row {
+		display: flex;
+		flex-wrap: wrap;
+	}
+	.modal-body .row > div {
+		margin-bottom: 15px;
+	}
+	.text-truncate-custom {
+		white-space: nowrap;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		max-width: 100%;
+	}
 }

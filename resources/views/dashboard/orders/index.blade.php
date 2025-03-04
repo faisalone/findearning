@@ -22,7 +22,7 @@
 							Contact: {{ $order->user->contact }}
 						</td>
                         <td>
-							<strong>Order ID: {{ $order->id }}</strong>
+							<strong>Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</strong>
 							<br>
 							Products:
                             <ul>
@@ -32,14 +32,19 @@
                             </ul>
                             Status: <strong>{{ $order->status }}</strong>
                             <br>
-                            Total: <strong>{{ number_format($order->total, 2) }}</strong>
+                            Total: <strong>${{ number_format($order->total, 2) }}</strong>
                         </td>
                         <td>
-							@if($order->payment_option == 'wallet')
-								Wallet ID: {{ $order->user->wallet->id }}<br>
+							@if($order->payment_option == 'Wallet')
+								<label class="form-label">Paid by Wallet No: {{ $order->user->wallet->id }}</label>
 							@else
-								<div class="zoom-container">
-									<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid" style="width: 100px; height: 100px;">
+								<div class="magnify-container">
+									<div class="clickable-image-container">
+										<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid proof-thumbnail" data-proof="{{ $order->proofUrl() }}">
+										<div class="zoom-icon">
+											<i class="fa fa-search-plus"></i>
+										</div>
+									</div>
 								</div>
 							@endif
 						</td>
@@ -57,4 +62,38 @@
         </table>
     </div>
 </div>
+
+<!-- Proof Modal -->
+<div class="modal fade" id="proofModal" tabindex="-1" role="dialog" aria-labelledby="proofModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="proofModalLabel">Payment Proof</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body text-center">
+				<img id="fullProof" src="" alt="Full Proof" style="max-width: 100%;">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
+</div>
+
 @endsection
+
+@push('scripts')
+<script>
+	$(document).ready(function() {
+		// Make the entire container clickable
+		$('.clickable-image-container').click(function() {
+			var proofSrc = $(this).find('.proof-thumbnail').data('proof');
+			$('#fullProof').attr('src', proofSrc);
+			$('#proofModal').modal('show');
+		});
+	});
+</script>
+@endpush

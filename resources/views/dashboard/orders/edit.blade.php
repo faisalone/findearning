@@ -6,28 +6,32 @@
         :formId="'editOrderForm'"
         :formAction="route('orders.update', $order->id)"
         :method="'PUT'"
-        :title="'Edit Order #'.$order->id.' - '.$order->user->name"
+        :title="'Edit Order #'.str_pad($order->id, 5, '0', STR_PAD_LEFT).' - '.$order->user->name"
         :discardRoute="route('orders.index')"
     >
         <!-- Group 1: Total, Proof & Status -->
         <div class="row mb-3 p-3 bg-light rounded border">
-			@if($order->payment_option === 'wallet')
+			@if($order->payment_option === 'Wallet')
 				<div class="col-md-4">
-					<label class="form-label">Wallet ID</label>
-					<p class="fs-4 fw-bold mb-0">{{ $order->user->wallet->id }}</p>
+					<label class="form-label">Paid by Wallet No: {{ $order->user->wallet->id }}</label>
 				</div>
 			@else
 				<div class="col-md-4">
 					<label for="proof" class="form-label">Proof</label>
-					<div class="zoom-container">
-						<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid" style="width: 100px; height: 100px;">
+					<div class="magnify-container">
+						<div class="clickable-image-container">
+							<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid proof-thumbnail" style="width: 100px; height: 100px;" data-proof="{{ $order->proofUrl() }}">
+							<div class="zoom-icon">
+								<i class="fa fa-search-plus"></i>
+							</div>
+						</div>
 					</div>
 				</div>
 			@endif
 			
             <div class="col-md-4">
                 <label class="form-label">Total</label>
-                <p class="fs-4 fw-bold mb-0">${{ number_format($order->total, 2) }}</p>
+                <p class="font-weight-bold mb-0">${{ number_format($order->total, 2) }}</p>
             </div>
 
 			<div class="col-md-4">
@@ -74,13 +78,13 @@
                 <p class="form-control-plaintext">
                     Phone: <span id="phoneText">{{ $order->user->contact }}</span>
                     <button type="button" id="copyPhoneBtn" class="btn btn-link p-0">
-                        <i class="bi bi-clipboard"></i>
+                        <i class="fa fa-clipboard"></i>
                     </button>
                     <span id="copyPhoneMessage" style="display:none;">Copied!</span>
                     <br>
                     Email: <span id="emailText">{{ $order->user->email }}</span>
                     <button type="button" id="copyEmailBtn" class="btn btn-link p-0">
-                        <i class="bi bi-clipboard"></i>
+                        <i class="fa fa-clipboard"></i>
                     </button>
                     <span id="copyEmailMessage" style="display:none;">Copied!</span>
                 </p>
@@ -94,6 +98,26 @@
             </div>
         </div>
     </x-form>
+</div>
+
+<!-- Proof Modal -->
+<div class="modal fade" id="proofModal" tabindex="-1" role="dialog" aria-labelledby="proofModalLabel" aria-hidden="true">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="proofModalLabel">Payment Proof</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body text-center">
+				<img id="fullProof" src="" alt="Full Proof" style="max-width: 100%;">
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+			</div>
+		</div>
+	</div>
 </div>
 
 <script>
@@ -114,5 +138,27 @@ document.getElementById("copyEmailBtn").addEventListener("click", function(){
         setTimeout(function(){ copyMsg.style.display = "none"; }, 2000);
     });
 });
+
+// Add proof modal functionality
+$(document).ready(function() {
+    $('.clickable-image-container').click(function() {
+        var proofSrc = $(this).find('.proof-thumbnail').data('proof');
+        $('#fullProof').attr('src', proofSrc);
+        $('#proofModal').modal('show');
+    });
+});
 </script>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    // Make the entire container clickable
+    $('.clickable-image-container').click(function() {
+        var proofSrc = $(this).find('.proof-thumbnail').data('proof');
+        $('#fullProof').attr('src', proofSrc);
+        $('#proofModal').modal('show');
+    });
+});
+</script>
+@endpush

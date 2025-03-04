@@ -1,10 +1,10 @@
 <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
     <!-- Sidebar - Brand -->
-    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('dashboard') }}">
+    <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('index') }}">
         <div class="sidebar-brand-icon rotate-n-15">
-            <i class="fas fa-laugh-wink"></i>
+            <img src="{{ asset('assets/images/fav.png') }}" alt="Findearning" width="50">
         </div>
-        <div class="sidebar-brand-text mx-3">Dashboard</div>
+        <div class="sidebar-brand-text mx-3">Findearning</div>
     </a>
     
     <!-- Divider -->
@@ -64,6 +64,13 @@
             <a class="nav-link {{ request()->routeIs('payment-methods.*') ? 'active' : '' }}" href="{{ route('payment-methods.index') }}">
                 <i class="fas fa-fw fa-credit-card"></i>
                 <span>Payment Methods</span>
+            </a>
+        </li>
+        <!-- New Settings Menu -->
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('settings.*') ? 'active' : '' }}" href="{{ route('settings.index') }}">
+                <i class="fas fa-fw fa-cog"></i>
+                <span>Settings</span>
             </a>
         </li>
     @else

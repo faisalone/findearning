@@ -16587,7 +16587,6 @@ color: var(--theme-color);
   border-radius: 6px;
   padding-right: 35px;
   width: 72%;
-  display: flex;
   align-items: center;
   justify-content: space-between;
 }
@@ -16680,8 +16679,16 @@ color: var(--theme-color);
 .footer-4 .footer-bottombar {
   background: var(--theme-color);
 }
-.footer-4 .footer-bottombar .payment-methods img {
-  filter: brightness(0);
+.payment-methods {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.payment-methods img {
+    height: 50px; /* Adjust the height as needed */
+    object-fit: contain;
+    margin: 0 10px; /* Adjust the margin as needed */
 }
 .footer-4 .footer-bottom-area {
   background: transparent;

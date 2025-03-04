@@ -15,9 +15,13 @@ use App\Http\Controllers\PaymentMethodController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReviewController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Middleware\CheckUserRole;
 
-// Route::auth(); // This line automatically registers Auth routes, no extra directive needed.
-Auth::routes(['verify' => true]);
+// Apply the CheckUserRole middleware directly to Auth routes
+Route::middleware([CheckUserRole::class])->group(function () {
+    Auth::routes(['verify' => true]);
+});
 
 Route::controller(HomeController::class)->group(function () {
 	Route::get('/', 'index')->name('index');
@@ -70,41 +74,39 @@ Route::patch('/reviews/{review}/toggle-status', [ReviewController::class, 'toggl
 
 // Transaction routes
 
-Route::prefix('dashboard')->middleware(['auth'])->group(function () {
-	Route::get('/', function () {
-		return view('dashboard.index');
-	})->name('dashboard');
-	Route::get('/wallet', [WalletController::class, 'index'])->name('wallet');
-	Route::get('/wallet/recharge', [WalletController::class, 'rechargeIndex'])->name('recharge.index');
-	Route::post('/wallet/recharge', [WalletController::class, 'recharge'])->name('recharge');
-	Route::get('/transactions/{id}/approve', [TransactionController::class, 'approve'])->name('transactions.approve');
-	Route::get('/transactions/{id}/reject', [TransactionController::class, 'reject'])->name('transactions.reject');
-	Route::patch('/transactions/{id}/adjust', [TransactionController::class, 'adjust'])->name('transactions.adjust');
+// Dashboard routes - add the CheckUserRole middleware explicitly
+Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(function () {
+    // Keep the main dashboard route
+    Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
 
-	
-	Route::resource('categories', CategoryController::class);
-	Route::prefix('categories')->controller(CategoryController::class)->group(function () {
-		Route::post('/{category}/status', 'updateStatus')->name('categories.updateStatus');
-	});
+    // Customer-specific routes - these can be accessed by customers
+    Route::get('/my-profile', [CustomerController::class, 'profile'])->name('myProfile');
+    Route::post('/my-profile/update', [CustomerController::class, 'updateProfile'])->name('profile.update');
+    Route::get('/my-orders', [CustomerController::class, 'orders'])->name('myOrders');
+    
+    // Admin-only routes - customers will be redirected away from these
+    Route::get('/wallet', [WalletController::class, 'index'])->name('wallet');
+    Route::get('/wallet/recharge', [WalletController::class, 'rechargeIndex'])->name('recharge.index');
+    Route::post('/wallet/recharge', [WalletController::class, 'recharge'])->name('recharge');
+    Route::get('/transactions/{id}/approve', [TransactionController::class, 'approve'])->name('transactions.approve');
+    Route::get('/transactions/{id}/reject', [TransactionController::class, 'reject'])->name('transactions.reject');
+    Route::patch('/transactions/{id}/adjust', [TransactionController::class, 'adjust'])->name('transactions.adjust');
+    
+    Route::resource('categories', CategoryController::class);
+    Route::prefix('categories')->controller(CategoryController::class)->group(function () {
+        Route::post('/{category}/status', 'updateStatus')->name('categories.updateStatus');
+    });
 
-	Route::resource('orders', OrderController::class);
-	Route::resource('sliders', SliderController::class);
-	Route::resource('payment-methods', PaymentMethodController::class);
-	Route::resource('pages', PageController::class)->except(['show']);
+    Route::resource('orders', OrderController::class);
+    Route::resource('sliders', SliderController::class);
+    Route::resource('payment-methods', PaymentMethodController::class);
+    Route::resource('pages', PageController::class)->except(['show']);
 
-	Route::resource('products', ProductController::class);
-	Route::prefix('products')->controller(ProductController::class)->group(function () {
-		Route::post('/{product}/status', 'updateStatus')->name('products.updateStatus');
-	});
-	Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
-	Route::get('/my-profile', [CustomerController::class, 'profile'])->name('myProfile');
-	Route::post('/my-profile/update', [CustomerController::class, 'updateProfile'])->name('profile.update');
-	Route::get('/my-orders', [CustomerController::class, 'orders'])->name('myOrders'); 
-	Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-    Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
+    Route::resource('products', ProductController::class);
+    Route::prefix('products')->controller(ProductController::class)->group(function () {
+        Route::post('/{product}/status', 'updateStatus')->name('products.updateStatus');
+    });
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
+    Route::post('/customers/{customer}/toggle', [CustomerController::class, 'toggle'])->name('customers.toggle');
+    Route::resource('settings', SettingController::class)->except(['create', 'edit', 'show']);
 });
-
-// Route::middleware(['auth', 'verified'])->group(function () {
-//     Route::get('/settings', [SettingController::class, 'index'])->name('settings.index');
-//     Route::post('/settings', [SettingController::class, 'store'])->name('settings.store');
-// });

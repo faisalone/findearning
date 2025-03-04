@@ -4,13 +4,15 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
-use Illuminate\Support\Facades\Schema; // added import
-
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\Blade;
 use App\Models\Category;
-use App\Models\Page; // added import
-use App\Models\Product; // Add Product model import
-use Illuminate\Pagination\Paginator; // added import
+use App\Models\Page;
+use App\Models\Product;
 use App\Models\Setting;
+use App\Models\PaymentMethod;
+use App\Helpers\Settings;
+use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
 
 class AppServiceProvider extends ServiceProvider
@@ -20,7 +22,13 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function register(): void
 	{
-		//
+		// Register the settings singleton
+        $this->app->singleton('settings', function ($app) {
+            if (Schema::hasTable('settings')) {
+                return Setting::get();
+            }
+            return [];
+        });
 	}
 
 	/**
@@ -28,12 +36,13 @@ class AppServiceProvider extends ServiceProvider
 	 */
 	public function boot(): void
 	{
-		Paginator::useBootstrapFive(); // enable Bootstrap 4 pagination
-		Paginator::useBootstrapFour(); // enable Bootstrap 4 pagination
+		Paginator::useBootstrapFive();
+		Paginator::useBootstrapFour();
 
 		if (Schema::hasTable('settings')) {
 			$settings = Setting::pluck('value', 'key')->toArray();
-   			Config::set('settings', $settings);
+			Config::set('settings', $settings);
+			View::share('settings', $settings);
 		}
 
 		if (Schema::hasTable('categories')) {
@@ -45,12 +54,17 @@ class AppServiceProvider extends ServiceProvider
 			$pages = Page::where('status', true)->get()->groupBy('position');
 			View::share('informationPages', $pages->get(1, collect()));
 			View::share('myaccountPages', $pages->get(2, collect()));
-			}
-        
-		// Share top products with all views, but don't fall back to latest products
+		}
+
 		if (Schema::hasTable('products')) {
 			$topProducts = Product::getTopProducts(4, false);
 			View::share('topProducts', $topProducts);
+		}
+
+		// Share payment methods with all views
+		if (Schema::hasTable('payment_methods')) {
+			$paymentMethods = PaymentMethod::select('name', 'image',)->where('status', true)->get();
+			View::share('paymentMethods', $paymentMethods);
 		}
 	}
 }

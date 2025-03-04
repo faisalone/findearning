@@ -185,6 +185,7 @@ class OrderController extends Controller
     public function index()
     {
         $orders = Order::with('user')->get();
+		// return response()->json($orders);
         return view('dashboard.orders.index', compact('orders'));
     }
 

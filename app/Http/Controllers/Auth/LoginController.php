@@ -120,4 +120,26 @@ class LoginController extends Controller
         // Otherwise return the default redirect path
         return $this->redirectTo;
     }
+
+    /**
+     * The user has been authenticated.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  mixed  $user
+     * @return mixed
+     */
+    protected function authenticated(Request $request, $user)
+    {
+        // Check for disabled users (role = 2)
+        if ($user->role === 2) {
+            $this->guard()->logout();
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+            
+            return redirect()->route('login')
+                ->with('error', 'Your account has been disabled. Please contact the administrator.');
+        }
+
+        return redirect()->intended($this->redirectPath());
+    }
 }

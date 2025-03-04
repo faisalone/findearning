@@ -22,6 +22,21 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
                         </div>
                         <div class="card">
                             <div class="card-body">
+                                <!-- Add this section to display flash messages -->
+                                @if(session('error'))
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        {{ session('error') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
+                                @if(session('success'))
+                                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                        {{ session('success') }}
+                                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                                    </div>
+                                @endif
+                                <!-- End flash messages section -->
+
                                 <form method="POST" action="{{ route('login') }}">
                                     @csrf
                                     <div class="form">

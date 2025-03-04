@@ -17,7 +17,8 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return view('dashboard.settings.index');
+        $settings = Setting::orderBy('key', 'asc')->get();
+        return view('dashboard.settings.index', compact('settings'));
     }
 
     /**
@@ -33,7 +34,15 @@ class SettingController extends Controller
      */
     public function store(Request $request)
     {
-		//
+        $request->validate([
+            'key' => 'required|string|max:255|unique:settings,key',
+            'value' => 'required|string'
+        ]);
+
+        Setting::create($request->only(['key', 'value']));
+        
+        return redirect()->route('settings.index')
+            ->with('success', 'Setting created successfully.');
     }
 
     /**
@@ -57,7 +66,15 @@ class SettingController extends Controller
      */
     public function update(Request $request, Setting $setting)
     {
-        //
+        $request->validate([
+            'value' => 'required|string'
+        ]);
+
+        $setting->value = $request->value;
+        $setting->save();
+        
+        return redirect()->route('settings.index')
+            ->with('success', 'Setting updated successfully.');
     }
 
     /**
@@ -65,6 +82,9 @@ class SettingController extends Controller
      */
     public function destroy(Setting $setting)
     {
-        //
+        $setting->delete();
+        
+        return redirect()->route('settings.index')
+            ->with('success', 'Setting deleted successfully.');
     }
 }
