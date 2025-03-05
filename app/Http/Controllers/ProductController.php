@@ -48,7 +48,7 @@ class ProductController extends Controller
 	public function store(Request $request)
 	{
 		$request->validate([
-			'category_id' => 'nullable|exists:categories,id',
+			'category_id' => 'required|exists:categories,id',
 			'title' => 'required|unique:products,title',
 			'description' => 'required',
 			'price'        => 'required|numeric',
