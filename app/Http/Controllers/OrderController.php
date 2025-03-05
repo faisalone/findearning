@@ -35,7 +35,6 @@ class OrderController extends Controller
             'order_notes' => 'nullable|string',
         ];
 
-        // Conditionally add validation for email and contact fields
         if ($request->delivery_method === 'email') {
             $validationRules['email'] = 'required|email|max:255';
             $validationRules['contact'] = 'nullable|string|max:255';
@@ -44,8 +43,23 @@ class OrderController extends Controller
             $validationRules['email'] = 'nullable|email|max:255';
         }
 
-        // Validate the request with conditional rules
-        $request->validate($validationRules);
+        $validator = \Validator::make($request->all(), $validationRules);
+
+        // After hook: if payment_option is Wallet, ensure the wallet exists for the user.
+        $validator->after(function($validator) use ($request) {
+            if ($request->payment_option === 'Wallet') {
+                $user = auth()->check()
+                    ? auth()->user()
+                    : User::where('email', $request->email)
+                          ->orWhere('contact', $request->contact)
+                          ->first();
+                if (!$user || !Wallet::where('user_id', $user->id)->exists()) {
+                    $validator->errors()->add('payment_option', 'No wallet found.');
+                }
+            }
+        });
+
+        $validator->validate();
 
         // Collect product details from the cart and calculate the total
         $cart = session('cart', []);
@@ -85,17 +99,21 @@ class OrderController extends Controller
 
         // Check Wallet balance if payment_option is Wallet
         if ($request->payment_option === 'Wallet') {
-            $user = auth()->check() ? auth()->user() : User::where('email', $request->email)->first();
+            $user = auth()->check()
+                ? auth()->user()
+                : User::where('email', $request->email)
+                      ->orWhere('contact', $request->contact)
+                      ->first();
             if ($user) {
                 $wallet = Wallet::where('user_id', $user->id)->first();
-                if (!$wallet || $wallet->balance === null) {
+                if (!$wallet) {
                     return redirect()->back()
-                        ->withErrors(['payment_option' => 'eWallet not found or balance is empty. Please recharge your eWallet.'])
+                        ->withErrors(['payment_option' => 'No wallet found.'])
                         ->withInput();
                 }
-                if ($total > $wallet->balance) {
+                if ($wallet->balance === null || $total > $wallet->balance) {
                     return redirect()->back()
-                        ->withErrors(['payment_option' => 'Insufficient eWallet balance. Please Recharge your eWallet.'])
+                        ->withErrors(['payment_option' => 'Insufficient eWallet balance. Please recharge your eWallet.'])
                         ->withInput();
                 }
             }

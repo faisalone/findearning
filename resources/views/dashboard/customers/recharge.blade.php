@@ -1,5 +1,5 @@
 @extends('dashboard.layouts.app')
-
+@section('title', 'Request Wallet Recharge')
 @section('content')
 <div class="container-fluid py-4">
     <!-- Page Header -->
@@ -122,6 +122,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="card bg-light border-0 mb-3">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <span class="text-muted">Exchange Rate</span>
+                                        <span id="payment_rate" class="font-weight-bold">1 USD = 1 USDT</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         
                         <!-- Payment Details Section - Shows after amount is entered -->
@@ -152,20 +160,14 @@
                                 </div>
                             </div>
                             
-                            <!-- Currency Rate -->
-                            <div class="card bg-light border-0 mb-3">
-                                <div class="card-body">
-                                    <div class="d-flex justify-content-between">
-                                        <span class="text-muted">Exchange Rate</span>
-                                        <span id="payment_rate" class="font-weight-bold">1 USD = 1.00</span>
-                                    </div>
-                                </div>
-                            </div>
+                            <!-- Remove the former exchange rate card from within the payment-details-container -->
                             
                             <!-- Payment Instructions -->
                             <div class="payment-instructions">
                                 <h6 class="text-uppercase text-muted small mb-2">Instructions</h6>
-                                <p id="payment_instructions" class="text-muted small">Please scan the QR code with your payment app or copy the address to make a payment.</p>
+                                <p class="text-muted">
+                                    <mark id="payment_instructions">Please scan the QR code with your payment app or copy the address to make a payment.</mark>
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -415,7 +417,7 @@ function updatePaymentDetails(method) {
     // Update rate - simplified
     const rateElem = document.getElementById('payment_rate');
     if (rateElem) {
-        rateElem.textContent = method.rate ? '1 USD = ' + method.rate + ' ' + method.name : 'N/A';
+        rateElem.textContent = '1 USD = 1 USDT';
     }
     
     // Calculate initial payable amount
@@ -426,9 +428,9 @@ function calculatePayable() {
     const amount = parseFloat(document.getElementById('amount').value);
     const calcDiv = document.getElementById('calculatedAmount');
     
-    if (amount && selectedMethod && selectedMethod.rate) {
-        let payable = amount * parseFloat(selectedMethod.rate);
-        calcDiv.textContent = selectedMethod.name + ' ' + payable.toFixed(2);
+    if (amount) {
+        let payable = amount; 
+        calcDiv.textContent = payable.toFixed(2) + ' USDT';
     } else {
         calcDiv.textContent = '--';
     }

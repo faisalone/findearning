@@ -142,6 +142,7 @@ class ShopController extends Controller
         }
         // Fetch active payment methods from DB
         $paymentMethods = PaymentMethod::where('status', true)->get();
+		// return response()->json($paymentMethods);
         return view('shop.checkOut', compact('cartItems', 'subtotal', 'paymentMethods'));
     }
 

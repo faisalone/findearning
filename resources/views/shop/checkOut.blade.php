@@ -13,21 +13,27 @@
         <div class="container">
             @if(count($cartItems) > 0)
                 <!-- Display stock error message -->
+                {{-- The $message variable below is provided by the @error directive --}}
                 @error('stock_error')
                     <div class="alert alert-danger" role="alert">
                         {{ $message }}
                     </div>
                 @enderror
+
                 
-                <!-- Display general error message -->
-                @error('error')
-                    <div class="alert alert-danger" role="alert">
-                        {{ $message }}
-                    </div>
-                @enderror
-                
-                <form class="checkout-form" method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
+                <form class="checkout-form" novalidate method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
                     @csrf
+                    {{-- New common error block --}}
+                    @if ($errors->any())
+                        <div class="alert alert-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </div>
+                    @endif
+
                     <div class="row g-3 justify-content-between">
                         <label class="delivery-heading mb-3"><h3>Delivery Information:</h3></label>
 
@@ -54,28 +60,19 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="input-div">
-                                        <input type="text" name="name" placeholder="Name**" required value="{{ old('name') }}">
-                                        @error('name')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                        <input type="text" name="name" placeholder="Name**" required value="{{ old('name', Auth::user()->name ?? '') }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-md-6">
                                     <div class="input-div">
-                                        <input type="text" id="contactInput" name="contact" placeholder="Telegram/WhatsApp**" value="{{ old('contact') }}">
-                                        @error('contact')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                        <input type="text" id="contactInput" name="contact" placeholder="Telegram/WhatsApp**" value="{{ old('contact', Auth::user()->contact ?? '') }}">
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-md-6">
                                     <div class="input-div">
-                                        <input type="email" id="emailInput" name="email" placeholder="Email Address**" value="{{ old('email') }}">
-                                        @error('email')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
+                                        <input type="email" id="emailInput" name="email" placeholder="Email Address**" value="{{ old('email', Auth::user()->email ?? '') }}">
                                     </div>
                                 </div>
                             </div>
@@ -84,56 +81,70 @@
                                     <textarea id="orderNotes" name="order_notes" cols="80" rows="4" placeholder="Order notes (optional)">{{ old('order_notes') }}</textarea>
                                 </div>
                             </div>
-                            <!-- Payment Options -->
-                            <div class="payment-options checkout-options mb-3">
-                                <label class="mb-2">Select a payment option:</label>
-                                <div class="btn-group d-flex flex-wrap justify-content-center gap-3" role="group">
+                            <!-- Replace Payment Method Options -->
+                            <div class="row mb-3">
+                                <div class="col-12">
+                                    <label class="mb-2">Select a Payment Method:</label>
+                                    <div class="d-flex gap-2 payment-options-container" role="group">
+                                        <input type="radio" class="btn-check" name="payment_option" id="paymentEwallet" value="Wallet" autocomplete="off" {{ old('payment_option') == 'Wallet' ? 'checked' : '' }}>
+                                        <label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentEwallet">
+                                            <img src="https://img.icons8.com/fluency/48/000000/wallet.png" alt="eWallet" class="me-2"> eWallet
+                                        </label>
+                                        <!-- Fixed: Changed name to match other radio button -->
+                                        <input type="radio" class="btn-check" name="payment_option" id="paymentCrypto" value="crypto" autocomplete="off" {{ old('payment_option') == 'crypto' ? 'checked' : '' }}>
+                                        <label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentCrypto">
+                                            <img src="https://img.icons8.com/fluency/48/000000/bitcoin.png" alt="Crypto" class="me-2"> Crypto
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- New Crypto Payment Methods Options (centered) -->
+                            <div id="cryptoOptionsContainer" class="mt-3 text-center" style="display:none;">
+                                <label class="mb-2 d-block">Select a Crypto Payment Method:</label>
+                                <div class="d-flex gap-2 flex-wrap justify-content-center">
                                     @foreach($paymentMethods as $method)
-                                        <input type="radio" class="btn-check" name="payment_option" id="payment_{{ $method->id }}" value="{{ $method->name }}" required autocomplete="off" {{ old('payment_option') == $method->name ? 'checked' : '' }}>
-                                        <label class="btn btn-outline-secondary rounded-pill" for="payment_{{ $method->id }}" onclick="showPaymentInfo('{{ $method->name }}')">
-                                            <img src="{{ $method->image_path }}" alt="{{ $method->name }}" class="payment-icon"> {{ $method->name }}
+                                        <input type="radio" class="btn-check crypto-method" name="payment_option" id="cryptoMethod{{$method->id}}"
+                                            value="{{ $method->name }}" autocomplete="off"
+                                            data-address="{{ $method->address }}"
+                                            data-instruction="{{ $method->instruction }}"
+                                            data-exchange="{{ $method->rate }}"
+                                            data-qr="{{ $method->qr_path }}">
+                                        <label class="btn btn-outline-secondary rounded d-flex align-items-center" for="cryptoMethod{{$method->id}}">
+                                            <img src="{{ $method->image_path }}" alt="{{ $method->name }}" class="me-2" style="width:2.2em; height:2.2em;"> {{ $method->name }}
                                         </label>
                                     @endforeach
                                 </div>
-                                @error('payment_option')
-                                    <span class="text-danger">{{ $message }}</span>
-                                @enderror
                             </div>
-                            
-                            <!-- Payment Details and Upload -->
-                            <div id="payment-info-container" class="d-none">
-                                <div id="payment-details">
-                                    <div class="p-3 mb-3">
-                                        <h5>Step 1: Payment</h5>
-                                        <div class="d-flex flex-wrap align-items-center">
-                                            <label class="form-label me-2 mb-0">Payment Details:</label>
-                                            <span class="badge bg-info text-dark text-break" style="white-space: normal;">
-                                                Instructions: Ensure to send money/cash out correctly for Bkash, Nagad, or Rocket!
-                                            </span>
+                            <!-- Crypto Payment Method Information Panel (modified) -->
+                            <div id="cryptoInfo" class="mt-3" style="display:none;">
+                                <div class="card crypto-details-card mx-auto">
+                                    <div class="card-body">
+                                        <div class="row align-items-center">
+                                            <!-- QR Code Column: center aligned -->
+                                            <div class="col-md-6 d-flex align-items-center justify-content-center">
+                                                <img id="cryptoQr" src="" alt="QR Code" class="img-fluid" style="max-height:250px;">
+                                            </div>
+                                            <!-- Info Column -->
+                                            <div class="col-md-6">
+												<strong>Payable Amount:</strong> {{ number_format($subtotal, 2) }} USDT
+                                                <div class="mb-3 d-flex align-items-center">
+                                                    <label class="form-label me-2"><strong>Address:</strong></label>
+                                                    <mark id="cryptoAddressBadge" class="bg-light text-dark flex-grow-1 text-start"></mark>
+                                                    <button class="btn btn-outline-secondary btn-sm ms-2" type="button" id="copyAddressBtn">Copy</button>
+                                                    <span id="copyTooltip" class="copy-tooltip text-success" style="display:none;">Copied!</span>
+                                                </div>
+                                                <p class="card-text"><strong>Instructions:</strong> <span id="cryptoInstructions"></span></p>
+                                                <p class="card-text">
+                                                    <span class="bg-warning px-1 rounded">Exchange Rate: 1 USD = 1 USDT</span>
+                                                </p>
+                                                <!-- New Proof Upload Field with Preview -->
+                                                <div class="proof-upload-container mt-3">
+                                                    <label id="proofUploadLabel" for="proofUpload" class="form-label"><strong>Upload Payment Proof:</strong></label>
+                                                    <input type="file" id="proofUpload" name="proof" accept="image/*">
+                                                    <img id="proofPreview" src="" alt="Image Preview" style="max-width:100%; display:none; margin-top:10px;">
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div class="input-group">
-                                            <button class="btn btn-outline-secondary"
-                                                    id="copyButton"
-                                                    type="button"
-                                                    onclick="copyToClipboard(paymentDetails[selectedPaymentMethod], selectedPaymentMethod)">
-                                                <i class="fa fa-copy"></i> Copy
-                                            </button>
-                                            <input type="text" class="form-control" aria-label="Payment Details" id="paymentDetailsInput" readonly>
-                                        </div>
-                                        <div class="mt-2">
-                                            <strong>Payable Total: <span id="payableTotalDropdown">${{ number_format($subtotal, 2) }}</span></strong>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div id="upload-proof">
-                                    <div class="card p-3">
-                                        <h5>Step 2: Upload Proof of Payment</h5>
-                                        <label for="paymentScreenshot" class="form-label">Upload Payment Screenshot:</label>
-                                        <input class="form-control" type="file" id="paymentScreenshot" name="proof" accept="image/*">
-                                        @error('proof')
-                                            <span class="text-danger">{{ $message }}</span>
-                                        @enderror
-                                        <img id="screenshotPreview" alt="Payment Screenshot" class="img-thumbnail mt-2 img-fluid d-none">
                                     </div>
                                 </div>
                             </div>
@@ -202,104 +213,30 @@
 
 @push('scripts')
 <script>
-    let selectedPaymentMethod = '';
-    const paymentDetails = {!! json_encode($paymentMethods->pluck('address', 'name')) !!};
-    const paymentRates = {!! json_encode($paymentMethods->pluck('rate', 'name')) !!};
-    const subtotal = {{ $subtotal }};
-
-    function showPaymentInfo(paymentMethod) {
-        selectedPaymentMethod = paymentMethod;
-        const container = document.getElementById('payment-info-container');
-        const paymentScreenshot = document.getElementById('paymentScreenshot');
-        const paymentDetailsInput = document.getElementById('paymentDetailsInput');
-        
-        container.classList.remove('d-none');
-        
-        let multiplier = parseFloat(paymentRates[paymentMethod]) || 1;
-        let payableTotal = subtotal * multiplier;
-        document.getElementById('payableTotalDropdown').innerHTML = '$' + payableTotal.toFixed(2);
-        
-        // Set payment details
-        if (paymentDetails[paymentMethod]) {
-            paymentDetailsInput.value = paymentDetails[paymentMethod];
-        }
-        
-        if (paymentMethod.toLowerCase() === 'wallet') {
-            document.getElementById('payment-details').classList.add('d-none');
-            document.getElementById('upload-proof').classList.add('d-none');
-            paymentScreenshot.removeAttribute('required');
-        } else {
-            document.getElementById('payment-details').classList.remove('d-none');
-            document.getElementById('upload-proof').classList.remove('d-none');
-            paymentScreenshot.setAttribute('required', 'required');
-        }
-    }
-
-    // Update form submission handler
+    // Update form submission and delivery method change handlers only.
     document.addEventListener('DOMContentLoaded', function() {
         const checkoutForm = document.querySelector('.checkout-form');
-        const paymentScreenshot = document.getElementById('paymentScreenshot');
         
         if (checkoutForm) {
             checkoutForm.addEventListener('submit', function(e) {
-                const selectedPayment = document.querySelector('input[name="payment_option"]:checked');
-                // Validate proof only if selected option is not "Wallet"
-                if (selectedPayment && selectedPayment.value.toLowerCase() !== 'wallet' && (!paymentScreenshot.files || !paymentScreenshot.files[0])) {
-                    e.preventDefault();
-                    alert('Please upload payment proof');
-                    return false;
-                }
                 return true;
             });
         }
-
-        // Initialize payment method if there's a previously selected option
-        const selectedPayment = document.querySelector('input[name="payment_option"]:checked');
-        if (selectedPayment) {
-            showPaymentInfo(selectedPayment.value);
-        }
-    });
-
-    document.addEventListener("DOMContentLoaded", function() {
-        var screenshotElem = document.getElementById('paymentScreenshot');
-        if (screenshotElem) {
-            screenshotElem.addEventListener('change', function(event) {
-                const file = event.target.files[0];
-                const preview = document.getElementById('screenshotPreview');
-                if (file) {
-                    const reader = new FileReader();
-                    reader.onload = function(e) {
-                        preview.src = e.target.result;
-                        preview.classList.remove('d-none');
-                    }
-                    reader.readAsDataURL(file);
-                } else {
-                    preview.src = '#';
-                    preview.classList.add('d-none');
-                }
-            });
-        } else {
-            console.error("Element 'paymentScreenshot' not found.");
-        }
-
+    
         // Set up delivery method change handlers
         const emailInput = document.getElementById('emailInput');
         const contactInput = document.getElementById('contactInput');
         const deliveryRadios = document.querySelectorAll('.delivery-method-radio');
         
-        // Function to update required fields based on delivery method
         function updateRequiredFields() {
             const selectedDelivery = document.querySelector('input[name="delivery_method"]:checked');
-            
             if (selectedDelivery) {
                 if (selectedDelivery.value === 'email') {
-                    // Email delivery: email required, contact optional
                     emailInput.setAttribute('required', 'required');
                     contactInput.removeAttribute('required');
                     emailInput.placeholder = 'Email Address**';
                     contactInput.placeholder = 'Telegram/WhatsApp (Optional)';
                 } else {
-                    // WhatsApp/Telegram delivery: contact required, email optional
                     contactInput.setAttribute('required', 'required');
                     emailInput.removeAttribute('required');
                     contactInput.placeholder = 'Telegram/WhatsApp**';
@@ -308,7 +245,6 @@
             }
         }
         
-        // Add event listeners to all delivery method radio buttons
         deliveryRadios.forEach(radio => {
             radio.addEventListener('change', updateRequiredFields);
         });
@@ -317,19 +253,134 @@
         updateRequiredFields();
     });
 
-    function copyToClipboard(text, paymentMethod) {
-        navigator.clipboard.writeText(text)
-            .then(() => {
-                var copyButton = document.getElementById('copyButton');
-                var originalHTML = copyButton.innerHTML;
-                copyButton.innerHTML = 'Copied!';
-                setTimeout(() => {
-                    copyButton.innerHTML = originalHTML;
-                }, 1500);
-            })
-            .catch(err => {
-                console.error('Could not copy text: ', err);
-            });
+    // Toggle crypto options based on primary payment method
+    const paymentCrypto = document.getElementById('paymentCrypto');
+    const paymentEwallet = document.getElementById('paymentEwallet');
+    const cryptoOptionsContainer = document.getElementById('cryptoOptionsContainer');
+    const cryptoInfo = document.getElementById('cryptoInfo');
+
+    function toggleCryptoOptions() {
+        if (paymentCrypto.checked) {
+            cryptoOptionsContainer.style.display = 'block';
+            // Reset label to default when crypto option is not yet chosen
+            document.getElementById('proofUploadLabel').innerHTML = '<strong>Upload Payment Proof:</strong>';
+        } else {
+            cryptoOptionsContainer.style.display = 'none';
+            cryptoInfo.style.display = 'none';
+            document.querySelectorAll('.crypto-method').forEach(radio => radio.checked = false);
+            document.getElementById('proofUpload').removeAttribute('required');
+            document.getElementById('proofUploadLabel').innerHTML = '<strong>Upload Payment Proof:</strong>';
+        }
     }
+    paymentCrypto.addEventListener('change', toggleCryptoOptions);
+    paymentEwallet.addEventListener('change', toggleCryptoOptions);
+
+    // Handle crypto method selection
+    document.querySelectorAll('.crypto-method').forEach(function(radio) {
+        radio.addEventListener('change', function() {
+            const address = radio.dataset.address;
+            const instruction = radio.dataset.instruction;
+            const exchange = radio.dataset.exchange; // no longer used
+            const qr = radio.dataset.qr;
+            document.getElementById('cryptoAddressBadge').textContent = address;
+            document.getElementById('cryptoInstructions').textContent = instruction;
+            // Set static exchange rate text.
+            document.getElementById('cryptoQr').src = qr;
+            cryptoInfo.style.display = 'block';
+            // Set proof field as required and update label text to indicate requirement
+            document.getElementById('proofUpload').setAttribute('required', 'required');
+            document.getElementById('proofUploadLabel').innerHTML = '<strong>Upload Payment Proof*:</strong>';
+        });
+    });
+    // Copy address functionality (updated)
+    document.getElementById('copyAddressBtn').addEventListener('click', function() {
+        const badge = document.getElementById('cryptoAddressBadge');
+        const text = badge.textContent.trim();
+        if(navigator.clipboard) {
+            navigator.clipboard.writeText(text);
+        }
+        const tooltip = document.getElementById('copyTooltip');
+        tooltip.style.display = 'inline-block';
+        setTimeout(() => {
+            tooltip.style.display = 'none';
+        }, 500);
+    });
+
+    // Add image upload preview for payment proof
+    document.getElementById('proofUpload').addEventListener('change', function(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.getElementById('proofPreview');
+                preview.src = e.target.result;
+                preview.style.display = 'block';
+            }
+            reader.readAsDataURL(file);
+        }
+    });
 </script>
 @endpush
+<!-- Custom CSS for tooltip and embossed effect -->
+<style>
+  .crypto-details-card {
+      box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+      border: none;
+      background-color: #fff;
+  }
+  .input-group {
+      position: relative;
+  }
+  .copy-tooltip {
+      position: absolute !important;
+      top: 50% !important;
+      right: -2rem !important; /* Force tooltip to appear after the copy button */
+      transform: translateY(-50%) !important;
+      font-size: 0.9rem !important;
+      z-index: 9999 !important;
+      background: #fff;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+      pointer-events: none;
+  }
+  @media (max-width: 767.98px) {
+    .responsive-input-group {
+      flex-direction: column !important;
+      align-items: center;
+    }
+    .responsive-input-group .form-control,
+    .responsive-input-group .btn {
+      width: 100%;
+      margin-bottom: .5rem;
+    }
+    .responsive-input-group .btn {
+      margin-bottom: 0;
+    }
+    .copy-tooltip {
+      position: static !important;
+      transform: none !important;
+      margin-top: -0.3rem;
+    }
+  }
+  #cryptoAddressBadge {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      max-width: 100%; /* Ensure it doesn't exceed parent */
+  }
+  /* Fix for payment method container */
+  .payment-options-container {
+      max-width: 100%;
+      overflow: hidden;
+      flex-wrap: wrap;
+  }
+  
+  .payment-options-container .btn {
+      width: auto;
+      white-space: nowrap;
+      flex: 1 1 auto;
+      min-width: 120px;
+      max-width: calc(50% - 0.5rem); /* Account for the gap */
+  }
+</style>
