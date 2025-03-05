@@ -383,4 +383,24 @@
       min-width: 120px;
       max-width: calc(50% - 0.5rem); /* Account for the gap */
   }
+  /* Fix for the CSS conflict with btn-check radios */
+  .rts-checkout-section .checkout-form input:not([type="radio"]):not([type="checkbox"]),
+  .rts-checkout-section .checkout-form select,
+  .rts-checkout-section .checkout-form textarea {
+      width: 100%;
+      padding: 17px 30px;
+      border-radius: 6px;
+      border: 1px solid #e3e3e3;
+      margin-bottom: 25px;
+      outline: none;
+      transition: box-shadow 300ms;
+      font-size: 16px;
+      color: #777777;
+  }
+  
+  /* Preserve the radio buttons' Bootstrap styling */
+  .btn-check {
+
+      width: auto !important; /* Override the 100% width */
+  }
 </style>
