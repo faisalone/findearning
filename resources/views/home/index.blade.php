@@ -64,12 +64,12 @@
 		<div class="rts-featured-product-section-inner">
 			<div class="section-header section-header3">
 				<div class="wrapper">
-					<h2 class="title">Latest Products</h2>
+					<h2 class="title">Top Products</h2>
 					<a href="{{ route('shop') }}" class="section-button">View All</a>
 				</div>
 			</div>
 			<div class="row">
-				@foreach ($randomProducts as $product)
+				@foreach ($topProducts as $product)
 				<div class="col-xl-3 col-md-3 col-sm-6 col-6">
 					<div class="product-item element-item1">
 						<a href="{{ route('productDetails', ['category' => $product->category->slug, 'product' => $product->slug]) }}" class="product-image">
@@ -103,12 +103,18 @@
 					@foreach ($reviews as $review)
 						<div class="swiper-slide">
 							<div class="slider-inner">
-								<img class="avatar img-fluid" src="{{ asset('storage/' . $review->image_path) }}" alt="Review image" style="max-width: 100px;">
-								<div class="content text-white">
-									<p class="description text-white">“ {{ $review->comment }} ”</p>
-								</div>
-								<div class="author-box">
-									<h3 class="author-name text-white">{{ $review->user->name ?? 'Anonymous' }}</h3>
+								<div class="d-flex align-items-center">
+									<div class="flex-grow-1">
+										<div class="content text-white">
+											<p class="description text-white mb-2">" {{ $review->comment }} "</p>
+											<div class="me-4">
+												<img class="avatar img-fluid" src="{{ asset('storage/'.$review->image_path) }}" alt="Review image" style="max-height: 150px; object-fit: cover;">
+											</div>
+										</div>
+										<div class="author-box">
+											<h3 class="author-name text-white mb-0">{{ $review->user->name ?? 'Anonymous' }}</h3>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

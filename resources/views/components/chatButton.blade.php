@@ -1,7 +1,8 @@
 <div class="chat-float">
-    <a href="javascript:void(0)" class="btn chat-button text-white">
+    <a href="https://wa.me/yourwhatsappnumber" class="btn chat-button whatsapp-button text-white">
         <i class="fab fa-whatsapp whatsapp-icon"></i>
+    </a>
+    <a href="https://t.me/yourtelegramusername" class="btn chat-button telegram-button text-white">
         <i class="fab fa-telegram telegram-icon"></i>
-        <span class="text-white">Message Us</span>
     </a>
 </div>

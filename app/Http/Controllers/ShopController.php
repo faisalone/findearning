@@ -17,15 +17,12 @@ class ShopController extends Controller
     public function shop(Request $request)
     {
         $productsQuery = Product::select('products.*')
-            ->distinct()
-            ->with([
-                'category:id,title,slug',
-                'images:id,product_id,image',
-            ]);
-        
-        // Apply sorting
+            ->with(['category:id,title,slug','images:id,product_id,image'])
+            ->active(); // optional if you want only active products
+
+        // Apply sorting via trait
         $productsQuery = $this->applySorting($productsQuery);
-        
+
         $products = $productsQuery->paginate(8);
 
         // Check if this is an AJAX request for infinite scroll

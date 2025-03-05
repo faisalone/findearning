@@ -4,11 +4,12 @@ namespace App\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AdminMiddleware
 {
     /**
-     * Handle an incoming request and allow only admin users (role = 1).
+     * Handle an incoming request.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \Closure  $next
@@ -16,11 +17,12 @@ class AdminMiddleware
      */
     public function handle(Request $request, Closure $next)
     {
-        // Check if user is authenticated and has admin role (role = 1)
-        if (!auth()->check() || auth()->user()->role !== 1) {
-            abort(403, 'Unauthorized action. Admin access required.');
+        // Check if user is authenticated and has admin role (role==1 is admin)
+        if (Auth::check() && Auth::user()->role == 1) {
+            return $next($request);
         }
-        
-        return $next($request);
+
+        // If not admin, redirect to dashboard with message
+        return redirect()->route('dashboard')->with('error', 'You do not have admin access.');
     }
 }

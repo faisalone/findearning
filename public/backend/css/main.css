@@ -191,3 +191,49 @@ copy-feedback.visible {
 		max-width: 100%;
 	}
 }
+.star-rating {
+	color: #FFD700;
+}
+.review-image {
+	max-width: 80px;
+	max-height: 80px;
+	cursor: pointer;
+	object-fit: cover;
+}
+.modal-image {
+	max-width: 100%;
+	height: auto;
+}
+/* Improve text wrapping */
+.table td {
+	word-break: break-word;
+	white-space: normal;
+}
+/* Ensure the table doesn't overflow */
+.table-responsive {
+	overflow-x: visible;
+}
+/* Define column widths */
+.product-column {
+	width: 15%;
+}
+.customer-column {
+	width: 15%;
+}
+.review-column {
+	width: 40%;
+}
+.date-column {
+	width: 10%;
+}
+.status-column {
+	width: 10%;
+}
+.action-column {
+	width: 10%;
+}
+/* Ensure long content wraps properly */
+.comment-text {
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+}

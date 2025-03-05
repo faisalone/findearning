@@ -5,7 +5,10 @@ namespace App\Http\Controllers;
 use App\Models\Product;
 use App\Models\Review;
 use Illuminate\Http\Request;
+use App\Http\Middleware\AdminMiddleware;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+
 
 class ReviewController extends Controller
 {
@@ -14,7 +17,7 @@ class ReviewController extends Controller
      */
     public function __construct()
     {
-        $this->middleware('auth')->only(['store', 'toggleStatus']);
+        $this->middleware(AdminMiddleware::class)->only(['index', 'toggleStatus',]);
     }
 
     /**
@@ -22,7 +25,10 @@ class ReviewController extends Controller
      */
     public function index()
     {
-        //
+        // Get all reviews with their relationships
+        $reviews = Review::with(['user', 'product'])->latest()->get();
+        
+        return view('dashboard.reviews.index', compact('reviews'));
     }
 
     /**
@@ -117,6 +123,12 @@ class ReviewController extends Controller
      */
     public function destroy(Review $review)
     {
-        //
+        // Delete the review image if it exists
+        if ($review->image_path) {
+            Storage::disk('public')->delete($review->image_path);
+        }
+        $review->delete();
+        
+        return redirect()->back()->with('success', 'Review deleted successfully.');
     }
 }

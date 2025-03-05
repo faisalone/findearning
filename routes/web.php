@@ -64,17 +64,7 @@ Route::prefix('order')->group(function () {
 	});
 });
 
-// Product Reviews
-Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])
-    ->middleware('auth')  // This middleware will use the stored intended URL
-    ->name('product.addReview');
-Route::patch('/reviews/{review}/toggle-status', [ReviewController::class, 'toggleStatus'])
-    ->middleware(['auth', 'can:manage-reviews'])
-    ->name('reviews.toggleStatus');
-
-// Transaction routes
-
-// Dashboard routes - add the CheckUserRole middleware explicitly
+// Dashboard routes
 Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(function () {
     // Keep the main dashboard route
     Route::get('/', [DashboardController::class, 'index'])->name('dashboard');
@@ -83,6 +73,9 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
     Route::get('/my-profile', [CustomerController::class, 'profile'])->name('myProfile');
     Route::post('/my-profile/update', [CustomerController::class, 'updateProfile'])->name('profile.update');
     Route::get('/my-orders', [CustomerController::class, 'orders'])->name('myOrders');
+    
+    // Product Reviews - All users need to be authenticated
+    Route::post('/products/{product}/reviews', [ReviewController::class, 'store'])->name('product.addReview');
     
     // Admin-only routes - customers will be redirected away from these
     Route::get('/wallet', [WalletController::class, 'index'])->name('wallet');
@@ -109,4 +102,9 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
     Route::post('/customers/{customer}/toggle', [CustomerController::class, 'toggle'])->name('customers.toggle');
     Route::resource('settings', SettingController::class)->except(['create', 'edit', 'show']);
+
+    // Reviews management routes - the admin middleware is handled in the controller
+	Route::resource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);
+    Route::patch('/reviews/{review}/toggle-status', [ReviewController::class, 'toggleStatus'])
+        ->name('reviews.toggleStatus');
 });

@@ -147,48 +147,24 @@ class Product extends Model
     }
 
     /**
-     * Scope a query to sort by popularity (most ordered products)
-     * Leverages the existing getTopProducts method for consistency
+     * Scope a query to sort by popularity using getTopProducts.
      */
     public function scopeSortByPopularity($query)
     {
-        // Get all orders with non-cancelled status
-        $orders = Order::where('status', '!=', 'cancelled')->get();
-        
-        // Track product counts - this logic is similar to getTopProducts
-        $productCounts = collect();
-        
-        // Process each order
-        foreach ($orders as $order) {
-            $orderProducts = $order->products();
-            
-            foreach ($orderProducts as $product) {
-                $productId = $product->id;
-                $quantity = $product->quantity ?? 1;
-                
-                $currentCount = $productCounts->get($productId, 0);
-                $productCounts->put($productId, $currentCount + $quantity);
-            }
-        }
-        
-        // If no ordered products found, fall back to latest
-        if ($productCounts->isEmpty()) {
+        // Fetch a large list of top products 
+        // to cover typical listings:
+        $topProducts = self::getTopProducts(9999, true);
+
+        // If no popular products, fall back to latest
+        if ($topProducts->isEmpty()) {
             return $query->latest();
         }
-        
-        // Sort by count (most ordered first)
-        $sortedProductCounts = $productCounts->sortDesc();
-        
-        // Get all product IDs in order of popularity
-        $orderedProductIds = $sortedProductCounts->keys()->all();
-        
-        // If we have ordered products, apply the custom sorting
-        if (!empty($orderedProductIds)) {
-            return $query->orderByRaw("FIELD(id, " . implode(',', $orderedProductIds) . ") DESC");
-        }
-        
-        // Fallback to latest products
-        return $query->latest();
+
+        // Extract IDs and apply custom FIELD-based ordering
+        $orderedIds = $topProducts->pluck('id')->all();
+        $idList = implode(',', $orderedIds);
+
+        return $query->orderByRaw("FIELD(id, {$idList}) ASC");
     }
 
     /**
@@ -213,48 +189,6 @@ class Product extends Model
     public function scopeSortByPriceHighToLow($query)
     {
         return $query->orderBy('price', 'desc');
-    }
-
-    /**
-     * Apply sorting based on provided sort parameter
-     */
-    public function scopeApplySort($query, $sort)
-    {
-        switch ($sort) {
-            case 'popularity':
-                return $query->sortByPopularity();
-            case 'latest':
-                return $query->sortByLatest();
-            case 'price-asc':
-                return $query->sortByPriceLowToHigh();
-            case 'price-desc':
-                return $query->sortByPriceHighToLow();
-            default:
-                return $query->sortByLatest(); // Default sorting
-        }
-    }
-
-    /**
-     * Apply sorting to any query based on provided sort parameter
-     * This is a helper method called by the sortedByRequest macro
-     * 
-     * @param \Illuminate\Database\Eloquent\Builder $query
-     * @param string $sort
-     * @return \Illuminate\Database\Eloquent\Builder
-     */
-    public function applySort($query, $sort)
-    {
-        switch ($sort) {
-            case 'popularity':
-                return $query->sortByPopularity();
-            case 'price-asc':
-                return $query->sortByPriceLowToHigh();
-            case 'price-desc':
-                return $query->sortByPriceHighToLow();
-            case 'latest':
-            default:
-                return $query->latest();
-        }
     }
 
     /**

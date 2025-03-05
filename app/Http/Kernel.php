@@ -36,7 +36,8 @@ class Kernel extends HttpKernel
             \Illuminate\View\Middleware\ShareErrorsFromSession::class,
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
-            \App\Http\Middleware\CheckUserRole::class,
+            // Remove CheckUserRole from global middleware to avoid applying it to all routes
+            // \App\Http\Middleware\CheckUserRole::class,
         ],
 
         'api' => [
@@ -67,5 +68,7 @@ class Kernel extends HttpKernel
         'admin' => \App\Http\Middleware\AdminMiddleware::class,
         'user' => \App\Http\Middleware\UserMiddleware::class,
         'store.intended' => \App\Http\Middleware\StoreIntendedUrl::class,
+        // Register CheckUserRole as named middleware so it can be used selectively
+        'check.role' => \App\Http\Middleware\CheckUserRole::class,
     ];
 }

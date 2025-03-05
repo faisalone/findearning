@@ -19,7 +19,8 @@ class HomeController extends Controller
 	public function index()
     {
 		$categories = Category::select('id', 'title', 'slug', 'image')->take(10)->get();
-		$randomProducts = Product::inRandomOrder()->limit(8)->get();
+		$topProducts = Product::getTopProducts(8);
+		// $topProducts = Product::getTopProducts(8, false);
         $banners = Slider::all()
             ->map(function($slider) {
                 return [
@@ -28,10 +29,9 @@ class HomeController extends Controller
                     'link' => route('shop')
                 ];
             });
-        $reviews = Review::where('status', true)->get(); // fetching approved reviews
-		// return $reviews;
-        
-        return view('home.index', compact('categories', 'randomProducts', 'banners', 'reviews'));
+		$reviews = Review::where('status', true)->orderBy('updated_at', 'desc')->get(); // Changed from first() to get()
+		// Pass the variable to the view
+        return view('home.index', compact('categories', 'topProducts', 'banners', 'reviews'));
     }
     
     

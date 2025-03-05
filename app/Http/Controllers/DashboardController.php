@@ -35,7 +35,7 @@ class DashboardController extends Controller
             $recentOrders = $orders->take(5);
             
             // Return the customer view
-            return view('dashboard.customer.index', compact(
+            return view('dashboard.customer-index', compact(
                 'user',
                 'totalOrders',
                 'completedOrders',

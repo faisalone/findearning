@@ -19,8 +19,8 @@
 					<div class="filter-area">
 						<p class="select-area">
 							<select class="select" id="product-sort">
-								<option value="popularity" {{ request('sort') == 'popularity' ? 'selected' : '' }}>Sort by popularity</option>
-								<option value="latest" {{ request('sort') == 'latest' || !request('sort') ? 'selected' : '' }}>Sort by latest</option>
+								<option value="popularity" {{ (request('sort') == 'popularity' || !request('sort')) ? 'selected' : '' }}>Sort by popularity</option>
+								<option value="latest" {{ request('sort') == 'latest' ? 'selected' : '' }}>Sort by latest</option>
 								<option value="price-asc" {{ request('sort') == 'price-asc' ? 'selected' : '' }}>Sort by price: low to high</option>
 								<option value="price-desc" {{ request('sort') == 'price-desc' ? 'selected' : '' }}>Sort by price: high to low</option>
 							</select>
