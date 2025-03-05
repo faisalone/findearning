@@ -41,14 +41,12 @@ class WalletController extends Controller
 	public function recharge(Request $request)
 	{
 		$request->validate([
-			'wallet_id' => 'required|exists:wallets,id',
-			'payment_method_id' => 'required|exists:payment_methods,id',
-			'amount' => 'required|numeric|min:1',
-			'screenshot' => 'required|image|max:2048',
-		], [], [
-			'wallet_id' => 'wallet',
-			'payment_method_id' => 'payment method',
-		]);
+				'payment_method_id' => 'required|exists:payment_methods,id',
+				'amount' => 'required|numeric|min:1',
+				'screenshot' => 'required|image|max:2048',
+			], [], [
+				'payment_method_id' => 'payment method',
+			]);
 
 		// Check if user already has a pending transaction
 		$pendingTransaction = Transaction::where('user_id', auth()->id())
@@ -59,6 +57,12 @@ class WalletController extends Controller
 			return back()->with('error', 'You already have a pending transaction. Please wait for it to be processed.');
 		}
 
+			// Find or create wallet for the user
+			$wallet = Wallet::firstOrCreate(
+				['user_id' => auth()->id()],
+				['balance' => 0]
+			);
+
 		// Store screenshot and get the filename
 		$path = $request->file('screenshot')->store('transactions', 'public');
 		$filename = basename($path);
@@ -66,13 +70,13 @@ class WalletController extends Controller
 		// Create transaction
 		$transaction = Transaction::create([
 			'user_id' => auth()->id(),
-			'wallet_id' => $request->wallet_id,
+			'wallet_id' => $wallet->id,
 			'payment_method_id' => $request->payment_method_id,
 			'amount' => $request->amount,
 			'screenshot' => $filename,
 			'status' => 'pending',
 		]);
 
-		return redirect()->route('recharge.index')->with('success', 'Recharge request submitted successfully. It will be processed shortly.');
+		return redirect()->route('myProfile')->with('success', 'Recharge request submitted successfully. It will be processed shortly.');
 	}
 }

@@ -44,11 +44,7 @@
     <!-- Recharge form - improved validation -->
     <form action="{{ route('recharge') }}" method="POST" enctype="multipart/form-data" id="rechargeForm">
         @csrf
-        <!-- Wallet ID field - check if exists -->
-        <input type="hidden" name="wallet_id" value="{{ optional(auth()->user()->wallet)->id }}">
-        @error('wallet_id')
-            <div class="alert alert-danger">{{ $message }}</div>
-        @enderror
+        <!-- Remove the wallet_id hidden input field as it's no longer needed -->
         
         <input type="hidden" name="payment_method_id" id="selected_payment_method">
         @error('payment_method_id')
@@ -354,12 +350,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // Form submission validation
+    // Form submission validation - modified to remove wallet check
     const rechargeForm = document.getElementById('rechargeForm');
     if (rechargeForm) {
         rechargeForm.addEventListener('submit', function(e) {
             const methodId = document.getElementById('selected_payment_method').value;
-            const walletId = document.querySelector('input[name="wallet_id"]').value;
             
             if (!methodId) {
                 e.preventDefault();
@@ -367,11 +362,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return;
             }
             
-            if (!walletId) {
-                e.preventDefault();
-                alert('No wallet found. Please contact support.');
-                return;
-            }
+            // Remove wallet ID check since we're creating wallets on demand in the controller
         });
     }
 });
