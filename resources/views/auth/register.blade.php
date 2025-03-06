@@ -33,7 +33,7 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
                                     </div>
                                     <div class="form">
                                         <input type="email" class="form-control" id="email" name="email"
-                                            placeholder="Email address*" value="{{ old('email') }}" required />
+                                            placeholder="Email address" value="{{ old('email') }}" />
                                         @error('email')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

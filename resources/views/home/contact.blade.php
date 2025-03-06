@@ -71,9 +71,9 @@
                             </h3>
                             <div class="contact">
                                 <ul>
-                                    <li class="one">{{ $address->subtitle }}</li>
-                                    <li class="two">{{ $contact->url }} ({{ $contact->name }})</li>
-                                    <li class="three">Store Hours: <br>{{ $storeHours->subtitle }}</li>
+									<li class="one">{{ $address->subtitle ?? 'Default Address' }}</li>
+									<li class="two">{{ $contact->url ?? 'Default URL' }} ({{ $contact->name ?? 'Default Name' }})</li>
+									<li class="three">Store Hours: <br>{{ $storeHours->subtitle ?? 'Default Store Hours' }}</li>
                                 </ul>
                             </div>
                         </div>

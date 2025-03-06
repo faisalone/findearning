@@ -21,7 +21,7 @@
                 @enderror
 
                 
-                <form class="checkout-form" novalidate method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
+                <form class="checkout-form" method="POST" action="{{ route('placeOrder') }}" enctype="multipart/form-data">
                     @csrf
                     {{-- New common error block --}}
                     @if ($errors->any())

@@ -44,10 +44,8 @@ class HomeController extends Controller
     
 	public function contact()
     {
-		$address = Social::where('name', 'Address')->firstOrFail();
-		$contact = Social::where('name', 'Telegram')->firstOrFail();
-		$storeHours = Social::where('name', 'Store Hours')->firstOrFail();
-        return view('home.contact', compact('address', 'contact', 'storeHours'));
+
+        return view('home.contact', );
     }
 
 }

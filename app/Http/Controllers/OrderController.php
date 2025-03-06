@@ -108,7 +108,7 @@ class OrderController extends Controller
                 $wallet = Wallet::where('user_id', $user->id)->first();
                 if (!$wallet) {
                     return redirect()->back()
-                        ->withErrors(['payment_option' => 'No wallet found.'])
+                        ->withErrors(['payment_option' => 'No wallet found. Please recharge your eWallet.'])
                         ->withInput();
                 }
                 if ($wallet->balance === null || $total > $wallet->balance) {

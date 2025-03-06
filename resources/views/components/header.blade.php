@@ -74,10 +74,10 @@
 							@if(optional(Auth::user()->wallet)->balance)
 								<a href="{{ route('myProfile') }}" class="text-white"> ${{ Auth::user()->wallet->balance }}</a>
 							@else
-								<a href="{{ route('myProfile') }}" class="text-white"><i class="rt-plus"></i> eWallet</a>
+								<a href="{{ route('myProfile') }}" class="text-white"><i class="rt-plus"></i> Recharge</a>
 							@endif
 						@else
-							<a href="{{ route('login') }}" class="text-white"><i class="rt-plus"></i> eWallet</a>
+							<a href="{{ route('login') }}" class="text-white"><i class="rt-plus"></i> Recharge</a>
 						@endif
 					</div>
 					<div class="hamburger"><span></span></div>
@@ -95,10 +95,10 @@
 					@if(optional(Auth::user()->wallet)->balance)
 						<a href="{{ route('myProfile') }}" class="text-dark"> ${{ Auth::user()->wallet->balance }}</a>
 					@else
-						<a href="{{ route('myProfile') }}" class="text-dark"><i class="rt-plus"></i> eWallet</a>
+						<a href="{{ route('myProfile') }}" class="text-dark"><i class="rt-plus"></i> Recharge</a>
 					@endif
 				@else
-					<a href="{{ route('login') }}" class="text-dark"><i class="rt-plus"></i> eWallet</a>
+					<a href="{{ route('login') }}" class="text-dark"><i class="rt-plus"></i> Recharge</a>
 				@endif
 			</div>
 		</div>
