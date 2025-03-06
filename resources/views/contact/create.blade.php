@@ -8,13 +8,21 @@
 @endphp
 
 @section('content')
-     
+    
     <!--contact-area start-->
     <div class="contact-area">
         <div class="container">
+			{{-- Flash success message --}}
+			@if(session('success'))
+				<div class="alert alert-success">
+					{{ session('success') }}
+				</div>
+			@endif
+
             <div class="row">
                 <div class="col-lg-8 col-md-12">
-                    <form class="contact-form mb-10">
+                    <form class="contact-form mb-10" action="{{ route('contact.store') }}" method="POST">
+                        @csrf
                         <div class="section-header section-header5 text-start">
                             <div class="wrapper">
                                 <div class="sub-content">
@@ -28,36 +36,46 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="input-box mb-20">
-                                        <input type="text" id="validationDefault01" placeholder="Full Name" required>
+                                        <input type="text" name="name" placeholder="Full Name" value="{{ old('name') }}" required>
+                                        @error('name')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="input-box mail-input mb-20">
-                                        <input type="email" id="validationDefault02" placeholder="E-mail Address"
-                                            required>
+                                        <input type="email" name="email" placeholder="E-mail Address" value="{{ old('email') }}">
+                                        @error('email')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="input-box number-input mb-30">
-                                        <input type="number" id="validationDefault03" placeholder="Phone Number"
-                                            required>
+                                        <input type="text" name="phone" placeholder="Phone Number" value="{{ old('phone') }}">
+                                        @error('phone')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-6 col-12">
                                     <div class="input-box sub-input mb-30">
-                                        <input type="text" id="validationDefault04" placeholder="Subject..." required>
+                                        <input type="text" name="subject" placeholder="Subject..." value="{{ old('subject') }}">
+                                        @error('subject')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-lg-12 col-sm-12">
                                     <div class="input-box text-input mb-20">
-                                        <textarea name="Message" id="validationDefault05" cols="30" rows="10"
-                                            placeholder="Enter message" required></textarea>
+                                        <textarea name="message" cols="30" rows="10" placeholder="Enter message" required>{{ old('message') }}</textarea>
+                                        @error('message')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
                                     </div>
                                 </div>
                                 <div class="col-12 mb-15">
-                                    <a href="#" class="form-btn form-btn4">
-                                        Get A Quote
-                                    </a>
+                                    <button type="submit" class="form-btn form-btn4">Submit</button>
                                 </div>
                             </div>
                         </div>

@@ -56,6 +56,12 @@
                     Payment Methods
                 </a>
             </li>
+            <li class="nav-item">
+                <a class="nav-link {{ request()->is('dashboard/contact*') ? 'active' : '' }}" href="{{ route('contact.index') }}">
+                    Messages
+                </a>
+            </li>
+
             @else
             <li class="nav-item">
                 <a class="nav-link {{ request()->is('dashboard/my-profile*') ? 'active' : '' }}" href="{{ route('myProfile') }}">

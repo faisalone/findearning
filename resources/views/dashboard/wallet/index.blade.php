@@ -25,7 +25,11 @@
 						{{ $transaction->id }}<br>
 						{{ $transaction->created_at->format('Y-m-d H:i') }}
 					</td>
-					<td>{{ $transaction->user->name }}</td>
+					<td>
+						{{ $transaction->user->name }}<br>
+						{{ $transaction->user->contact }}<br>
+						{{ $transaction->user->email }}
+					</td>
 					<!-- Merged Payment Method and Amount -->
 					<td>
 						{{ $transaction->paymentMethod->name }}<br>

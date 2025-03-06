@@ -1,4 +1,5 @@
 @extends('dashboard.layouts.app')
+@section('title', 'My Profile')
 @section('content')
 <div class="container-fluid px-0 px-md-2">
 	<x-alert />
@@ -90,6 +91,20 @@
 						</div>
                         <button type="submit" class="btn btn-primary">Update Profile</button>
                     </form>
+
+                    <!-- Added new form for password reset email via Laravel default auth route -->
+                    <form action="{{ route('password.email') }}" method="POST" class="mt-3">
+                        @csrf
+                        <input type="hidden" name="email" value="{{ $customer->email }}">
+                        <button type="submit" class="btn btn-secondary">
+                            Send Password Reset Email
+                        </button>
+                    </form>
+                    @if (session('status'))
+                        <div class="alert alert-success mt-2">
+                            {{ session('status') }}
+                        </div>
+                    @endif
                 </div>
             </div>
             
@@ -117,9 +132,9 @@
                                         <td>{{ number_format($transaction->amount, 2) }}</td>
                                         <td>{{ $transaction->paymentMethod->name }}</td>
                                         <td class="text-center">
-                                            <span class="badge bg-{{ $transaction->status == 'approved' ? 'success' : ($transaction->status == 'pending' ? 'warning' : 'danger') }}">
-                                                {{ ucfirst($transaction->status) }}
-                                            </span>
+											<span class="badge bg-{{ $transaction->status == 'approved' ? 'success' : ($transaction->status == 'pending' ? 'warning' : 'danger') }} text-{{ in_array($transaction->status, ['approved', 'danger']) ? 'light' : 'dark' }}">
+												{{ ucfirst($transaction->status) }}
+											</span>
                                         </td>
                                     </tr>
                                     @endforeach

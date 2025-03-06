@@ -1,6 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
     // Initialize on each file input with data-uploader attribute
-    document.querySelectorAll('input[data-uploader="true"]').forEach(initUploader);
+    document.querySelectorAll('input[data-uploader="true"]').forEach(imagesInput => {
+        if (imagesInput._initialized) return;
+        imagesInput._initialized = true;
+        initUploader(imagesInput);
+    });
 
     function initUploader(imagesInput) {
         const previewContainer = document.getElementById(imagesInput.getAttribute('data-preview'));

@@ -74,6 +74,12 @@
                 <span>Payment Methods</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('contact.index') }}">
+                <i class="fas fa-fw fa-comments"></i>
+                <span>Messages</span>
+            </a>
+        </li>
         <!-- New Settings Menu -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('settings.index') }}">

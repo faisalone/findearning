@@ -119,9 +119,9 @@
                                             <td>{{ $order->created_at->format('M d, Y') }}</td>
                                             <td>${{ number_format($order->total, 2) }}</td>
                                             <td>
-                                                <span class="badge badge-{{ $order->status == 'completed' ? 'success' : ($order->status == 'pending' ? 'warning' : 'secondary') }}">
-                                                    {{ ucfirst($order->status) }}
-                                                </span>
+												<span class="badge badge-{{ $order->status == 'completed' ? 'success' : ($order->status == 'pending' ? 'warning' : ($order->status == 'cancelled' ? 'danger' : 'secondary')) }}">
+													{{ ucfirst($order->status) }}
+												</span>
                                             </td>
                                         </tr>
                                     @endforeach

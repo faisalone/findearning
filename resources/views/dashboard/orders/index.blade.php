@@ -7,7 +7,7 @@
         <table class="table table-bordered">
             <thead>
                 <tr>
-                    <th>User</th>
+                    <th>Customer Info</th>
                     <th>Summary</th>
                     <th>Proof</th>
                     <th>Actions</th>
@@ -17,9 +17,15 @@
                 @foreach($orders as $order)
                     <tr>
 						<td>
-							{{ $order->user->name }}<br>
-							Email: {{ $order->user->email }}<br>
-							Contact: {{ $order->user->contact }}
+							Name: {{ $order->customer_name }}<br>
+							@if($order->customer_email)
+								Email: {{ $order->customer_email }}<br>
+							@endif
+							@if($order->customer_contact)
+								Contact: {{ $order->customer_contact }}
+							@endif
+							<br>
+							<strong>Delivery Method: {{ $order->delivery_method }}</strong>
 						</td>
                         <td>
 							<strong>Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</strong>

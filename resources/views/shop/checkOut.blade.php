@@ -60,19 +60,19 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="input-div">
-                                        <input type="text" name="name" placeholder="Name**" required value="{{ old('name', Auth::user()->name ?? '') }}">
+                                        <input type="text" name="name" placeholder="Name**" required value="{{ old('name') }}">
                                     </div>
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-xl-6 col-md-6">
                                     <div class="input-div">
-                                        <input type="text" id="contactInput" name="contact" placeholder="Telegram/WhatsApp**" value="{{ old('contact', Auth::user()->contact ?? '') }}">
+                                        <input type="text" id="contactInput" name="contact" placeholder="Telegram/WhatsApp**" value="{{ old('contact') }}">
                                     </div>
                                 </div>
                                 <div class="col-xl-6 col-md-6">
                                     <div class="input-div">
-                                        <input type="email" id="emailInput" name="email" placeholder="Email Address**" value="{{ old('email', Auth::user()->email ?? '') }}">
+                                        <input type="email" id="emailInput" name="email" placeholder="Email Address**" value="{{ old('email') }}">
                                     </div>
                                 </div>
                             </div>
@@ -88,7 +88,7 @@
                                     <div class="d-flex gap-2 payment-options-container" role="group">
                                         <input type="radio" class="btn-check" name="payment_option" id="paymentEwallet" value="Wallet" autocomplete="off" {{ old('payment_option') == 'Wallet' ? 'checked' : '' }}>
                                         <label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentEwallet">
-                                            <img src="https://img.icons8.com/fluency/48/000000/wallet.png" alt="eWallet" class="me-2"> eWallet
+                                            <img src="{{ asset('assets/images/fav.png') }}" alt="eWallet" class="me-2"> My Wallet
                                         </label>
                                         <!-- Fixed: Changed name to match other radio button -->
                                         <input type="radio" class="btn-check" name="payment_option" id="paymentCrypto" value="crypto" autocomplete="off" {{ old('payment_option') == 'crypto' ? 'checked' : '' }}>

@@ -16,6 +16,9 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->json('product_details'); // Rename to product_details
             $table->string('delivery_method');
+			$table->string('customer_name')->nullable();
+			$table->string('customer_contact')->nullable();
+			$table->string('customer_email')->nullable();
             $table->string('payment_option');
             $table->string('proof')->nullable();
             $table->decimal('total', 8, 2);

@@ -27,11 +27,11 @@
                                 <td>#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
                                 <td>{{ $order->created_at->format('d M Y') }}</td>
                                 <td class="text-right">${{ number_format($order->total, 2) }}</td>
-                                <td class="text-center">
-                                    <span class="badge bg-{{ $order->status == 'pending' ? 'warning text-dark' : ($order->status == 'completed' ? 'success text-white' : 'danger text-white') }}">
-                                        {{ ucfirst($order->status) }}
-                                    </span>
-                                </td>
+								<td class="text-center">
+									<span class="badge bg-{{ $order->status == 'pending' ? 'warning text-dark' : ($order->status == 'completed' ? 'success text-white' : ($order->status == 'processing' ? 'info text-white' : 'danger text-white')) }}">
+										{{ ucfirst($order->status) }}
+									</span>
+								</td>
                                 <td class="text-right">
                                     <button type="button" class="btn btn-sm btn-outline-primary" data-toggle="modal" data-target="#orderModal{{ $order->id }}">
                                         <i class="bi bi-eye"></i> Details

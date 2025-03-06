@@ -18,7 +18,7 @@ class HomeController extends Controller
 	
 	public function index()
     {
-		$categories = Category::select('id', 'title', 'slug', 'image')->take(10)->get();
+        $categories = Category::getTopCategories(12);
 		$topProducts = Product::getTopProducts(8);
 		// $topProducts = Product::getTopProducts(8, false);
         $banners = Slider::all()
@@ -37,7 +37,8 @@ class HomeController extends Controller
     
     public function allCategory()
     {
-        $categories = Category::select('id', 'title', 'slug', 'image')->get();
+        $categories = Category::getTopCategories();
+
         return view('home.allCategory', compact('categories'));
     }
     

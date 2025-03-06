@@ -7,6 +7,7 @@ use App\Models\Category;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Http\Middleware\AdminMiddleware;
+use Carbon\Carbon; // add Carbon for timestamp manipulation
 
 class CategoryController extends Controller
 {
@@ -19,7 +20,7 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $categories = Category::withCount('products')->get();
+		$categories = Category::withCount('products')->orderBy('updated_at', 'desc')->get();
         return view('dashboard.categories.index', compact('categories'));
     }
 
@@ -112,6 +113,9 @@ class CategoryController extends Controller
             'slug' => $slug,
             'description' => $request->description,
         ]);
+
+        // Force the updated_at timestamp to refresh
+        $category->touch();
 
         return redirect()->route('categories.index')->with('success', 'Category updated successfully.');
     }

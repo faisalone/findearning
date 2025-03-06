@@ -11,23 +11,28 @@
     >
         <!-- Group 1: Total, Proof & Status -->
         <div class="row mb-3 p-3 bg-light rounded border">
-			@if($order->payment_option === 'Wallet')
-				<div class="col-md-4">
-					<label class="form-label">Paid by Wallet No: {{ $order->user->wallet->id }}</label>
-				</div>
-			@else
-				<div class="col-md-4">
-					<label for="proof" class="form-label">Proof</label>
-					<div class="magnify-container">
-						<div class="clickable-image-container">
-							<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid proof-thumbnail" style="width: 100px; height: 100px;" data-proof="{{ $order->proofUrl() }}">
-							<div class="zoom-icon">
-								<i class="fa fa-search-plus"></i>
-							</div>
-						</div>
-					</div>
-				</div>
-			@endif
+			<div class="col-md-4">
+				<label class="form-label">User Contact</label>
+				<p class="form-control-plaintext">
+					<strong>Name:</strong> {{ $order->customer_name }}<br>
+					
+					@if($order->customer_email)
+						<strong>Email:</strong> <span id="emailText">{{ $order->customer_email }}</span>
+						<button type="button" id="copyEmailBtn" class="btn btn-link p-0">
+							<i class="fa fa-clipboard"></i>
+						</button>
+						<span id="copyEmailMessage" style="display:none;">Copied!</span><br>
+					@endif
+
+					@if($order->customer_contact)
+						<strong>Phone:</strong> <span id="phoneText">{{ $order->customer_contact }}</span>
+						<button type="button" id="copyPhoneBtn" class="btn btn-link p-0">
+							<i class="fa fa-clipboard"></i>
+						</button>
+						<span id="copyPhoneMessage" style="display:none;">Copied!</span>
+					@endif
+				</p>
+			</div>
 			
             <div class="col-md-4">
                 <label class="form-label">Total</label>
@@ -42,6 +47,28 @@
 					<option value="completed" {{ $order->status == 'completed' ? 'selected' : '' }}>Completed</option>
 					<option value="cancelled" {{ $order->status == 'cancelled' ? 'selected' : '' }}>Cancelled</option>
 				</select>
+			</div>
+        </div>
+		<!-- Group 3: Delivery Method & Payment Option -->
+		<div class="row mb-3 p-3 bg-white rounded border">
+            <div class="col-md-4">
+                <label class="form-label">Delivery Method</label>
+                <p class="form-control-plaintext">{{ $order->delivery_method }}</p>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Payment Option</label>
+                <p class="form-control-plaintext">{{ $order->payment_option }}</p>
+            </div>
+			<div class="col-md-4">
+				<label for="proof" class="form-label">Proof</label>
+				<div class="magnify-container">
+					<div class="clickable-image-container">
+						<img src="{{ $order->proofUrl() }}" alt="Proof" class="img-thumbnail img-fluid proof-thumbnail" style="width: 100px; height: 100px;" data-proof="{{ $order->proofUrl() }}">
+						<div class="zoom-icon">
+							<i class="fa fa-search-plus"></i>
+						</div>
+					</div>
+				</div>
 			</div>
         </div>
         <!-- Group 2: Products -->
@@ -60,34 +87,10 @@
                 </ul>
             </div>
         </div>
-        <!-- Group 3: Delivery Method & Payment Option -->
-        <div class="row mb-3 p-3 bg-white rounded border">
-            <div class="col-md-6">
-                <label class="form-label">Delivery Method</label>
-                <p class="form-control-plaintext">{{ $order->delivery_method }}</p>
-            </div>
-            <div class="col-md-6">
-                <label class="form-label">Payment Option</label>
-                <p class="form-control-plaintext">{{ $order->payment_option }}</p>
-            </div>
-        </div>
         <!-- New Group: User Contact with Copy to Clipboard for both Phone & Email -->
         <div class="row mb-3 p-3 bg-light rounded border">
             <div class="col-12">
-                <label class="form-label">User Contact</label>
-                <p class="form-control-plaintext">
-                    Phone: <span id="phoneText">{{ $order->user->contact }}</span>
-                    <button type="button" id="copyPhoneBtn" class="btn btn-link p-0">
-                        <i class="fa fa-clipboard"></i>
-                    </button>
-                    <span id="copyPhoneMessage" style="display:none;">Copied!</span>
-                    <br>
-                    Email: <span id="emailText">{{ $order->user->email }}</span>
-                    <button type="button" id="copyEmailBtn" class="btn btn-link p-0">
-                        <i class="fa fa-clipboard"></i>
-                    </button>
-                    <span id="copyEmailMessage" style="display:none;">Copied!</span>
-                </p>
+                
             </div>
         </div>
         <!-- Group 4: Order Notes -->

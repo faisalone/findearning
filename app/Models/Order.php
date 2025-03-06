@@ -16,6 +16,9 @@ class Order extends Model
         'user_id',
         'product_details', // Rename to product_details
         'delivery_method',
+        'customer_name',
+        'customer_contact',
+        'customer_email',
         'payment_option',
         'proof',
         'total',

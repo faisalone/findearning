@@ -164,6 +164,9 @@ class OrderController extends Controller
                 'user_id' => $userId,
                 'product_details' => json_encode($productDetails), // Store product details as JSON
                 'delivery_method' => $request->delivery_method,
+                'customer_name' => $request->name,
+                'customer_contact' => $request->contact,
+                'customer_email' => $request->email,
                 'payment_option' => $request->payment_option,
                 'proof' => $proofFilename, // Store only the filename
                 'total' => $total, // Calculate total from session
@@ -200,12 +203,11 @@ class OrderController extends Controller
         }
     }
 
-    public function index()
-    {
-        $orders = Order::with('user')->get();
-		// return response()->json($orders);
-        return view('dashboard.orders.index', compact('orders'));
-    }
+	public function index()
+	{
+		$orders = Order::with('user')->orderBy('created_at', 'desc')->get();
+		return view('dashboard.orders.index', compact('orders'));
+	}
 
     public function edit($id)
     {

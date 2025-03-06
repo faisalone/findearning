@@ -17,6 +17,7 @@ use App\Http\Controllers\SettingController;
 use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\CheckUserRole;
+use App\Http\Controllers\ContactController;
 
 // Apply the CheckUserRole middleware directly to Auth routes
 Route::middleware([CheckUserRole::class])->group(function () {
@@ -26,8 +27,6 @@ Route::middleware([CheckUserRole::class])->group(function () {
 Route::controller(HomeController::class)->group(function () {
 	Route::get('/', 'index')->name('index');
 	Route::get('/all-category', 'allCategory')->name('allCategory');
-	Route::get('/contact', 'contact')->name('contact');
-
 });
 
 Route::get('/pages/{page}', [PageController::class, 'show'])->name('pages.show');
@@ -107,4 +106,9 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
 	Route::resource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);
     Route::patch('/reviews/{review}/toggle-status', [ReviewController::class, 'toggleStatus'])
         ->name('reviews.toggleStatus');
+
+    Route::get('/messages', [ContactController::class, 'index'])->name('contact.index');
 });
+
+Route::get('/contact', [ContactController::class, 'create'])->name('contact');
+Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
