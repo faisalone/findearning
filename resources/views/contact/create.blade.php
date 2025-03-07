@@ -89,9 +89,8 @@
                             </h3>
                             <div class="contact">
                                 <ul>
-									<li class="one">{{ $address->subtitle ?? 'Default Address' }}</li>
-									<li class="two">{{ $contact->url ?? 'Default URL' }} ({{ $contact->name ?? 'Default Name' }})</li>
-									<li class="three">Store Hours: <br>{{ $storeHours->subtitle ?? 'Default Store Hours' }}</li>
+									<li class="one">{{ $settings['email'] ?? 'contact@findearning.com' }}</li>
+									<li class="two">{{ $settings['telegram'] ?? 'username' }}</li>
                                 </ul>
                             </div>
                         </div>

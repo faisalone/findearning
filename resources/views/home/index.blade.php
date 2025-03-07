@@ -98,6 +98,9 @@
 <div class="rts-testimonial-section">
 	<div class="container">
 		<div class="section-inner">
+			<div class="section-header4 section-header8">
+                <h2 class="title text-white">Customer Reviews</h2>
+            </div>
 			<div class="swiper testimonialSlide">
 				<div class="swiper-wrapper">
 					@foreach ($reviews as $review)
@@ -107,9 +110,11 @@
 									<div class="flex-grow-1">
 										<div class="content text-white">
 											<p class="description text-white mb-2">" {{ $review->comment }} "</p>
-											<div class="me-4">
-												<img class="avatar img-fluid" src="{{ asset('storage/'.$review->image_path) }}" alt="Review image" style="max-height: 150px; object-fit: cover;">
-											</div>
+											@if ($review->image_path)
+												<div class="me-4">
+													<img class="avatar img-fluid" src="{{ asset('storage/'.$review->image_path) }}" alt="Review image" style="max-height: 150px; object-fit: cover;">
+												</div>
+											@endif
 										</div>
 										<div class="author-box">
 											<h3 class="author-name text-white mb-0">{{ $review->user->name ?? 'Anonymous' }}</h3>
