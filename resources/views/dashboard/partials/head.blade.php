@@ -5,6 +5,7 @@
 <meta name="author" content="">
 
 <title>@yield('title', 'Dashboard')</title>
+<link rel="icon" href="{{ asset('assets/images/fav.png') }}" type="image/png">
 
 <!-- Custom fonts for this template-->
 <link href="{{ asset('backend/vendor/fontawesome-free/css/all.min.css') }}" rel="stylesheet" type="text/css">

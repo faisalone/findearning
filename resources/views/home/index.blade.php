@@ -17,7 +17,7 @@
 							<h2 class="widget-title">All Categories <i class="rt-angle-down"></i></h2>
 							<nav>
 								<ul>
-									@foreach ($categories as $category)
+									@foreach ($categories->take(8) as $category)
 									<li><a href="{{ route('shop.category', $category->slug) }}">{{ $category->title }} <i class="rt rt-arrow-right-long"></i></a></li>
 									@endforeach
 								</ul>

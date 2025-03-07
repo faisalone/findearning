@@ -18,7 +18,12 @@ class HomeController extends Controller
 	
 	public function index()
     {
-        $categories = Category::getTopCategories(12);
+		$categories = Category::where('status', true)
+									->orderByRaw('`order` IS NULL ASC')
+									->orderBy('order')
+									->limit(12)
+									->get();
+
 		$topProducts = Product::getTopProducts(8);
 		// $topProducts = Product::getTopProducts(8, false);
         $banners = Slider::all()
@@ -37,16 +42,11 @@ class HomeController extends Controller
     
     public function allCategory()
     {
-        $categories = Category::getTopCategories();
+        $categories = Category::orderByRaw('`order` IS NULL ASC')
+								->orderBy('order')
+								->get();
 
         return view('home.allCategory', compact('categories'));
-    }
-    
-    
-	public function contact()
-    {
-
-        return view('home.contact', );
     }
 
 }

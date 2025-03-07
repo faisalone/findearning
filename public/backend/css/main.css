@@ -237,3 +237,11 @@ copy-feedback.visible {
 	overflow-wrap: break-word;
 	word-wrap: break-word;
 }
+.dragging {
+    opacity: 0.8;
+    background-color: #f0f0f0;
+    transition: background-color 0.2s ease;
+  }
+  .drop-indicator {
+    border-top: 2px dashed #007bff;
+  }

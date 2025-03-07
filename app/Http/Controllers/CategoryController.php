@@ -20,7 +20,10 @@ class CategoryController extends Controller
      */
     public function index()
     {
-		$categories = Category::withCount('products')->orderBy('updated_at', 'desc')->get();
+		$categories = Category::withCount('products')
+            ->orderByRaw('`order` IS NULL ASC')
+            ->orderBy('order')
+            ->get();
         return view('dashboard.categories.index', compact('categories'));
     }
 
@@ -137,5 +140,20 @@ class CategoryController extends Controller
         $category->delete();
 
         return redirect()->route('categories.index')->with('success', 'Category deleted successfully.');
+    }
+
+    public function reorder(Request $request)
+    {
+        $ids = $request->input('ids', []);
+        foreach ($ids as $index => $id) {
+            Category::where('id', $id)->update(['order' => $index + 1]);
+        }
+        return response()->json(['status' => 'Order updated']);
+    }
+
+    public function toggleStatus(Category $category)
+    {
+        $category->update(['status' => !$category->status]);
+        return redirect()->route('categories.index')->with('success', 'Category status updated.');
     }
 }

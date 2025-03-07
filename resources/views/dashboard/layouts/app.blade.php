@@ -2,12 +2,6 @@
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     @include('dashboard.partials.head')
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard</title>
-    <!-- Include Bootstrap CSS -->
-	
-    @include('dashboard.partials.head')
     @stack('styles')
 </head>
 <body id="page-top">

@@ -84,10 +84,14 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
     Route::get('/transactions/{id}/reject', [TransactionController::class, 'reject'])->name('transactions.reject');
     Route::patch('/transactions/{id}/adjust', [TransactionController::class, 'adjust'])->name('transactions.adjust');
     
-    Route::resource('categories', CategoryController::class);
+    // Move reorder outside the prefix('categories') group
+
     Route::prefix('categories')->controller(CategoryController::class)->group(function () {
-        Route::post('/{category}/status', 'updateStatus')->name('categories.updateStatus');
+        Route::patch('/reorder', 'reorder')->name('categories.reorder');
+        Route::patch('/{category}/toggle-status', 'toggleStatus')->name('categories.toggleStatus');
     });
+	Route::resource('categories', CategoryController::class);
+
 
     Route::resource('orders', OrderController::class);
     Route::resource('sliders', SliderController::class);
