@@ -2,6 +2,7 @@
 
 @section('content')
 <div class="container-fluid px-0 px-md-2">
+	<x-alert />
     <h1>Orders</h1>
     <div class="table-responsive">
         <table class="table table-bordered">
@@ -55,7 +56,9 @@
 							@endif
 						</td>
                         <td>
-                            <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm mb-1 w-100">Edit</a>
+                            @if($order->status !== 'cancelled')
+                                <a href="{{ route('orders.edit', $order->id) }}" class="btn btn-warning btn-sm mb-1 w-100">Edit</a>
+                            @endif
                             <form action="{{ route('orders.destroy', $order->id) }}" method="POST" style="display:inline;">
                                 @csrf
                                 @method('DELETE')

@@ -244,10 +244,42 @@ class OrderController extends Controller
             'status' => 'required|string',
         ]);
 
+        // If cancelling the order, refund the order total to the user's wallet
+        if ($request->status === 'cancelled' && $order->status !== 'cancelled') {
+            $user = $order->user; // Assumes relation exists
+            if ($user) {
+                $wallet = Wallet::where('user_id', $user->id)->first();
+                if (!$wallet) {
+                    // Create wallet if not found
+                    $wallet = Wallet::create([
+                        'user_id' => $user->id,
+                        'balance' => 0,
+                        // ...other attributes if needed...
+                    ]);
+                }
+                $wallet->balance += $order->total;
+                $wallet->save();
+            }
+        }
+
         $order->update([
             'status' => $request->status,
         ]);
 
         return redirect()->route('orders.index')->with('success', 'Order updated successfully.');
+    }
+
+    public function destroy($id)
+    {
+        $order = Order::findOrFail($id);
+        
+        // Delete proof file from disk if exists
+        if ($order->proof) {
+            Storage::disk('public')->delete('proofs/' . $order->proof);
+        }
+        
+        $order->delete();
+        
+        return redirect()->route('orders.index')->with('success', 'Order deleted successfully.');
     }
 }
