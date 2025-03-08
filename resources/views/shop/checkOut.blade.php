@@ -85,17 +85,16 @@
                             <div class="row mb-3">
                                 <div class="col-12">
                                     <label class="mb-2">Select a Payment Method:</label>
-                                    <div class="d-flex gap-2 payment-options-container" role="group">
-                                        <input type="radio" class="btn-check" name="payment_option" id="paymentEwallet" value="Wallet" autocomplete="off" {{ old('payment_option') == 'Wallet' ? 'checked' : '' }}>
-                                        <label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentEwallet">
-                                            <img src="{{ asset('assets/images/fav.png') }}" alt="eWallet" class="me-2"> My Wallet
-                                        </label>
-                                        <!-- Fixed: Changed name to match other radio button -->
-                                        <input type="radio" class="btn-check" name="payment_option" id="paymentCrypto" value="crypto" autocomplete="off" {{ old('payment_option') == 'crypto' ? 'checked' : '' }}>
-                                        <label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentCrypto">
-                                            <img src="https://img.icons8.com/fluency/48/000000/bitcoin.png" alt="Crypto" class="me-2"> Crypto
-                                        </label>
-                                    </div>
+									<div class="d-flex gap-2 payment-options-container" role="group">
+										<input type="radio" class="btn-check" name="payment_option" id="paymentEwallet" value="Wallet" autocomplete="off" {{ old('payment_option') == 'Wallet' ? 'checked' : '' }} required>
+										<label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentEwallet">
+											<img src="{{ asset('assets/images/fav.png') }}" alt="eWallet" class="me-2"> My Wallet
+										</label>
+										<input type="radio" class="btn-check" id="paymentCrypto" value="crypto" autocomplete="off" {{ old('payment_option') == 'crypto' ? 'checked' : '' }}>
+										<label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentCrypto">
+											<img src="https://img.icons8.com/fluency/48/000000/bitcoin.png" alt="Crypto" class="me-2"> Crypto
+										</label>
+									</div>
                                 </div>
                             </div>
                             <!-- New Crypto Payment Methods Options (centered) -->
@@ -127,15 +126,15 @@
                                             <!-- Info Column -->
                                             <div class="col-md-6">
 												<strong>Payable Amount:</strong> {{ number_format($subtotal, 2) }} USDT
-                                                <div class="mb-3 d-flex align-items-center">
-                                                    <label class="form-label me-2"><strong>Address:</strong></label>
-                                                    <mark id="cryptoAddressBadge" class="bg-light text-dark flex-grow-1 text-start"></mark>
-                                                    <button class="btn btn-outline-secondary btn-sm ms-2" type="button" id="copyAddressBtn">Copy</button>
-                                                    <span id="copyTooltip" class="copy-tooltip text-success" style="display:none;">Copied!</span>
-                                                </div>
-                                                <p class="card-text"><strong>Instructions:</strong> <span id="cryptoInstructions"></span></p>
+												<div class="mb-3 d-flex align-items-center p-2 border border-primary rounded bg-light">
+													<label class="form-label me-2 fw-bold text-primary" style="margin-bottom:0;"><strong>Address:</strong></label>
+													<span id="cryptoAddressBadge" class="text-primary flex-grow-1 text-start px-2" style="line-height:1.5;"></span>
+													<button class="btn btn-outline-primary btn-sm ms-2" type="button" id="copyAddressBtn" style="line-height:1;">Copy</button>
+													<span id="copyTooltip" class="copy-tooltip text-success" style="display:none;">Copied!</span>
+												</div>
+                                                <p class="bg-warning card-text"><strong class="text-dark">Instructions:</strong> <span id="cryptoInstructions"></span></p>
                                                 <p class="card-text">
-                                                    <span class="bg-warning px-1 rounded">Exchange Rate: 1 USD = 1 USDT</span>
+                                                    <span class="px-1 rounded">Exchange Rate: 1 USD = 1 USDT</span>
                                                 </p>
                                                 <!-- New Proof Upload Field with Preview -->
                                                 <div class="proof-upload-container mt-3">
@@ -333,7 +332,6 @@
   }
   .copy-tooltip {
       position: absolute !important;
-      top: 50% !important;
       right: -2rem !important; /* Force tooltip to appear after the copy button */
       transform: translateY(-50%) !important;
       font-size: 0.9rem !important;

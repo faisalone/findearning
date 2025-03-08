@@ -2422,7 +2422,7 @@ i {
 }
 .cart-bar .cart-edit .quantity-edit button i {
   font-size: 14px;
-  color: #C0C0C0;
+  /* color: #C0C0C0; */
 }
 .cart-bar .cart-edit .product-edit {
   margin-right: 15px;
@@ -2912,7 +2912,7 @@ i {
 }
 .cart-edit .quantity-edit button i {
   font-size: 16px;
-  color: #d3d3d3;
+  /* color: #d3d3d3; */
 }
 
 .side-sticky {
@@ -19808,7 +19808,7 @@ color: var(--theme-color);
 }
 .rts-product-details-section .details-product-area .cart-edit .quantity-edit button i {
   font-size: 16px;
-  color: #d3d3d3;
+  /* color: #d3d3d3; */
 }
 .rts-product-details-section .details-product-area .cart-edit span {
   margin-left: 20px;

@@ -75,7 +75,7 @@
                                     <span class="subtotal-price">${{ number_format($subtotal, 2) }}</span>
                                 </div>
                             </div>
-                            <a href="{{ route('checkOut') }}" class="procced-btn">Procced To Checkout</a>
+                            <a href="{{ route('checkOut', ['source' => 'cart']) }}" class="procced-btn">Procced To Checkout</a>
                             <a href="{{ route('shop') }}" class="continue-shopping"><i class="fal fa-long-arrow-left"></i> Continue Shopping</a>
                         </div>
                     </div>

@@ -124,22 +124,42 @@ class ShopController extends Controller
         return view('shop.cart', compact('cartItems'));
     }
     
-    public function checkOut()
+    public function checkOut(Request $request)
     {
-        $cart = session('cart', []);
+        if ($request->input('source') === 'cart') {
+            session()->forget('buy_now_product');
+        }
+
+        $buyNowProduct = session('buy_now_product');
         $cartItems = [];
         $subtotal = 0;
-        foreach ($cart as $productId => $item) {
-            $product = Product::find($productId);
+
+        if ($buyNowProduct) {
+            // Only show the buy-now product
+            $product = Product::find($buyNowProduct['product_id']);
             if ($product) {
-                $quantity = is_array($item) && isset($item['quantity']) ? $item['quantity'] : $item;
+                $quantity = $buyNowProduct['quantity'];
                 $cartItems[] = [
                     'product'  => $product,
                     'quantity' => $quantity,
                 ];
                 $subtotal += $product->price * $quantity;
             }
+        } else {
+            $cart = session('cart', []);
+            foreach ($cart as $productId => $item) {
+                $product = Product::find($productId);
+                if ($product) {
+                    $quantity = is_array($item) && isset($item['quantity']) ? $item['quantity'] : $item;
+                    $cartItems[] = [
+                        'product'  => $product,
+                        'quantity' => $quantity,
+                    ];
+                    $subtotal += $product->price * $quantity;
+                }
+            }
         }
+
         // Fetch active payment methods from DB
         $paymentMethods = PaymentMethod::where('status', true)->get();
 		// return response()->json($paymentMethods);
@@ -171,36 +191,39 @@ class ShopController extends Controller
         $cart = session()->get('cart', []);
         $productId = $product->id;
 
-        if (isset($cart[$productId])) {
-            // Add the quantity from input field to the existing quantity
-            $cart[$productId]['quantity'] += $quantity;
-        } else {
-            $cart[$productId] = [
-                'quantity' => $quantity,
-                'product'  => $product->id
-            ];
-        }
-        
-        session()->put('cart', $cart);
-        
-        $uniqueCount = count($cart);
-        
-        // Check if it's an AJAX request
-        if ($request->ajax() && $request->input('action_type') === 'add-to-cart') {
-            // Return JSON response for AJAX requests
-            return response()->json([
-                'success' => true, 
-                'message' => 'Product added to cart',
-                'count' => $uniqueCount  // Using the calculated count instead of Cart facade
-            ]);
-        }
-        
-        // If it's a "Buy Now" action, redirect to checkout
         if ($request->input('action_type') === 'buy-now') {
+            session()->put('buy_now_product', [
+                'quantity' => $quantity,
+                'product_id' => $product->id,
+            ]);
             return redirect()->route('checkOut');
         }
-        
-        // Default fallback for non-AJAX requests
+
+        // Only add to cart if action_type is add-to-cart
+        if ($request->input('action_type') === 'add-to-cart') {
+            if (isset($cart[$productId])) {
+                // Add the quantity from input field to the existing quantity
+                $cart[$productId]['quantity'] += $quantity;
+            } else {
+                $cart[$productId] = [
+                    'quantity' => $quantity,
+                    'product'  => $product->id
+                ];
+            }
+            session()->put('cart', $cart);
+            $uniqueCount = count($cart);
+
+            if ($request->ajax()) {
+                // Return JSON response for AJAX requests
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'Product added to cart',
+                    'count' => $uniqueCount  // Using the calculated count instead of Cart facade
+                ]);
+            }
+            return redirect()->back()->with('success', 'Product added to cart');
+        }
+
         return redirect()->back()->with('success', 'Product added to cart');
     }
 

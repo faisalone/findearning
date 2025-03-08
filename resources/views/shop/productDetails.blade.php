@@ -87,12 +87,12 @@
                                 {{ $product->title }}
                                 @if($product->quantity > 0)
                                     @if($product->quantity > 5)
-                                        <span class="stock text-success">In Stock</span>
+                                        <span class="stock text-success" data-stock="{{ $product->quantity }}">In Stock</span>
                                     @else
-                                        <span class="stock text-warning">Low Stock ({{ $product->quantity }} left)</span>
+                                        <span class="stock text-warning" data-stock="{{ $product->quantity }}">Low Stock ({{ $product->quantity }} left)</span>
                                     @endif
                                 @else
-                                    <span class="stock text-danger">Out of Stock</span>
+                                    <span class="stock text-danger" data-stock="0">Out of Stock</span>
                                 @endif
                             </h2>
 

@@ -57,7 +57,7 @@ Route::prefix('shop')->group(function () {
 });
 
 // shop
-Route::prefix('order')->group(function () {
+Route::prefix('order')->middleware('auth')->group(function () {
 	Route::controller(OrderController::class)->group(function () {
 		Route::post('/store', 'createOrder')->name('placeOrder');
 	});

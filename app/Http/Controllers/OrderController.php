@@ -24,6 +24,7 @@ class OrderController extends Controller
 
     public function createOrder(Request $request)
     {
+		// return $request->all();
         // Dynamic validation rules based on delivery method
         $validationRules = [
             'name' => 'required|string|max:255',
@@ -61,30 +62,51 @@ class OrderController extends Controller
 
         $validator->validate();
 
-        // Collect product details from the cart and calculate the total
-        $cart = session('cart', []);
+        // Check both the buy_now_product and regular cart
         $productDetails = [];
         $total = 0;
-
-        // Check if products are in stock before proceeding
         $outOfStockItems = [];
-        foreach ($cart as $productId => $item) {
-            $product = Product::find($productId);
+        
+        // Check if we have a buy now product
+        $buyNowProduct = session('buy_now_product');
+        if ($buyNowProduct) {
+            $product = Product::find($buyNowProduct['product_id']);
             if ($product) {
-                $quantity = is_array($item) && isset($item['quantity']) ? $item['quantity'] : $item;
+                $quantity = $buyNowProduct['quantity'];
                 
-                // Check if enough stock is available
+                // Check stock
                 if ($product->quantity < $quantity) {
                     $outOfStockItems[] = [
                         'product' => $product->title,
                         'requested' => $quantity,
                         'available' => $product->quantity
                     ];
-                    continue;
+                } else {
+                    $productDetails[] = ['id' => $product->id, 'quantity' => $quantity];
+                    $total += $product->price * $quantity;
                 }
-                
-                $productDetails[] = ['id' => $productId, 'quantity' => $quantity];
-                $total += $product->price * $quantity;
+            }
+        } else {
+            // If no buy now product, check the cart
+            $cart = session('cart', []);
+            foreach ($cart as $productId => $item) {
+                $product = Product::find($productId);
+                if ($product) {
+                    $quantity = is_array($item) && isset($item['quantity']) ? $item['quantity'] : $item;
+                    
+                    // Check if enough stock is available
+                    if ($product->quantity < $quantity) {
+                        $outOfStockItems[] = [
+                            'product' => $product->title,
+                            'requested' => $quantity,
+                            'available' => $product->quantity
+                        ];
+                        continue;
+                    }
+                    
+                    $productDetails[] = ['id' => $productId, 'quantity' => $quantity];
+                    $total += $product->price * $quantity;
+                }
             }
         }
         
@@ -120,27 +142,27 @@ class OrderController extends Controller
         }
 
 		// Check if the user is authenticated
-		if (auth()->check()) {
-			$userId = auth()->id();
-		} else {
-			// Check if the user exists by email or contact
-			$user = User::where('email', $request->email)
-				->orWhere('contact', $request->contact)
-				->first();
+		// if (auth()->check()) {
+		// 	$userId = auth()->id();
+		// } else {
+		// 	// Check if the user exists by email or contact
+		// 	$user = User::where('email', $request->email)
+		// 		->orWhere('contact', $request->contact)
+		// 		->first();
 
-			if ($user) {
-			$userId = $user->id;
-			} else {
-			// Create a new user
-			$user = User::create([
-				'name' => $request->name,
-				'email' => $request->email,
-				'contact' => $request->contact,
-				'password' => Hash::make($request->contact) // Use contact as the default password
-			]);
-			$userId = $user->id;
-			}
-		}
+		// 	if ($user) {
+		// 	$userId = $user->id;
+		// 	} else {
+		// 	// Create a new user
+		// 	$user = User::create([
+		// 		'name' => $request->name,
+		// 		'email' => $request->email,
+		// 		'contact' => $request->contact,
+		// 		'password' => Hash::make($request->contact) // Use contact as the default password
+		// 	]);
+		// 	$userId = $user->id;
+		// 	}
+		// }
 
         // Use a database transaction to ensure all operations complete successfully
         DB::beginTransaction();
@@ -161,7 +183,7 @@ class OrderController extends Controller
 
             // Create the order
             $order = Order::create([
-                'user_id' => $userId,
+				'user_id' => auth()->id(),
                 'product_details' => json_encode($productDetails), // Store product details as JSON
                 'delivery_method' => $request->delivery_method,
                 'customer_name' => $request->name,
@@ -191,8 +213,8 @@ class OrderController extends Controller
             // Commit the transaction if everything is successful
             DB::commit();
             
-            // Destroy the cart session
-            session()->forget('cart');
+            // Clear both session variables
+            session()->forget(['cart', 'buy_now_product']);
 
             return redirect()->route('thankYou', ['order' => $order->id]);
         } catch (\Exception $e) {
