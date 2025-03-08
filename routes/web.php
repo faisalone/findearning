@@ -48,8 +48,8 @@ Route::prefix('shop')->group(function () {
 		Route::post('/add-to-cart', 'addToCart')->name('shop.addToCart');
 		Route::post('/remove-from-cart', 'removeFromCart')->name('shop.removeFromCart');
 		Route::post('/update-cart', 'updateCart')->name('shop.updateCart');
-		Route::get('/check-out', 'checkOut')->name('checkOut');
-		Route::get('/{order}/thank-you', 'thankYou')->name('thankYou');
+		Route::get('/check-out', 'checkOut')->middleware('auth')->name('checkOut');
+		Route::get('/{order}/thank-you', 'thankYou')->middleware('auth')->name('thankYou');
 		Route::get('/{category}', 'category')->name('shop.category');
 		Route::get('/{category}/{product}', 'productDetails')
             ->name('productDetails');
@@ -104,7 +104,7 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
     });
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
     Route::post('/customers/{customer}/toggle', [CustomerController::class, 'toggle'])->name('customers.toggle');
-    Route::resource('settings', SettingController::class)->except(['create', 'edit', 'show']);
+    Route::resource('settings', SettingController::class)->except(['show']);
 
     // Reviews management routes - the admin middleware is handled in the controller
 	Route::resource('reviews', ReviewController::class)->only(['index', 'update', 'destroy']);

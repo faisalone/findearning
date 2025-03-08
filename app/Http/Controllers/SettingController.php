@@ -5,13 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Setting;
 use Illuminate\Http\Request;
 use App\Http\Middleware\AdminMiddleware;
+use Illuminate\Support\Facades\Storage;
 
 class SettingController extends Controller
 {
-	public function __construct()
+    public function __construct()
     {
         $this->middleware(AdminMiddleware::class);
     }
+    
     /**
      * Display a listing of the resource.
      */
@@ -26,7 +28,7 @@ class SettingController extends Controller
      */
     public function create()
     {
-        //
+        return view('dashboard.settings.create');
     }
 
     /**
@@ -36,21 +38,21 @@ class SettingController extends Controller
     {
         $request->validate([
             'key' => 'required|string|max:255|unique:settings,key',
-            'value' => 'required|string'
+            'value' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Setting::create($request->only(['key', 'value']));
+        $data = $request->only(['key', 'value']);
+        
+        if ($request->hasFile('image')) {
+            $imagePath = $request->file('image')->store('settings', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        Setting::create($data);
         
         return redirect()->route('settings.index')
             ->with('success', 'Setting created successfully.');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Setting $setting)
-    {
-        //
     }
 
     /**
@@ -58,7 +60,7 @@ class SettingController extends Controller
      */
     public function edit(Setting $setting)
     {
-        //
+        return view('dashboard.settings.edit', compact('setting'));
     }
 
     /**
@@ -67,11 +69,23 @@ class SettingController extends Controller
     public function update(Request $request, Setting $setting)
     {
         $request->validate([
-            'value' => 'required|string'
+            'value' => 'nullable|string',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        $setting->value = $request->value;
-        $setting->save();
+        $data = $request->only(['value']);
+        
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($setting->image) {
+                Storage::disk('public')->delete($setting->image);
+            }
+            
+            $imagePath = $request->file('image')->store('settings', 'public');
+            $data['image'] = $imagePath;
+        }
+
+        $setting->update($data);
         
         return redirect()->route('settings.index')
             ->with('success', 'Setting updated successfully.');
@@ -82,6 +96,11 @@ class SettingController extends Controller
      */
     public function destroy(Setting $setting)
     {
+        // Delete image if exists
+        if ($setting->image) {
+            Storage::disk('public')->delete($setting->image);
+        }
+        
         $setting->delete();
         
         return redirect()->route('settings.index')

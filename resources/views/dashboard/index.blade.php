@@ -101,7 +101,7 @@
                             <tbody>
                                 @foreach($recentOrders as $order)
                                     <tr>
-                                        <td>#{{ $order->id }}</td>
+										<td>#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
                                         <td>{{ $order->user->name ?? 'Guest' }}</td>
                                         <td>${{ number_format($order->total_amount, 2) }}</td>
                                         <td>

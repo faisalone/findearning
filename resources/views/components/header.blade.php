@@ -48,7 +48,7 @@
 
 						<a href="{{ route('login') }}" class="account"><i class="rt-user-2"></i></a>
 					</div>
-					<div class="hamburger"><span></span></div>
+					<div class="ms-2 hamburger"><span></span></div>
 				</div>
 			</div>
 		</div>
@@ -80,7 +80,7 @@
 							<a href="{{ route('login') }}" class="text-white"><i class="rt-plus"></i> Recharge</a>
 						@endif
 					</div>
-					<div class="hamburger"><span></span></div>
+					<div class="ms-2 hamburger"><span></span></div>
 				</div>
 			</div>
 		</div>

@@ -115,7 +115,7 @@
                                 <tbody>
                                     @foreach($recentOrders as $order)
                                         <tr>
-                                            <td>#{{ $order->id }}</td>
+											<td>#{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</td>
                                             <td>{{ $order->created_at->format('M d, Y') }}</td>
                                             <td>${{ number_format($order->total, 2) }}</td>
                                             <td>

@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Setting extends Model
 {
-    protected $fillable = ['key', 'value'];
+    protected $fillable = ['key', 'value', 'image'];
 
     /**
      * Get a setting value by key
@@ -28,5 +28,16 @@ class Setting extends Model
     public static function set($key, $value)
     {
         return self::updateOrCreate(['key' => $key], ['value' => $value]);
+    }
+
+    /**
+     * Initialize common settings keys if they don't exist.
+     */
+    public static function initializeDefaults()
+    {
+        $defaultKeys = ['url', 'title', 'description', 'keywords', 'whatsapp', 'telegram', 'email', 'favicon', 'og'];
+        foreach ($defaultKeys as $key) {
+            self::firstOrCreate(['key' => $key], ['value' => null]);
+        }
     }
 }

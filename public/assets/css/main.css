@@ -6784,7 +6784,7 @@ tr:first-child {
   margin-right: 10px;
 }
 .header-action-items .cart .cart-nav .cart-icon {
-  margin-right: 5px;
+  /* margin-right: 5px; */
   position: relative;
 }
 
@@ -6832,9 +6832,9 @@ tr:first-child {
   }
 }
 @media (max-width: 370px) {
-  .navbar-part .header-action-items {
+  /* .navbar-part .header-action-items {
     display: none;
-  }
+  } */
   .navbar-part .hamburger {
     margin-left: auto;
   }
