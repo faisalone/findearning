@@ -18,8 +18,8 @@
     </title>
     
     <!-- ..::Favicon::.. -->
-    <link rel="apple-touch-icon" href="{{ asset(config('settings.favicon', 'assets/images/fav.png')) }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ asset(config('settings.favicon', 'assets/images/fav.png')) }}">
+    <link rel="apple-touch-icon" href="{{ $settings['logo'] }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $settings['logo'] }}">
     
     <!-- ..::Bootstrap V5 CSS::.. -->
     <link rel="stylesheet" type="text/css"  href="{{ asset('assets/css/bootstrap.min.css') }}">

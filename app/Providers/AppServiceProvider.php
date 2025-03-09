@@ -40,7 +40,7 @@ class AppServiceProvider extends ServiceProvider
 		Paginator::useBootstrapFour();
 
 		if (Schema::hasTable('settings')) {
-			$settings = Setting::pluck('value', 'key')->toArray();
+			$settings = Setting::get(); // changed here
 			Config::set('settings', $settings);
 			View::share('settings', $settings);
 		}

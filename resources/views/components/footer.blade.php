@@ -4,7 +4,9 @@
 			<div class="row">
 				<div class="col-xl-3 col-md-6 col-sm-6 box-widget-col">
 					<div class="footer-widget footer-box-widget">
-						<div class="footer-logo"><img src="{{ asset($settings['site_logo'] ?? 'assets/images/logo-findearning.svg') }}" class="w-100" alt="footer-logo"></div>
+						<div class="footer-logo">
+							<img src="{{ $settings['logo'] }}" class="w-75" alt="Findearning">
+						</div>
 						<p>{{ $settings['site_description'] ?? 'Solid is the information & experience directed at an end-user' }}</p>
 						<div class="quick-contact">
 							<div class="phone contact-item">

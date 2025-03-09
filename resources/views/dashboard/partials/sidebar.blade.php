@@ -2,7 +2,7 @@
     <!-- Sidebar - Brand -->
     <a class="sidebar-brand d-flex align-items-center justify-content-center" href="{{ route('index') }}">
         <div class="sidebar-brand-icon rotate-n-15">
-            <img src="{{ asset('assets/images/fav.png') }}" alt="Findearning" width="50">
+            <img src="{{ $settings['logo'] }}" alt="Findearning" width="50">
         </div>
         <div class="sidebar-brand-text mx-3">Findearning</div>
     </a>

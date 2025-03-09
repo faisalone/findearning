@@ -3,26 +3,40 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Storage; // ...new import...
 
 class Setting extends Model
 {
     protected $fillable = ['key', 'value', 'image'];
 
     /**
-     * Get a setting value by key
+     * Get a setting by key.
+     * Returns the 'value' if present; if 'value' is null, returns the Storage URL for 'image'.
+     * If both are null, returns the default.
      * 
      * @param string|null $key The setting key to retrieve
-     * @param mixed $default The default value if setting doesn't exist
-     * @return mixed The setting value or all settings if no key provided
+     * @param mixed $default The default if not found
+     * @return mixed
      */
     public static function get($key = null, $default = null)
     {
-        // If no key is provided, return all settings as key-value pairs
         if ($key === null) {
-            return self::pluck('value', 'key')->all();
+            return self::all()
+                ->mapWithKeys(function($item){
+                    $val = $item->value !== null 
+                        ? $item->value 
+                        : ($item->image ? url(Storage::url($item->image)) : null);
+                    return [$item->key => $val];
+                })->all();
         }
         
-        return self::where('key', $key)->value('value') ?? $default;
+        $setting = self::where('key', $key)->first();
+        if (!$setting) {
+            return $default;
+        }
+        return $setting->value !== null
+            ? $setting->value
+            : ($setting->image ? url(Storage::url($setting->image)) : $default);
     }
 
     public static function set($key, $value)

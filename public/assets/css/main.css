@@ -6291,7 +6291,14 @@ tr:first-child {
   color: #040404;
 }
 .navbar-part4 .logo {
-  margin-left: 60px;
+	margin-left: 60px;
+	width: 150px; /* Set a fixed width for the logo */
+}
+
+.navbar-part4 .logo img {
+	width: 100%; /* Make the image take the full width of the logo div */
+	height: auto; /* Maintain the aspect ratio */
+	display: block; /* Remove any extra space below the image */
 }
 .navbar-part4 .navbar-select-area {
   margin-left: auto;

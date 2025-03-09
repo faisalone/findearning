@@ -88,7 +88,7 @@
 									<div class="d-flex gap-2 payment-options-container" role="group">
 										<input type="radio" class="btn-check" name="payment_option" id="paymentEwallet" value="Wallet" autocomplete="off" {{ old('payment_option') == 'Wallet' ? 'checked' : '' }} required>
 										<label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentEwallet">
-											<img src="{{ asset('assets/images/fav.png') }}" alt="eWallet" class="me-2"> My Wallet
+											<img src="{{ $settings['logo'] }}" alt="eWallet" class="me-2"> My Wallet
 										</label>
 										<input type="radio" class="btn-check" name="payment_category" id="paymentCrypto" value="crypto" autocomplete="off" {{ old('payment_category') == 'crypto' ? 'checked' : '' }}>
 										<label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentCrypto">
