@@ -1851,17 +1851,23 @@ i {
 }
 .sticky-footer {
     position: fixed;
-    left: 1rem;   /* Add left gap */
-    right: 1rem;  /* Retain right gap */
-    bottom: 1rem;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0;
     z-index: 9999;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    /* Make the container ignore pointer events */
+    pointer-events: none;
+}
+
+.sticky-footer > * {
+    /* Enable pointer events on child elements (chat buttons and scrolling text) */
+    pointer-events: auto;
 }
 
 .chat-float {
-    /* Retain your original floating button styling without extra backgrounds */
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -1904,12 +1910,12 @@ i {
 
 /* Scrolling text styling */
 .scrolling-text {
-    margin-top: 5px; /* space between buttons and scrolling text */
+    margin-top: 5px;
     background-color: red;
     color: white;
     padding-top: 2px;
     border-radius: 5px;
-	width: 100%;
+    width: 100%;
 }
 .scroll-top-btn {
   display: inline-block;
