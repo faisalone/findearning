@@ -32,13 +32,6 @@
 </div>
 <!-- ..::Banner Section End Here::.. -->
 
-<!-- Red Background Scrolling Text Section using Inline CSS -->
-<div class="scrolling-text" style="background-color: red; color: white; padding: 10px 0;">
-	<marquee behavior="scroll" direction="left" style="font-size: 1.5em;">
-	    {{ $settings['scroll'] }}
-	</marquee>
-</div>
-
 <!-- ..::Featured Product Section Start Here::.. -->
 <div class="rts-featured-product-section1 featured-product7 featured-product8">
 	<div class="container">

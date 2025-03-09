@@ -1849,17 +1849,25 @@ i {
     flex-direction: column;
   }
 }
-.chat-float {
+.sticky-footer {
     position: fixed;
-    bottom: 0;
-    right: 0;
-    margin: 1rem;
+    left: 1rem;   /* Add left gap */
+    right: 1rem;  /* Retain right gap */
+    bottom: 1rem;
+    z-index: 9999;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
-    z-index: 9999;
 }
 
+.chat-float {
+    /* Retain your original floating button styling without extra backgrounds */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+}
+
+/* Chat buttons styling */
 .chat-button {
     background: #0088cc;
     border-radius: 50%;
@@ -1889,10 +1897,19 @@ i {
         width: 50px;
         height: 50px;
     }
-
     .telegram-icon, .whatsapp-icon {
         font-size: 25px;
     }
+}
+
+/* Scrolling text styling */
+.scrolling-text {
+    margin-top: 5px; /* space between buttons and scrolling text */
+    background-color: red;
+    color: white;
+    padding-top: 2px;
+    border-radius: 5px;
+	width: 100%;
 }
 .scroll-top-btn {
   display: inline-block;
