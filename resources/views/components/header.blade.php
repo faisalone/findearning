@@ -46,7 +46,11 @@
 							</div>
 						</a>
 
-						<a href="{{ route('login') }}" class="account"><i class="rt-user-2"></i></a>
+						@if(Auth::check())
+							<a href="{{ route('myProfile') }}" class="account"><i class="rt-user-2"></i></a>
+						@else
+							<a href="{{ route('login') }}" class="account"><i class="rt-user-2"></i></a>
+						@endif
 					</div>
 					<div class="ms-2 hamburger"><span></span></div>
 				</div>

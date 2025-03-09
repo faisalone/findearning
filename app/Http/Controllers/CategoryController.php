@@ -128,11 +128,13 @@ class CategoryController extends Controller
      */
     public function destroy(Category $category)
     {
-        foreach ($category->products as $product) {
-            $product->update(['category_id' => null]);
+        // Check if category has any associated products
+        if ($category->products()->exists()) {
+            return redirect()->route('categories.index')
+                ->with('error', 'Cannot delete category: it has associated products.');
         }
 
-        // Delete image
+        // Delete image if exists
         if ($category->image) {
             Storage::disk('public')->delete(Category::IMAGE_FOLDER . '/' . $category->image);
         }

@@ -16,7 +16,9 @@ class CustomerController extends Controller
 
     public function index()
     {
-		$customers = User::where('role', '!=', 1)->get();
+		$customers = User::where('role', '!=', 1)
+            ->orderBy('created_at', 'desc') // added order by newest first
+            ->get();
 		// return response()->json($customers);
         return view('dashboard.customers.index', compact('customers'));
     }

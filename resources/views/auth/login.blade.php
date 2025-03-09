@@ -42,7 +42,7 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
                                     <div class="form">
                                         <!-- Changed name to login but kept id as email for any JS dependencies -->
                                         <input type="text" class="form-control" id="email" name="login"
-                                            placeholder="Email or Contact Number*" required />
+                                            placeholder="Email/Telegram/Whatsapp*" required />
                                         @error('login')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror

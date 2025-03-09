@@ -40,7 +40,7 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
                                     </div>
                                     <div class="form">
                                         <input type="tel" class="form-control" id="contact" name="contact"
-                                            placeholder="WhatsApp/Telegram* (e.g., +1234567890)" value="{{ old('contact') }}" 
+                                            placeholder="WhatsApp/Telegram*" value="{{ old('contact') }}" 
                                             pattern="[0-9+\-\s()]*" title="Enter a valid phone number (digits, +, -, spaces, and parentheses allowed)" required />
                                         @error('contact')
                                             <span class="text-danger">{{ $message }}</span>

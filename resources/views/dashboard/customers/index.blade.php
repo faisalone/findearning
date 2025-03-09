@@ -32,7 +32,7 @@
                                         <br><span>{{ $customer->contact ?? 'N/A' }}</span>
 										<br><strong>Balance: <span class="text-primary">{{ $customer->wallet ? '$' . $customer->wallet->balance : 'No Wallet' }}</span></strong>
                                     </td>
-                                    <td>{{ $customer->created_at->format('d M Y') }}</td>
+                                    <td>{{ $customer->created_at->setTimezone('Asia/Dhaka')->format('d M Y') }}</td>
                                     <td>
                                         <span class="badge bg-{{ $customer->email_verified_at ? 'success' : 'warning' }}">
                                             {{ $customer->email_verified_at ? 'Verified' : 'Unverified' }}
@@ -73,10 +73,10 @@
             $('#customerTable').DataTable().destroy();
         }
         
-        // Initialize DataTable
+        // Initialize DataTable with no initial ordering to preserve backend order
         $('#customerTable').DataTable({
             responsive: true,
-            "order": [[ 1, "desc" ]],  // Changed to use registration date column
+            "order": [], // disables DataTables default ordering
             "pageLength": 25,
             "language": {
                 "search": "Search customers:",
