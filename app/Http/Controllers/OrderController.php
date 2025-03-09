@@ -119,6 +119,11 @@ class OrderController extends Controller
             return redirect()->back()->withErrors(['stock_error' => $errorMessage])->withInput();
         }
 
+        // After collecting $productDetails:
+        if (empty($productDetails)) {
+            return redirect()->back()->withErrors(['cart' => 'No product found in Cart or Buy Now session.'])->withInput();
+        }
+
         // Check Wallet balance if payment_option is Wallet
         if ($request->payment_option === 'Wallet') {
             $user = auth()->check()

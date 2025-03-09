@@ -90,7 +90,7 @@
 										<label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentEwallet">
 											<img src="{{ asset('assets/images/fav.png') }}" alt="eWallet" class="me-2"> My Wallet
 										</label>
-										<input type="radio" class="btn-check" id="paymentCrypto" value="crypto" autocomplete="off" {{ old('payment_option') == 'crypto' ? 'checked' : '' }}>
+										<input type="radio" class="btn-check" name="payment_category" id="paymentCrypto" value="crypto" autocomplete="off" {{ old('payment_category') == 'crypto' ? 'checked' : '' }}>
 										<label class="btn btn-outline-secondary rounded d-flex align-items-center justify-content-center" for="paymentCrypto">
 											<img src="https://img.icons8.com/fluency/48/000000/bitcoin.png" alt="Crypto" class="me-2"> Crypto
 										</label>
@@ -180,6 +180,11 @@
                                 @else
                                     <div class="empty-checkout text-center">
                                         <p>Your cart is empty.</p>
+                                        @error('cart')
+                                        <div class="alert alert-danger">
+                                            {{ $message }}
+                                        </div>
+                                        @enderror
                                         <a href="{{ route('shop') }}" class="continue-shopping">
                                             <i class="fal fa-long-arrow-left"></i> Shopping more
                                         </a>
@@ -200,6 +205,11 @@
             @else
                 <div class="empty-checkout text-center">
                     <p>Your cart is empty.</p>
+                    @error('cart')
+                    <div class="alert alert-danger">
+                        {{ $message }}
+                    </div>
+                    @enderror
                     <a href="{{ route('shop') }}" class="continue-shopping">
                         <i class="fal fa-long-arrow-left"></i> Shopping more
                     </a>
@@ -265,14 +275,21 @@
             document.getElementById('proofUploadLabel').innerHTML = '<strong>Upload Payment Proof:</strong>';
         } else {
             cryptoOptionsContainer.style.display = 'none';
+            // Uncheck sub-crypto methods
+            document.querySelectorAll('.crypto-method').forEach(r => r.checked = false);
             cryptoInfo.style.display = 'none';
-            document.querySelectorAll('.crypto-method').forEach(radio => radio.checked = false);
             document.getElementById('proofUpload').removeAttribute('required');
             document.getElementById('proofUploadLabel').innerHTML = '<strong>Upload Payment Proof:</strong>';
         }
     }
     paymentCrypto.addEventListener('change', toggleCryptoOptions);
-    paymentEwallet.addEventListener('change', toggleCryptoOptions);
+    paymentEwallet.addEventListener('change', function() {
+        paymentCrypto.checked = false;
+        // Force hide crypto options
+        toggleCryptoOptions();
+        // Uncheck Crypto
+        document.querySelectorAll('.crypto-method').forEach(r=>r.checked=false);
+    });
 
     // Handle crypto method selection
     document.querySelectorAll('.crypto-method').forEach(function(radio) {
@@ -317,6 +334,24 @@
             }
             reader.readAsDataURL(file);
         }
+    });
+
+    // Sync payment radios
+    const walletRadioName = 'payment_option';
+    const cryptoCategoryName = 'payment_category';
+    
+    function syncPaymentRadios() {
+        if (paymentCrypto.checked) {
+            // Uncheck eWallet
+            paymentEwallet.checked = false;
+        }
+    }
+
+    paymentCrypto.addEventListener('change', syncPaymentRadios);
+    paymentEwallet.addEventListener('change', function() {
+        // Uncheck Crypto
+        paymentCrypto.checked = false;
+        document.querySelectorAll('.crypto-method').forEach(r=>r.checked=false);
     });
 </script>
 @endpush

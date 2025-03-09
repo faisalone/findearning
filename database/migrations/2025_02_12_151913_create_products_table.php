@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-			$table->bigInteger('category_id')->unsigned()->nullable();
+            $table->foreignId('category_id')->constrained('categories')->restrictOnDelete()->cascadeOnUpdate();
             $table->text('title');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
@@ -21,13 +21,6 @@ return new class extends Migration
             $table->integer('quantity')->nullable();
             $table->boolean('status')->default(1); // Add status column
             $table->timestamps();
-
-            // Foreign Key
-            $table->foreign('category_id')
-                  ->references('id')
-                  ->on('categories')
-                  ->onDelete('set null') // Allow deleting a category by setting category_id to null in products
-                  ->onUpdate('cascade');
         });
     }
 

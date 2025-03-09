@@ -104,7 +104,7 @@ class ProductController extends Controller
 	{
 		// Inline validation or delegate to a Form Request:
 		$request->validate([
-			'category_id' => 'nullable|exists:categories,id',
+			'category_id' => 'required|exists:categories,id',
 			'title'       => 'required|unique:products,title,' . $product->id,
 			'description' => 'required',
 			'price'       => 'required|numeric',
