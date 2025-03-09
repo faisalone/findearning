@@ -8,7 +8,7 @@
 							<div class="search-input-inner">
 								<div class="input-div">
 									<button type="submit" class="search-input-icon"><i class="rt-search mr--10"></i> Search</button>
-									<input class="search-input input5" type="text" name="query" value="{{ request('query') }}" placeholder="Keyword here...">
+									<input class="search-input input5 text-white" type="text" name="query" value="{{ request('query') }}" placeholder="Keyword here...">
 								</div>
 							</div>
 						</form>

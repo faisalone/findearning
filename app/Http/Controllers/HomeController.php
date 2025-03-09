@@ -19,13 +19,17 @@ class HomeController extends Controller
 	public function index()
     {
 		$categories = Category::where('status', true)
-									->orderByRaw('`order` IS NULL ASC')
-									->orderBy('order')
-									->limit(12)
-									->get();
+								->orderByRaw('`order` IS NULL ASC')
+								->orderBy('order')
+								->limit(12)
+								->get();
 
+		// Retrieve top products using getTopProducts and filter by valid category
 		$topProducts = Product::getTopProducts(8);
-		// $topProducts = Product::getTopProducts(8, false);
+		$topProducts = $topProducts->filter(function($product) {
+			return optional($product->category)->status;
+		})->values();
+
         $banners = Slider::all()
             ->map(function($slider) {
                 return [
@@ -34,7 +38,9 @@ class HomeController extends Controller
                     'link' => route('shop')
                 ];
             });
-		$reviews = Review::where('status', true)->orderBy('updated_at', 'desc')->get(); // Changed from first() to get()
+		$reviews = Review::where('status', true)
+						  ->orderBy('updated_at', 'desc')
+						  ->get();
 		// Pass the variable to the view
         return view('home.index', compact('categories', 'topProducts', 'banners', 'reviews'));
     }

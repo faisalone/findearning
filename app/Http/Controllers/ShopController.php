@@ -18,7 +18,10 @@ class ShopController extends Controller
     {
         $productsQuery = Product::select('products.*')
             ->with(['category:id,title,slug','images:id,product_id,image'])
-            ->active(); // optional if you want only active products
+            ->active()
+            ->whereHas('category', function($q) {
+                $q->where('status', true);
+            });
 
         // Apply sorting via trait
         $productsQuery = $this->applySorting($productsQuery);
@@ -46,8 +49,11 @@ class ShopController extends Controller
     {
         $category = Category::where('slug', $slug)->firstOrFail();
         
-        // Use getQuery() to get a Builder instance instead of a HasMany relationship
-        $productsQuery = $category->products();
+        // Get products filtered by category status
+        $productsQuery = $category->products()
+            ->whereHas('category', function($q) {
+                $q->where('status', true);
+            });
         
         // Apply sorting
         $productsQuery = $this->applySorting($productsQuery);
@@ -82,12 +88,11 @@ class ShopController extends Controller
      */
 	public function productDetails(string $category, string $product)
 	{
-		// $topProducts = Product::getTopProducts(9, false);
-		// return response()->json($topProducts);
 		$product = Product::with('category')
 			->where('slug', $product)
 			->whereHas('category', function($query) use ($category) {
-				$query->where('slug', $category);
+				$query->where('slug', $category)
+				      ->where('status', true);
 			})
 			->first();
 
@@ -276,7 +281,10 @@ class ShopController extends Controller
             ->with([
                 'category:id,title,slug',
                 'images:id,product_id,image',
-            ]);
+            ])
+            ->whereHas('category', function($q) {
+                $q->where('status', true);
+            });
         
         // Search by query
         if ($query) {
