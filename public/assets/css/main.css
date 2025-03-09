@@ -6292,7 +6292,7 @@ tr:first-child {
 }
 .navbar-part4 .logo {
 	margin-left: 60px;
-	width: 150px; /* Set a fixed width for the logo */
+	width: 120px; /* Set a fixed width for the logo */
 }
 
 .navbar-part4 .logo img {
@@ -7196,7 +7196,8 @@ tr:first-child {
   }
   .sticky-menu .lower-navbar .navbar-inner .logo {
     display: block;
-    margin-left: 20px;
+    margin-left: 0px;
+	width: 120px;
   }
   .sticky-menu .lower-navbar .navbar-inner .catagory-select-area {
     display: none !important;
@@ -20679,6 +20680,10 @@ color: var(--theme-color);
 }
 .rts-checkout-section .action-item .product-brands a:hover {
   color: #040404;
+}
+
+.payment-method-logo {
+    width: 60px;
 }
 
 .place-order-btn {

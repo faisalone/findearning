@@ -57,13 +57,10 @@
 			</div>
 		</div>
 	</div>
-	<div class="navbar-sticky lower-navbar-sticky lower-navbar-sticky4">
+	<div class="navbar-sticky lower-navbar-sticky lower-navbar-sticky4 d-none d-md-block">
 		<div class="navbar-part navbar-part2 lower-navbar lower-navbar4">
 			<div class="container">
-				<div class="navbar-inner p-3">
-					<a href="{{ route('index') }}" class="logo">
-						<img src="{{ $settings['logo'] ?? asset('assets/images/fav.png') }}" class="w-75" alt="Findearning">
-					</a>
+				<div class="navbar-inner p-3 d-flex justify-content-between align-items-center">
 					<div class="rts-menu">
 						<nav class="menus menu-toggle">
 							<ul class="nav__menu">
@@ -75,7 +72,7 @@
 							</ul>
 						</nav>
 					</div>
-					<div class="contact-info ml-auto">
+					<div class="contact-info ml-auto d-none d-md-block">
 						@if(Auth::check())
 							@if(optional(Auth::user()->wallet)->balance)
 								<a href="{{ route('myProfile') }}" class="text-white"> ${{ Auth::user()->wallet->balance }}</a>
@@ -86,7 +83,6 @@
 							<a href="{{ route('login') }}" class="text-white"><i class="rt-plus"></i> Recharge</a>
 						@endif
 					</div>
-					<div class="ms-2 hamburger"><span></span></div>
 				</div>
 			</div>
 		</div>
