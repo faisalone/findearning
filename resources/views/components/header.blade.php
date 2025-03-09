@@ -14,7 +14,7 @@
 						</form>
 					</div>
 					<a href="{{ route('index') }}" class="logo">
-						<img src="{{ $settings['logo'] }}" class="w-75" alt="Findearning">
+						<img src="{{ $settings['logo'] ?? asset('assets/images/fav.png') }}" class="w-75" alt="Findearning">
 					</a>
 					<div class="navbar-select-area">
 						
@@ -62,7 +62,7 @@
 			<div class="container">
 				<div class="navbar-inner p-3">
 					<a href="{{ route('index') }}" class="logo">
-						<img src="{{ $settings['logo'] }}" class="w-75" alt="Findearning">
+						<img src="{{ $settings['logo'] ?? asset('assets/images/fav.png') }}" class="w-75" alt="Findearning">
 					</a>
 					<div class="rts-menu">
 						<nav class="menus menu-toggle">

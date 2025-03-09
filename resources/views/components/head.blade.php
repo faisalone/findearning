@@ -4,22 +4,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <meta name="description" content="{{ config('settings.description') }}">
-    <meta name="keywords" content="{{ config('settings.keywords') }}">
-    <meta property="og:image" content="{{ asset(config('settings.og-image', 'assets/images/og-image.png')) }}">
+    <meta name="description" content="{{ $settings['description'] }}">
+    <meta name="keywords" content="{{ $settings['keywords'] }}">
+    <meta property="og:image" content="{{ $settings['og'] ?? asset('assets/images/og-image.png') }}">
     
-    <title>
-        @if(!empty($headTitle))
-            {{ $headTitle . " - " . config('settings.title', 'FindEarning.us') }}
-        @else
-            {{ config('settings.title', 'FindEarning.us') }}
-            {{ !empty(config('settings.tagline')) ? " - " . config('settings.tagline') : '' }}
-        @endif
-    </title>
+	<title>
+		@if(!empty($headTitle))
+			{{ $headTitle . " - " . ($settings['title'] ?? 'Findearning') }}
+		@else
+			{{ $settings['title'] ?? 'Findearning' }}
+			{{ !empty($settings['tagline']) ? " - " . $settings['tagline'] : '' }}
+		@endif
+	</title>
     
     <!-- ..::Favicon::.. -->
-    <link rel="apple-touch-icon" href="{{ $settings['logo'] }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ $settings['logo'] }}">
+	<link rel="apple-touch-icon" href="{{ $settings['logo'] ?? asset('assets/images/fav.png') }}">
+	<link rel="shortcut icon" type="image/x-icon" href="{{ $settings['logo'] ?? asset('assets/images/fav.png') }}">
     
     <!-- ..::Bootstrap V5 CSS::.. -->
     <link rel="stylesheet" type="text/css"  href="{{ asset('assets/css/bootstrap.min.css') }}">
