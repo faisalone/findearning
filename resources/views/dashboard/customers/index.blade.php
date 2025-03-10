@@ -6,6 +6,7 @@
 
 @section('content')
 <div class="container-fluid px-0 px-md-2">
+	<x-alert />
     <div class="row">
         <div class="col-12">
             <div class="card">
@@ -34,10 +35,6 @@
                                     </td>
                                     <td>{{ $customer->created_at->setTimezone('Asia/Dhaka')->format('d M Y') }}</td>
                                     <td>
-                                        <span class="badge bg-{{ $customer->email_verified_at ? 'success' : 'warning' }}">
-                                            {{ $customer->email_verified_at ? 'Verified' : 'Unverified' }}
-                                        </span>
-                                        <br>
                                         <span class="badge bg-{{ $customer->role == 0 ? 'success' : 'danger' }} mt-1">
                                             {{ $customer->role == 0 ? 'Active' : 'Inactive' }}
                                         </span>
@@ -48,6 +45,11 @@
                                             <button class="btn btn-{{ $customer->role == 0 ? 'danger' : 'success' }} btn-sm">
                                                 {{ $customer->role == 0 ? 'Deactivate' : 'Activate' }}
                                             </button>
+                                        </form>
+                                        <!-- Add new reset password form -->
+                                        <form action="{{ route('customers.reset-password', $customer->id) }}" method="POST" class="mt-1">
+                                            @csrf
+                                            <button class="btn btn-warning btn-sm">Reset Password</button>
                                         </form>
                                     </td>
                                 </tr>

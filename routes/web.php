@@ -18,6 +18,7 @@ use App\Http\Controllers\ReviewController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Middleware\CheckUserRole;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\Auth\ResetPasswordController;
 
 // Apply the CheckUserRole middleware directly to Auth routes
 Route::middleware([CheckUserRole::class])->group(function () {
@@ -104,6 +105,8 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
     });
     Route::get('/customers', [CustomerController::class, 'index'])->name('customers');
     Route::post('/customers/{customer}/toggle', [CustomerController::class, 'toggle'])->name('customers.toggle');
+    Route::post('/customers/{id}/password/reset', [ResetPasswordController::class, 'resetUserPassword'])
+         ->name('customers.reset-password');
     Route::resource('settings', SettingController::class)->except(['show']);
 
     // Reviews management routes - the admin middleware is handled in the controller

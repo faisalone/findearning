@@ -1,6 +1,5 @@
 @extends('layout.layout')
 @php
-    // ...existing code...
     $css = '<link rel="stylesheet" href="' . asset('assets/css/variables/variable4.css') . '" />';
     $title = 'Reset Password';
     $subTitle = 'Home';

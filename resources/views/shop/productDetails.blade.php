@@ -69,12 +69,12 @@
                                 <h6 class="mb-2"><i class="fas fa-question-circle me-2"></i>Have questions about this product?</h6>
                                 <p class="small text-muted mb-3">Contact our team directly for quick assistance or share this product with others.</p>
                                 <div class="d-flex justify-content-center justify-content-md-start flex-wrap gap-2">
-                                    <a href="https://wa.me/?text={{ urlencode('Check out this product: ' . $product->title . ' - ' . url()->current()) }}" 
+									<a href="https://wa.me/{{ $settings['whatsapp'] }}?text={{ urlencode('Check out this product: ' . $product->title . ' - ' . url()->current()) }}" 
                                         target="_blank" 
                                         class="btn btn-sm btn-success d-inline-flex align-items-center">
                                         <i class="fab fa-whatsapp me-2"></i> WhatsApp
                                     </a>
-									<a href="https://t.me/share/url?url={{ urlencode(url()->current()) }}&text={{ urlencode('Check out this product: ' . $product->title) }}" 
+									<a href="https://t.me/{{ $settings['telegram'] }}?text={{ urlencode('Check out this product: ' . $product->title . ' - ' . url()->current()) }}" 
 										target="_blank" 
 										class="btn btn-sm d-inline-flex align-items-center text-white"
 										style="background-color: #0088cc;">

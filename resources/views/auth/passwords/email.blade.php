@@ -30,6 +30,7 @@ $script = '<script src="' . asset('assets/js/vendors/zoom.js') . '"></script>';
                                 <form method="POST" action="{{ route('password.email') }}">
                                     @csrf
                                     <div class="form">
+										<strong class="text-danger font-weight-bold">If no email is linked to your account, contact the admin to reset your password.</strong>
                                         <input type="text" class="form-control" id="email" name="email"
                                             placeholder="Email address*" value="{{ old('email') }}" required />
                                         @error('email')
