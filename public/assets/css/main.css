@@ -16009,9 +16009,9 @@ color: var(--theme-color);
 }
 
 .footer-widget .social-icons .social-icon {
-    color: white;
-    transition: color 0.3s ease;
-    font-size: 1.5rem; /* Increased font size */
+    color: #fff !important; /* Default color */
+    transition: color 0.3s ease !important;
+    font-size: 1.5rem !important; /* Increased font size */
 }
 
 .footer-widget .social-icons .social-icon:hover i.fab.fa-facebook-f {

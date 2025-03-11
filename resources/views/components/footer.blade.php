@@ -57,7 +57,7 @@
 				</div>
 				<div class="col-lg-13 col-md-6 col-sm-6">
 					<div class="footer-widget">
-						<h3 class="footer-widget-title">{{ $settings['information_title'] ?? 'Information' }}</h3>
+						<h3 class="footer-widget-title">Information</h3>
 						<ul class="widget-items cata-widget">
 							@foreach($informationPages as $page)
 								<li class="widget-list-item"><a href="{{ route('pages.show', $page->slug) }}">{{ $page->title }}</a></li>
@@ -66,11 +66,10 @@
 					</div>
 				</div>
 				<div class="col-lg-13 col-md-6 col-sm-6">
-					<h3 class="footer-widget-title">{{ $settings['my_account_title'] ?? 'My Account' }}</h3>
+					<h3 class="footer-widget-title">My Account</h3>
 					<ul class="footer-widget">
-						@foreach($myaccountPages as $page)
-							<li class="widget-list-item"><a href="{{ route('pages.show', $page->slug) }}">{{ $page->title }}</a></li>
-						@endforeach
+						<li class="widget-list-item"><a href="{{ route('myProfile')}}">My Profile</a></li>
+						<li class="widget-list-item"><a href="{{ route('myOrders')}}">My Orders</a></li>
 					</ul>
 				</div>
 				<div class="col-lg-25 col-md-6 col-sm-6" id="newsletter-section">
