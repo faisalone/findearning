@@ -119,3 +119,5 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+
+Route::post('/newsletter-subscribe', [HomeController::class, 'newsletterSubscribe'])->name('newsletter.subscribe');

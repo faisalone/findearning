@@ -16004,6 +16004,27 @@ color: var(--theme-color);
 .footer .widget-list-item a:hover {
   color: #fff;
 }
+.footer-widget .social-icons {
+    gap: 0.5rem; /* Adjust gap between icons */
+}
+
+.footer-widget .social-icons .social-icon {
+    color: white;
+    transition: color 0.3s ease;
+    font-size: 1.5rem; /* Increased font size */
+}
+
+.footer-widget .social-icons .social-icon:hover i.fab.fa-facebook-f {
+    color: #1877f2; /* Facebook brand color on hover */
+}
+
+.footer-widget .social-icons .social-icon:hover i.fab.fa-youtube {
+    color: #ff0000; /* YouTube brand color on hover */
+}
+
+.footer-widget .social-icons .social-icon:hover i.fab.fa-telegram-plane {
+    color: #0088cc; /* Telegram brand color on hover */
+}
 .footer .footer-bottom-area {
   background: var(--theme-color);
   padding: 25px 0;
@@ -16498,7 +16519,7 @@ color: var(--theme-color);
 .footer-3 {
   position: relative;
   padding-top: 80px;
-  padding-bottom: 0;
+  padding-bottom: 20px;
 }
 .footer-3 .mr--17 {
   margin-right: 17px;

@@ -68,7 +68,9 @@
 								<li><a class="menu-item" href="{{ route('shop') }}">Shop</a></li>
 								<li><a class="menu-item" href="{{ route('allCategory') }}">All Category</a></li>
 								<li><a class="menu-item" href="{{ route('contact') }}">Contact</a></li>
-								<li><a class="menu-item" href="{{ route('contact') }}">Shop Use Tutorial</a></li>
+								@isset($settings['shop_tutorial'])
+									<li><a class="menu-item" href="{{ $settings['shop_tutorial'] }}">Shop Use Tutorial</a></li>
+								@endisset
 							</ul>
 						</nav>
 					</div>

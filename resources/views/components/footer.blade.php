@@ -7,7 +7,7 @@
 						<div class="footer-logo">
 							<img src="{{ $settings['logo'] ?? asset('assets/images/fav.png') }}" class="w-75" alt="Findearning">
 						</div>
-						<p>{{ $settings['site_description'] ?? 'Solid is the information & experience directed at an end-user' }}</p>
+						<p>{{ $settings['description'] ?? 'Findearning - Earn Money' }}</p>
 						<div class="quick-contact">
 							<div class="phone contact-item">
 								<div class="icon"><img src="{{ asset('assets/images/icons/telegram.png') }}" alt="telegram-icon"></div>
@@ -32,8 +32,27 @@
 				<div class="col-xl-3 col-md-6 col-sm-6">
 					<div class="footer-widget">
 						<h3 class="footer-widget-title">{{ $settings['about_us_title'] ?? 'About Us' }}</h3>
-						<p class="widget-text">{{ $settings['about_us_text'] ?? 'Elegant pink origami design three type of dimensional view and decoration co Great for adding a decorative touch to any room\'s decor.' }}</p>
-						<a href="{{ $settings['get_in_touch_url'] ?? '#0' }}" class="getin-touch">{{ $settings['get_in_touch_text'] ?? 'Get In Touch' }} <i class="fal fa-long-arrow-right"></i></a>
+						<p class="widget-text">{{ $settings['description2'] ?? 'Findearning - Earn Money' }}</p>
+
+						<div class="social-icons d-flex flex-wrap">
+							@if(isset($settings['facebook_page']) && !empty($settings['facebook_page']))
+							<a class="social-icon me-2 mb-2" target="_blank" href="https://www.facebook.com/{{ $settings['facebook_page'] }}">
+								<i class="fab fa-facebook-f"></i>
+							</a>
+							@endif
+
+							@if(isset($settings['youtube_channel']) && !empty($settings['youtube_channel']))
+							<a class="social-icon me-2 mb-2" target="_blank" href="https://www.youtube.com/{{ $settings['youtube_channel'] }}">
+								<i class="fab fa-youtube"></i>
+							</a>
+							@endif
+
+							@if(isset($settings['telegram_channel']) && !empty($settings['telegram_channel']))
+							<a class="social-icon me-2 mb-2" target="_blank" href="https://t.me/{{ $settings['telegram_channel'] }}">
+								<i class="fab fa-telegram-plane"></i>
+							</a>
+							@endif
+						</div>
 					</div>
 				</div>
 				<div class="col-lg-13 col-md-6 col-sm-6">
@@ -54,14 +73,25 @@
 						@endforeach
 					</ul>
 				</div>
-				<div class="col-lg-25 col-md-6 col-sm-6">
-					<h3 class="footer-widget-title">{{ $settings['newsletter_title'] ?? 'Get Newsletter' }}</h3>
+				<div class="col-lg-25 col-md-6 col-sm-6" id="newsletter-section">
+					<h3 class="footer-widget-title">Get Newsletter</h3>
 					<div class="footer-widget newsletter-widget">
-						<p class="widget-text">{{ $settings['newsletter_text'] ?? 'Don\'t miss any updates and offers!' }}</p>
-						<div class="input-div">
-							<input type="email" placeholder="{{ $settings['newsletter_placeholder'] ?? 'Enter email address' }}">
-						</div>
-						<a href="{{ $settings['newsletter_button_url'] ?? '#0' }}" class="subscribe-btn">{{ $settings['newsletter_button_text'] ?? 'Subscribe Now' }} <i class="fal fa-long-arrow-right"></i></a>
+						<p class="widget-text">Don't miss any updates and offers!</p>
+						@if(session('success'))
+							<div class="alert alert-success">{{ session('success') }}</div>
+						@endif
+
+						@if($errors->has('email'))
+							<small class="text-danger">{{ $errors->first('email') }}</small>
+						@endif
+
+						<form action="{{ route('newsletter.subscribe') }}" method="POST">
+							@csrf
+							<div class="input-div">
+								<input type="email" name="email" placeholder="Enter email address">
+							</div>
+							<button type="submit" class="subscribe-btn">Subscribe Now <i class="fal fa-long-arrow-right"></i></button>
+						</form>
 					</div>
 				</div>
 			</div>
@@ -76,9 +106,8 @@
 	</div>
 	<div class="footer-bottom-area">
 		<div class="container">
-			<div class="footer-bottom-inner d-flex justify-content-between">
-				<span class="copyright">{{ $settings['footer_copyright'] ?? 'All rights reserved by' }} <a href="{{ $settings['company_url'] ?? 'http://findearning.us' }}" class="brand" target="_blank">{{ $settings['company_name'] ?? 'findearning.us' }}</a></span>
-				<span class="copyright">{{ $settings['footer_credits'] ?? 'Design & developed by' }} <a href="{{ $settings['developer_url'] ?? 'http://oyelab.com' }}" class="brand" target="_blank">{{ $settings['developer_name'] ?? 'oyelab.com' }}</a></span>
+			<div class="footer-bottom-inner d-flex justify-content-center">
+				<span class="copyright">All rights reserved by <a href="{{ $settings['url'] ?? 'http://findearning.net' }}" class="brand" target="_blank">{{ $settings['site_name'] ?? 'findearning.net' }}</a></span>
 			</div>
 		</div>
 	</div>

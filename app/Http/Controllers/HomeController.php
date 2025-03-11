@@ -7,7 +7,8 @@ use App\Models\Category;
 use App\Models\Product;
 use App\Models\Social;
 use App\Models\Slider;
-use App\Models\Review; // added import
+use App\Models\Review;
+use App\Models\Newsletter;
 
 class HomeController extends Controller
 {
@@ -21,7 +22,6 @@ class HomeController extends Controller
 		$categories = Category::where('status', true)
 								->orderByRaw('`order` IS NULL ASC')
 								->orderBy('order')
-								->limit(12)
 								->get();
 
 		// Retrieve top products using getTopProducts and filter by valid category
@@ -53,6 +53,20 @@ class HomeController extends Controller
 								->get();
 
         return view('home.allCategory', compact('categories'));
+    }
+
+    public function newsletterSubscribe(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|email'
+        ]);
+		
+        Newsletter::create([
+            'email' => $request->email,
+            'user_agent' => $request->userAgent(),
+        ]);
+
+        return redirect()->back()->with('success', 'Thank you for subscribing!');
     }
 
 }
