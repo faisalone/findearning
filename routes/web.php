@@ -115,7 +115,11 @@ Route::prefix('dashboard')->middleware(['auth', CheckUserRole::class])->group(fu
         ->name('reviews.toggleStatus');
 
     Route::get('/messages', [ContactController::class, 'index'])->name('contact.index');
+	Route::get('/subscribers', [DashboardController::class, 'subscribers'])->name('subscribers.index');
+    Route::get('/subscribers/{id}', [DashboardController::class, 'subscriberShow'])->name('subscribers.show');
+
 });
+
 
 Route::get('/contact', [ContactController::class, 'create'])->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');

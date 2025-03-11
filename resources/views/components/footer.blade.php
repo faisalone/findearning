@@ -34,21 +34,21 @@
 						<h3 class="footer-widget-title">{{ $settings['about_us_title'] ?? 'About Us' }}</h3>
 						<p class="widget-text">{{ $settings['description2'] ?? 'Findearning - Earn Money' }}</p>
 
-						<div class="social-icons d-flex flex-wrap">
+						<div class="d-flex flex-wrap">
 							@if(isset($settings['facebook_page']) && !empty($settings['facebook_page']))
-							<a class="social-icon me-2 mb-2" target="_blank" href="https://www.facebook.com/{{ $settings['facebook_page'] }}">
+							<a class="social-icon me-3 mb-3 fs-3 text-white" target="_blank" href="https://www.facebook.com/{{ $settings['facebook_page'] }}">
 								<i class="fab fa-facebook-f"></i>
 							</a>
 							@endif
 
 							@if(isset($settings['youtube_channel']) && !empty($settings['youtube_channel']))
-							<a class="social-icon me-2 mb-2" target="_blank" href="https://www.youtube.com/{{ $settings['youtube_channel'] }}">
+							<a class="social-icon me-3 mb-3 fs-3 text-white" target="_blank" href="https://www.youtube.com/{{ $settings['youtube_channel'] }}">
 								<i class="fab fa-youtube"></i>
 							</a>
 							@endif
 
 							@if(isset($settings['telegram_channel']) && !empty($settings['telegram_channel']))
-							<a class="social-icon me-2 mb-2" target="_blank" href="https://t.me/{{ $settings['telegram_channel'] }}">
+							<a class="social-icon me-3 mb-3 fs-3 text-white" target="_blank" href="https://t.me/{{ $settings['telegram_channel'] }}">
 								<i class="fab fa-telegram-plane"></i>
 							</a>
 							@endif

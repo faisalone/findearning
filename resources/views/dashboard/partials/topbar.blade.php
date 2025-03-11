@@ -11,7 +11,9 @@
 					<a class="nav-item nav-link" href="{{ route('shop') }}">Shop</a>
 					<a class="nav-item nav-link" href="{{ route('allCategory') }}">All Category</a>
 					<a class="nav-item nav-link" href="{{ route('contact') }}">Contact</a>
-					<a class="nav-item nav-link" href="{{ route('contact') }}">Shop Use Tutorial</a>
+					@isset($settings['shop_tutorial'])
+						<a class="nav-item nav-link" href="{{ $settings['shop_tutorial'] }}">Shop Use Tutorial</a>
+					@endisset
 				</div>
 			</div>
 			<div class="col-md-2 d-flex justify-content-end align-items-center">
@@ -66,7 +68,9 @@
 		<a class="nav-item nav-link" href="{{ route('shop') }}">Shop</a>
 		<a class="nav-item nav-link" href="{{ route('allCategory') }}">All Category</a>
 		<a class="nav-item nav-link" href="{{ route('contact') }}">Contact</a>
-		<a class="nav-item nav-link" href="{{ route('contact') }}">Shop Use Tutorial</a>
+		@isset($settings['shop_tutorial'])
+			<a class="nav-item nav-link" href="{{ $settings['shop_tutorial'] }}">Shop Use Tutorial</a>
+		@endisset
 	</div>
 </div>
 

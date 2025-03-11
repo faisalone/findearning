@@ -80,6 +80,12 @@
                 <span>Messages</span>
             </a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link" href="{{ route('subscribers.index') }}">
+                <i class="fas fa-fw fa-envelope"></i>
+                <span>Subscribers</span>
+            </a>
+        </li>
         <!-- New Settings Menu -->
         <li class="nav-item">
             <a class="nav-link" href="{{ route('settings.index') }}">
