@@ -1,5 +1,5 @@
 @extends('dashboard.layouts.app')
-
+@section('title', 'Orders')
 @section('content')
 <div class="container-fluid px-0 px-md-2">
 	<x-alert />
@@ -9,7 +9,7 @@
             <thead>
                 <tr>
                     <th>Customer Info</th>
-                    <th>Summary</th>
+                    <th>Order Summary</th>
                     <th>Proof</th>
                     <th>Actions</th>
                 </tr>
@@ -19,28 +19,41 @@
                     <tr>
 						<td>
 							Name: {{ $order->customer_name }}<br>
-							@if($order->customer_email)
-								Email: {{ $order->customer_email }}<br>
+							@if($order->user)
+								Email: {{ $order->user->email ?? 'Not available' }}<br>
+								Contact: {{ $order->user->contact ?? 'Not available' }}<br>
 							@endif
-							@if($order->customer_contact)
-								Contact: {{ $order->customer_contact }}
-							@endif
-							<br>
-							<strong>Delivery Method: {{ $order->delivery_method }}</strong>
 						</td>
-                        <td>
+						<td>
 							<strong>Order ID: #{{ str_pad($order->id, 5, '0', STR_PAD_LEFT) }}</strong>
 							<br>
+							<p class="form-control-plaintext">
+								<strong>Delivery Method: {{ $order->delivery_method }}  => </strong>
+								@if($order->delivery_method == 'email')
+									<span class="emailText">{{ $order->customer_email }}</span>
+									<button type="button" class="copyEmailBtn btn btn-link p-0">
+										<i class="fa fa-clipboard"></i>
+									</button>
+									<span class="copyEmailMessage" style="display:none;">Copied!</span>
+								@else
+									<span class="phoneText">{{ $order->customer_contact }}</span>
+									<button type="button" class="copyPhoneBtn btn btn-link p-0">
+										<i class="fa fa-clipboard"></i>
+									</button>
+									<span class="copyPhoneMessage" style="display:none;">Copied!</span>
+								@endif
+							</p>
+
 							Products:
-                            <ul>
-                                @foreach($order->products() as $product)
-                                    <li>{{ $product->title }} (Quantity: {{ $product->quantity }})</li>
-                                @endforeach
-                            </ul>
-                            Status: <strong>{{ $order->status }}</strong>
-                            <br>
-                            Total: <strong>${{ number_format($order->total, 2) }}</strong>
-                        </td>
+							<ul>
+								@foreach($order->products() as $product)
+									<li>{{ $product->title }} (Quantity: {{ $product->quantity }})</li>
+								@endforeach
+							</ul>
+							Status: <strong>{{ $order->status }}</strong>
+							<br>
+							Total: <strong>${{ number_format($order->total, 2) }}</strong>
+						</td>
                         <td>
 							@if($order->payment_option == 'Wallet')
 								<label class="form-label">Paid by Wallet No: {{ $order->user->wallet->id }}</label>
@@ -96,13 +109,32 @@
 
 @push('scripts')
 <script>
-	$(document).ready(function() {
-		// Make the entire container clickable
-		$('.clickable-image-container').click(function() {
-			var proofSrc = $(this).find('.proof-thumbnail').data('proof');
-			$('#fullProof').attr('src', proofSrc);
-			$('#proofModal').modal('show');
-		});
-	});
+    $(document).ready(function() {
+        // Make the entire container clickable
+        $('.clickable-image-container').click(function() {
+            var proofSrc = $(this).find('.proof-thumbnail').data('proof');
+            $('#fullProof').attr('src', proofSrc);
+            $('#proofModal').modal('show');
+        });
+
+        // Event delegation for copy buttons
+        $(document).on('click', '.copyPhoneBtn', function() {
+            var phoneText = $(this).siblings('.phoneText').text();
+            navigator.clipboard.writeText(phoneText).then(function() {
+                var copyMsg = $(this).siblings('.copyPhoneMessage');
+                copyMsg.show();
+                setTimeout(function() { copyMsg.hide(); }, 2000);
+            }.bind(this));
+        });
+
+        $(document).on('click', '.copyEmailBtn', function() {
+            var emailText = $(this).siblings('.emailText').text();
+            navigator.clipboard.writeText(emailText).then(function() {
+                var copyMsg = $(this).siblings('.copyEmailMessage');
+                copyMsg.show();
+                setTimeout(function() { copyMsg.hide(); }, 2000);
+            }.bind(this));
+        });
+    });
 </script>
 @endpush

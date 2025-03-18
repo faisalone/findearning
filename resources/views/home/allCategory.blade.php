@@ -17,13 +17,12 @@
 				<div class="col-xl-3 col-lg-4 col-sm-6">
                     <div class="catagory-card">
                         <div class="contents">
-                            <h3 class="catagory-title">{{ $category->title }}</h3>
+							<h3 class="catagory-title"><a href="{{ route('shop.category', $category->slug) }}">{{ $category->title }}</a></h3>
 							<div class="category-thumb mb-3">
 								<img src="{{ $category->imagePath }}" alt="category-thumb">
 							</div>
                             <a href="{{ route('shop.category', $category->slug) }}" class="all-btn">All {{ $category->title }} <i class="fal fa-long-arrow-right ml--5"></i></a>
                         </div>
-
                     </div>
                 </div>
 				@endforeach

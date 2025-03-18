@@ -42,7 +42,8 @@
 					<div class="col-xl-3 col-md-3 col-sm-6 col-6">
 						<div class="product-item element-item1">
 							<a href="{{ route('shop.category', $category->slug) }}" class="product-image">
-								<div class="image-vari1 image-vari"><img
+								<div class="image-vari1 image-vari">
+									<img
 										src="{{ $category->imagePath ?? asset('assets/images/products/home8/gun-410x410.webp') }}"
 										alt="product-image">
 								</div>
